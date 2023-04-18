@@ -1,7 +1,7 @@
 <?php require_once "dash_top.php" ?>
 
 <!---- Contenido Principal ---->
-<div class="container">
+<div class="container-fluid">
     <h1>Lista de Precios Fed Pat</h1>
 	<div class="row">
             <div class="table-responsive">        

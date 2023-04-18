@@ -1369,3 +1369,17 @@ footer.sticky-footer .copyright {
         max-width: 13.375rem
     }
 }*/
+
+
+.modalDetalle{
+    background-color: #17a2b8;
+    color:#fff;
+}
+
+.decorationNone{
+    text-decoration: none;
+}
+
+.decorationNone:hover{
+    text-decoration: none;
+}

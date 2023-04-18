@@ -118,14 +118,14 @@
                 <div id="collapsePages" class="collapse" aria-labelledby="headingPages" data-parent="#accordionSidebar">
                     <div class="bg-white py-2 collapse-inner rounded">
                         <h6 class="collapse-header">Empresas</h6>
-                        <a class="collapse-item" href="LP-particulares.php">Particulares</a>
-                        <a class="collapse-item" href="LP-laCaja.php">La Caja</a>
-                        <a class="collapse-item" href="LP-glasscom.php">Glasscom</a>
-                        <a class="collapse-item" href="LP-fedPat.php">Fed Pat</a>
-                        <a class="collapse-item" href="LP-comun.php">Común</a>
-                        <a class="collapse-item" href="LP-allianzSuraNacionMapfre.php">Allianz-Sura-Nacion-Mapfre</a>
-                        <a class="collapse-item" href="LP-laSegundaSancor.php">La Segunda - Sancor</a>
-                        <a class="collapse-item" href="LP-sanCristobal.php">San Cristobal</a>
+                        <a class="collapse-item" href="lp_particulares.php">Particulares</a>
+                        <a class="collapse-item" href="lp_laCaja.php">La Caja</a>
+                        <a class="collapse-item" href="lp_glasscom.php">Glasscom</a>
+                        <a class="collapse-item" href="lp_fedPat.php">Fed Pat</a>
+                        <a class="collapse-item" href="lp_comun.php">Común</a>
+                        <a class="collapse-item" href="lp_asnm.php">Allianz-Sura-Nacion-Mapfre</a>
+                        <a class="collapse-item" href="lp_lss.php">La Segunda - Sancor</a>
+                        <a class="collapse-item" href="lp_sanCristobal.php">San Cristobal</a>
                     </div>
                 </div>
             </li>

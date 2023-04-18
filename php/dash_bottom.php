@@ -35,7 +35,7 @@
             <div class="modal-body">Seleccione "Cerrar sesión" a continuación si desea finalizar la sesión.</div>
             <div class="modal-footer">
                 <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
-                <a class="btn btn-primary" href="../database/logout.php" role="button" >Cerrar sesión</a>
+                <a class="btn btn-primary decorationNone" href="../database/logout.php" role="button" >Cerrar sesión</a>
             </div>
             </div>
         </div>

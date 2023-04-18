@@ -1,27 +1,28 @@
 <?php require_once "dash_top.php" ?>
 
 <!---- Contenido Principal ---->
-<div class="container">
-    <h1>Lista de Precios La Segunda-Sancor</h1>
+    
+<div class="container-fluid">
+	<h1>Lista de Precios La Caja</h1>
 	<div class="row">
             <div class="table-responsive">        
-                <table id="tablaLP-laSegundaSancor" class="table table-striped table-bordered table-condensed" style="width:100%" >
+                <table id="tablaLP-laCaja" class="table table-striped table-bordered table-condensed" style="width:100%" >
                     <thead class="text-center">
                         <tr>
                             <th>Código</th>
                             <th>
-                                <select class="selectTabla" id="listaMarcaLaSegundaSancor" onChange="getModeloLaSegundaSancor(), dropDownLaSegundaSancor();">
+                                <select class="selectTabla" id="listaMarcaLaCaja" onChange="getModeloLaCaja(), dropDownLaCaja();">
                                     <option value=>Marca</option>
                                 </select>
                             </th>
                             <th>
-                                <select class="selectTabla" id="listaModeloLaSegundaSancor" onChange="getMarcaLaSegundaSancor(), dropDownLaSegundaSancor();">
+                                <select class="selectTabla" id="listaModeloLaCaja" onChange="getMarcaLaCaja(), dropDownLaCaja();">
                                     <option value=>Modelo</option>
                                 </select>
                             </th>                                
                             <th>Descripción</th>
                             <th>
-                                <select class="selectTabla" id="listaCristalLaSegundaSancor" onChange="dropDownLaSegundaSancor();">
+                                <select class="selectTabla" id="listaCristalLaCaja" onChange="dropDownLaCaja();">
                                     <option value=>Cristal</option>
                                 </select>                 
                             </th>
@@ -41,7 +42,7 @@
             </div>
     </div>  
 </div>
-<!--Modal para Detalle LP-LaSegunda-Sancor-->
+<!--Modal para Detalle LP-LaCaja-->
 <div class="modal" id="modalDetalle" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true" style="width:40%;margin-left: 450px; margin-top: 100px;">
         <div class="model-dialog" role="document">
             <div class="modal-content">
@@ -55,15 +56,15 @@
                             <tbody>
                                 <tr>
                                     <th scope="row">Código</th>
-                                    <td id="info00LPLaSegundaSancor"></td>
+                                    <td id="info00LPLaCaja"></td>
                                 </tr>
                                 <tr>
                                     <th scope="row">Descripción</th>
-                                    <td id="info01LPLaSegundaSancor"></td>
+                                    <td id="info01LPLaCaja"></td>
                                 </tr>
                                 <tr>
                                     <th scope="row">Color</th>
-                                    <td id="info02LPLaSegundaSancor"></td>
+                                    <td id="info02LPLaCaja"></td>
                                 </tr>
                             </tbody>
                         </table>
