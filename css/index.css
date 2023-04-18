@@ -1,0 +1,268 @@
+body {
+  color:#343a40;
+  background-color: white;
+  font-family: Raleway;
+}
+
+a {
+	text-decoration: none;
+}
+
+/*******************************************************************/
+
+/**************************   GENERALES   **************************/
+
+/*******************************************************************/
+
+.gradient-background{
+	background: linear-gradient(90deg, var(--primary), var(--secondary));
+	background-size: 150% 150%;
+	-webkit-animation: Gradient 10s ease infinite;
+	-moz-animation: Gradient 10s ease infinite;
+	animation: Gradient 10s ease infinite;	
+}
+
+.dark-opacity{
+	filter: brightness(50%) contrast(80%);
+	-webkit-filter: brightness(50%) contrast(80%);	
+}
+
+form{
+	margin: 0;
+}
+
+.divider-sm{
+	height: 2px;
+	width: 50px;
+}
+
+.divider-plus hr:first-child{
+	height: 1px;
+	width: 15%;
+	margin-top: 0;
+}
+
+.divider-plus hr:last-child{
+	height: 1px;
+	opacity: 0.5;
+	width: 85%;
+	margin-top: 0;
+}
+
+.divider-plus{
+	display: flex!important;
+}
+
+.bg-image{
+	background-size: cover;
+  background-position: center, center;
+  background-repeat: no-repeat;
+}
+
+.no-margin{
+	margin: 0!important;
+}
+
+.btn-outline-white{
+	color:var(--white);
+	border-color:var(--white);
+}
+
+.btn-outline-white:hover, .btn-outline-white:focus, .btn-outline-white:active{
+	color:var(--dark);
+	background-color: var(--white);
+	border-color:var(--white);
+}
+
+/* Aspect Ratio */
+
+.aspect-ratio{
+	position: relative;
+	margin: auto;
+}
+
+.aspect-ratio *{
+	position: absolute;
+	top: 0;
+	left: 0;
+	bottom: 0;
+	right: 0;	
+}
+
+.aspect-ratio:before{
+	content: "";
+	display: block;	
+}
+
+.ratio-1-1:before{
+	padding-top: 100%;
+}
+
+.ratio-16-9:before{
+	padding-top: 56.25%; 
+}
+
+.ratio-4-3:before{
+	padding-top: 75%; 
+}
+
+.ratio-3-2:before{
+	padding-top: 66%; 
+}
+
+.ratio-8-5:before{
+	padding-top: 62.5%; 
+}
+
+/* Efectos */
+
+@-webkit-keyframes Gradient {
+	0% {
+		background-position: 0% 50%
+	}
+	50% {
+		background-position: 100% 50%
+	}
+	100% {
+		background-position: 0% 50%
+	}
+}
+
+@-moz-keyframes Gradient {
+	0% {
+		background-position: 0% 50%
+	}
+	50% {
+		background-position: 100% 50%
+	}
+	100% {
+		background-position: 0% 50%
+	}
+}
+
+@keyframes Gradient {
+	0% {
+		background-position: 0% 50%
+	}
+	50% {
+		background-position: 100% 50%
+	}
+	100% {
+		background-position: 0% 50%
+	}
+}
+
+/* Navegador */
+
+.navbar-nav .nav-item.active{
+	background-color: var(--primary);
+  border-radius: 0.25rem;	
+}
+
+.navbar-nav .nav-item.active a.nav-link{
+	color: var(--white);
+}
+
+.navbar-expand-xl{
+	position: fixed;
+	background-color: var(--white);
+	width: 100%;
+	z-index: 99999;
+}
+
+/* Menú Lateral */
+
+#menu-lateral{
+	width: 400px;
+	height: calc(100vh - 56px);
+	position: fixed;
+	top:56px;
+	background-color: var(--white);
+	z-index: 99999;
+	left: -400px;
+	transition: 0.5s ease;
+}
+
+#menu-lateral.show{
+	left: 0;
+}
+
+/* Slider */
+
+.carousel-inner, .carousel-item{
+	max-height: 70vh;
+	background-color: black;
+}
+
+/*------- ------*/
+.navbar-brand-b4 {
+    display: inline-block;
+    padding-top: 0.3125rem;
+    padding-bottom: 0.3125rem;
+    margin-right: 1rem;
+    font-size: 1.25rem;
+    line-height: inherit;
+    white-space: nowrap;
+}
+
+.container-b4 {
+	max-width: 1140px;
+	width: 100%;
+    padding-right: 15px;
+    padding-left: 15px;
+    margin-right: auto;
+    margin-left: auto;
+}
+
+.text-dark-b4 {
+	color: #343a40 !important;
+}
+
+.bg-primary-b4{
+	background-color: #d5693b !important;
+    opacity: 1;
+    box-sizing: content-box;
+	border: 0;
+    border-top: 1px solid rgba(0, 0, 0, 0.1);
+}
+
+.bg-light-b4 {
+	background-color: #f8f9fa; 
+	opacity: 1;
+    box-sizing: content-box;
+	border: 0;
+    border-top: 1px solid rgba(0, 0, 0, 0.1);
+}
+
+.bg-dark-b4 {
+background-color: #343a40 !important;
+}
+
+.btn-primary-b4 {
+	background-color:#d5693b;
+	color: white;
+}
+
+.btn-primary-b4:hover {
+	background-color:#d5693b;
+	color: white;
+}
+
+.ps-relative{
+	position: relative;
+}
+
+.text-secondary-b4{
+	color: #557190;
+}
+
+a.text-secondary-b4:hover,
+a.text-secondary-b4:focus {
+	color: #394b60 ;
+}
+
+#contacto:hover{
+	color: #fff;
+    background-color: #c15629;
+    border-color: #b65227;
+}
