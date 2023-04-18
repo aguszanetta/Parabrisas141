@@ -80,9 +80,23 @@
             </li>-->
 
             <li class="nav-item mb-1">
+                <a class="nav-link" data-toggle="collapse" href="#" aria-expanded="false" >
+                    <i class="fas fa-list-ol"></i>
+                    <span class="menu-title">Turnos</span>
+                <!--<i class="menu-arrow"></i>-->
+                </a>
+                <div class="collapse">
+                    <ul class="nav flex-column">
+                        <li class="nav-item"> <a class="nav-link subitem" href="turnos.php">• Nuevo Turno</a></li>
+                        <li class="nav-item"> <a class="nav-link subitem" href="historico.php">• Historico</a></li>
+                    </ul>
+                </div>
+            </li>
+
+            <!--<li class="nav-item mb-1">
                 <a class="nav-link collapsed" data-toggle="collapse" data-target="#collapseTwo" href="#" aria-expanded="true" aria-controls="collapseTwo">
-                <i class="fas fa-list-ol"></i>
-                <span class="menu-title">Turnos</span>
+                    <i class="fas fa-list-ol"></i>
+                    <span class="menu-title">Turnos</span>
                 </a>
                 <div class="collapse" id="collapseTwo" aria-labelledby="headingTwo" data-parent="#accordionSidebar">
                     <ul class="nav flex-column sub-menu collapse-inner rounded">
@@ -90,7 +104,7 @@
                         <li class="nav-item"> <a class="nav-link" href="historico.php">Historico</a></li>
                     </ul>
                 </div>
-            </li>
+            </li>-->
 
             <!-- Nav Item - Charts -->
             <li class="nav-item mb-1">
@@ -109,27 +123,25 @@
             </li>
 
              <!-- Nav Item - Pages Collapse Menu 2-->
-            <li class="nav-item">
-                <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#collapsePages"
-                    aria-expanded="true" aria-controls="collapsePages">
+             <li class="nav-item mb-1">
+                <a class="nav-link" data-toggle="collapse" href="#" aria-expanded="false" >
                     <i class="fas fa-clipboard-list"></i>
-                    <span class="menu-title" >Lista de Precios</span>
+                    <span class="menu-title">Lista de Precios</span>
+                <!--<i class="menu-arrow"></i>-->
                 </a>
-                <div id="collapsePages" class="collapse" aria-labelledby="headingPages" data-parent="#accordionSidebar">
-                    <div class="bg-white py-2 collapse-inner rounded">
-                        <h6 class="collapse-header">Empresas</h6>
-                        <a class="collapse-item" href="lp_particulares.php">Particulares</a>
-                        <a class="collapse-item" href="lp_laCaja.php">La Caja</a>
-                        <a class="collapse-item" href="lp_glasscom.php">Glasscom</a>
-                        <a class="collapse-item" href="lp_fedPat.php">Fed Pat</a>
-                        <a class="collapse-item" href="lp_comun.php">Común</a>
-                        <a class="collapse-item" href="lp_asnm.php">Allianz-Sura-Nacion-Mapfre</a>
-                        <a class="collapse-item" href="lp_lss.php">La Segunda - Sancor</a>
-                        <a class="collapse-item" href="lp_sanCristobal.php">San Cristobal</a>
-                    </div>
+                <div class="collapse">
+                    <ul class="nav flex-column">
+                        <li class="nav-item"> <a class="nav-link subitem" href="lp_particulares.php">• Particulares</a></li>
+                        <li class="nav-item"> <a class="nav-link subitem" href="lp_laCaja.php">• La Caja</a></li>
+                        <li class="nav-item"> <a class="nav-link subitem" href="lp_glasscom.php">• Glasscom</a>
+                        <li class="nav-item"> <a class="nav-link subitem" href="lp_fedPat.php">• Fed Pat</a>
+                        <li class="nav-item"> <a class="nav-link subitem" href="lp_comun.php">• Común</a>
+                        <li class="nav-item"> <a class="nav-link subitem" href="lp_asnm.php">• A-S-N-M</a>
+                        <li class="nav-item"> <a class="nav-link subitem" href="lp_lss.php">• La Segunda - Sancor</a>
+                        <li class="nav-item"> <a class="nav-link subitem" href="lp_sanCristobal.php">• San Cristobal</a>
+                    </ul>
                 </div>
             </li>
-
         </ul>
         <!-- End of Sidebar -->
 
