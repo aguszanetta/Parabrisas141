@@ -25,7 +25,7 @@
     <!-- Bootstrap -->
     <link rel="stylesheet" type="text/css" href="../libraries/bootstrap-5.3.0/css/bootstrap.min.css" >
     <!-- Custom style-->
-    <link href="../css/stylePanel2.css" rel="stylesheet"> 
+    <link href="../css/stylePanel.css" rel="stylesheet"> 
     <!--SweetAlert2-->
     <link rel="stylesheet" href="../libraries/sweetalert2/sweetalert2.min.css">
     

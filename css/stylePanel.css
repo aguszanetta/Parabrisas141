@@ -1044,7 +1044,7 @@ a:focus {
 }
 
 .sidebar-dark .nav-item .nav-link {
-    color: rgba(255,255,255,.5)
+    color: rgba(255,255,255, 1)
 }
 
 .sidebar-dark .nav-item .nav-link i {
@@ -1130,6 +1130,12 @@ footer.sticky-footer .copyright {
     color:#fff;
 }
 
+#sidebar div.collapse>ul>li.nav-item:hover {
+    background: #d5693b;
+    color:#fff;
+    border-radius: 0px 0px 5px 0px;
+}
+
 /*------NAVBAR------*/
 
 /*Etiqueta Navlink Collapse*/
@@ -1192,193 +1198,3 @@ footer.sticky-footer .copyright {
     border-radius: 0 5px 5px 0px;
     background: #fd8b5a;
 }
-
-
-/* Sub-Menu */
-/*#sidebar .sub-menu {
-    margin-bottom: 0;
-    margin-top: 0;
-    list-style: none;
-    padding: 0.25rem 0 0 3.07rem;
-    background: #fd8b5a;
-    padding-bottom: 12px;
-  }
-  
-  #sidebar .sub-menu .nav-item {
-    padding: 0;
-  }
-  
-  #sidebar .sub-menu .nav-item::before {
-    content: '';
-    width: 5px;
-    height: 5px;
-    position: absolute;
-    margin-top: 16px;
-    border-radius: 50%;
-    background: #b2b2b2;
-  }
-  
-  #sidebar .sub-menu .nav-item .nav-link {
-    color: #fff;
-    padding: 0.7rem 1rem;
-    position: relative;
-    font-size: 0.875rem;
-    line-height: 1;
-    height: auto;
-    border-top: 0;
-  }
-  
-  #sidebar .sub-menu .nav-item .nav-link:hover {
-    color: #ffffff;
-  }
-  
-  #sidebar .sub-menu .nav-item .nav-link.active {
-    color: #ffffff;
-    background: transparent;
-  }
-  
-  #sidebar .sub-menu .nav-item:hover {
-    background: transparent;
-  }
-
-  .sidebar-icon-only #sidebar .sub-menu {
-    padding-right: 0rem;
-  }
-  
-  .sidebar-icon-onl #sidebar .sub-menu .nav-item .nav-link {
-    padding-right: 3rem;
-    text-align: right;
-  }
-  
-  .sidebar-icon-only #sidebar .sub-menu .nav-item .nav-link:before {
-    right: 1.75rem;
-  }
-
-  @media (min-width: 992px) {
-    #sidebar .sub-menu {
-        max-height: none;
-      }
-  }*/
-
-
-  /*-------- Dropdown-Menu --------*/
-/*.dropdown .dropdown-menu .dropdown-header,
-.sidebar .sidebar-heading,
-.text-uppercase {
-    text-transform: uppercase!important
-}
-
-.dropdown .dropdown-menu {
-    font-size: .85rem
-}
-
-.dropdown .dropdown-menu .dropdown-header {
-    font-weight: 800;
-    font-size: .65rem;
-    color: #b7b9cc
-}
-
-.dropdown.no-arrow .dropdown-toggle::after {
-    display: none
-}
-
-.sidebar .nav-item.dropdown .dropdown-toggle::after,
-.topbar .nav-item.dropdown .dropdown-toggle::after {
-    width: 1rem;
-    text-align: center;
-    float: right;
-    vertical-align: 0;
-    border: 0;
-    font-weight: 900;
-    content: '\f105';
-    font-family: 'Font Awesome 5 Free'
-}
-
-.topbar .dropdown {
-    position: static
-}
-
-.topbar .dropdown .dropdown-menu {
-    width: calc(100% - 1.5rem);
-    right: .75rem
-}
-
-.topbar .dropdown {
-    position: static
-}
-
-.topbar .dropdown .dropdown-menu {
-    width: calc(100% - 1.5rem);
-    right: .75rem
-}
-
-.topbar .dropdown-list {
-    padding: 0;
-    border: none;
-    overflow: hidden
-}
-
-.topbar .dropdown-list .dropdown-header {
-    background-color: #4e73df;
-    border: 1px solid #4e73df;
-    padding-top: .75rem;
-    padding-bottom: .75rem;
-    color: #fff
-}
-
-.topbar .dropdown-list .dropdown-item {
-    white-space: normal;
-    padding-top: .5rem;
-    padding-bottom: .5rem;
-    border-left: 1px solid #e3e6f0;
-    border-right: 1px solid #e3e6f0;
-    border-bottom: 1px solid #e3e6f0;
-    line-height: 1.3rem
-}
-
-.topbar .dropdown-list .dropdown-item .dropdown-list-image {
-    position: relative;
-    height: 2.5rem;
-    width: 2.5rem
-}
-
-.topbar .dropdown-list .dropdown-item .dropdown-list-image img {
-    height: 2.5rem;
-    width: 2.5rem
-}
-
-.topbar .dropdown-list .dropdown-item .dropdown-list-image .status-indicator {
-    background-color: #eaecf4;
-    height: .75rem;
-    width: .75rem;
-    border-radius: 100%;
-    position: absolute;
-    bottom: 0;
-    right: 0;
-    border: .125rem solid #fff
-}
-
-.topbar .dropdown-list .dropdown-item .text-truncate {
-    max-width: 10rem
-}
-
-.topbar .dropdown-list .dropdown-item:active {
-    background-color: #eaecf4;
-    color: #3a3b45
-}
-
-@media (min-width:576px) {
-    .topbar .dropdown {
-        position: relative
-    }
-    .topbar .dropdown .dropdown-menu {
-        width: auto;
-        right: 0
-    }
-    .topbar .dropdown-list {
-        width: 20rem!important
-    }
-    .topbar .dropdown-list .dropdown-item .text-truncate {
-        max-width: 13.375rem
-    }
-}*/

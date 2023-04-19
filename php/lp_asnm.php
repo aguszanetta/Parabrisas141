@@ -12,6 +12,7 @@
                             <th>Marca</th>
                             <th>Modelo</th>
                             <th>Cristal</th>
+                            <th>Descripcion</th>
                             <th>Posición</th>
                             <th>Lado</th>  
                             <th>Color</th>

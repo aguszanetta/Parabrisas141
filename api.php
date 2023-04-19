@@ -5,7 +5,7 @@ switch ($_REQUEST["accion"]) {
 	case 'recaptcha':
 		
 		//Configurar clave en config
-	  $secret = '';
+	  $secret = '6LfqBLQUAAAAACpmvUWF_Likx2PIIVVGAw3sUFYC';
 	  //Envío el request a la api de Google
 	  $verifyResponse = file_get_contents('https://www.google.com/recaptcha/api/siteverify?secret='.$secret.'&response='.$_REQUEST['response']);
 	  //Convierto la respuesta en JSON
