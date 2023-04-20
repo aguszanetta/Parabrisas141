@@ -44,7 +44,7 @@
             </div>
     </div>  
 </div>
-<!--Modal para Detalle LP-Allianz-Sura-Nacion-Mapfre-->
+<!--Modal para Detalle LP-ASNM-->
 <div class="modal" id="modalDetalle" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true" style="width:40%;margin-left: 450px; margin-top: 100px;">
         <div class="model-dialog" role="document">
             <div class="modal-content">

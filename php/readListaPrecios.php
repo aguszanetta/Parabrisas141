@@ -3,9 +3,9 @@ include_once '../database/conexion.php';
 $objeto = new Conexion();
 $conexion = $objeto->Conectar();
 
-$marca = (isset($_POST['marca'])) ? $_POST['marca'] : '';
-$modelo = (isset($_POST['modelo'])) ? $_POST['modelo'] : '';
-$modelo = str_replace("'", "\'", $modelo);
+$marcaID = (isset($_POST['marcaID'])) ? $_POST['marcaID'] : '';
+$modeloID = (isset($_POST['modeloID'])) ? $_POST['modeloID'] : '';
+//$modelo = str_replace("'", "\'", $modelo);
 $cristal = (isset($_POST['cristal'])) ? $_POST['cristal'] : '';
 
 $opcion = (isset($_POST['opcion'])) ? $_POST['opcion'] : '';
@@ -120,6 +120,23 @@ switch($opcion){
 		INNER JOIN precio p ON c.idCristal = p.cristalID
 		INNER JOIN empresaprecio ep ON p.idPrecio = ep.precioID
 		WHERE ep.empresaID = 9 AND c.estado = 'Activo'";
+		$resultado = $conexion->prepare($consulta);
+		$resultado->execute();        
+		$data=$resultado->fetchAll(PDO::FETCH_ASSOC);
+		break;
+	case "modelos":
+		$consulta = "SELECT idModelo, nombre AS modelo
+		FROM modelo m
+		WHERE marcaID = $marcaID";
+		$resultado = $conexion->prepare($consulta);
+		$resultado->execute();        
+		$data=$resultado->fetchAll(PDO::FETCH_ASSOC);
+		break;
+	case "cristales":
+		$consulta = "SELECT DISTINCT tipo 
+		FROM cristal c
+		WHERE modeloID = $modeloID
+		ORDER BY tipo";
 		$resultado = $conexion->prepare($consulta);
 		$resultado->execute();        
 		$data=$resultado->fetchAll(PDO::FETCH_ASSOC);

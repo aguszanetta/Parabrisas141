@@ -25,7 +25,8 @@
     <!-- Bootstrap -->
     <link rel="stylesheet" type="text/css" href="../libraries/bootstrap-5.3.0/css/bootstrap.min.css" >
     <!-- Custom style-->
-    <link href="../css/stylePanel.css" rel="stylesheet"> 
+    <link href="../css/stylesPanel.css" rel="stylesheet">
+    <link href="../css/styles.css" rel="stylesheet"> 
     <!--SweetAlert2-->
     <link rel="stylesheet" href="../libraries/sweetalert2/sweetalert2.min.css">
     
@@ -33,6 +34,7 @@
     <link rel="stylesheet" type="text/css" href="../libraries/DataTables/datatables.min.css"/>
     <!--Datables estilo bootstrap 5 CSS -->
     <link rel="stylesheet"  type="text/css" href="../libraries/DataTables/DataTables-1.13.4/css/dataTables.bootstrap5.min.css">
+    <link rel="stylesheet" type="text/css" href="../libraries/DataTables/Buttons-2.3.6/css/dataTables.min.css">
     <!--BootstrapMultiselect -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-multiselect/0.9.13/css/bootstrap-multiselect.css">
 </head>
@@ -147,7 +149,7 @@
 
         <!-- Content Wrapper -->
         <div id="content-wrapper" class="d-flex flex-column">
-
+            <div id="loader" class="loading loading--full-height hidden"></div>
             <!-- Main Content -->
             <div id="content">
 
@@ -176,4 +178,5 @@
                         </li>
                     </ul>
                 </nav>
+                
                 <!-- End of Topbar -->

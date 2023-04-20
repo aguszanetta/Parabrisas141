@@ -3,11 +3,33 @@
 <!---- Contenido Principal ---->
 <div class="container-fluid">
     <h1>Lista de Precios Allianz-Sura-Nacion-Mapfre</h1>
+    
+    <div class="row">
+      <div class="col-md-3">
+      <select id="marca" class="form-select mb-3">
+      <option value="" selected>Seleccione Marca</option>
+      </select>
+      </div>
+      <div class="col-md-3">
+        <select id="modelo" class="form-select mb-3">
+        <option value="" selected>Seleccione Modelo</option>
+        </select>
+      </div>
+      <div class="col-md-3">
+        <select id="cristal" class="form-select mb-3">
+          <option value="" selected>Seleccione Cristal</option>
+        </select>
+      </div>
+      <div class="col-md-3">
+        <button id="limpiarFiltros" type="button" class="btn btn-danger"><i class="fas fa-trash"></i></button>
+      </div>
+    </div>
 	<div class="row">
             <div class="table-responsive">        
                 <table id="tablaLP" data-empresa="asnm" class="table table-striped table-bordered table-condensed table-hover">
                     <thead class="text-center">
                         <tr>
+                            <th>idPrecio</th>
                             <th>Código</th>
                             <th>Marca</th>
                             <th>Modelo</th>
@@ -43,15 +65,15 @@
                 <tbody>
                     <tr>
                         <th scope="row">Código</th>
-                        <td id="info00"></td>
+                        <td id="info00LP"></td>
                     </tr>
                     <tr>
                         <th scope="row">Descripción</th>
-                        <td id="info01"></td>
+                        <td id="info01LP"></td>
                     </tr>
                     <tr>
                         <th scope="row">Color</th>
-                        <td id="info02"></td>
+                        <td id="info02LP"></td>
                     </tr>
                 </tbody>
             </table>
