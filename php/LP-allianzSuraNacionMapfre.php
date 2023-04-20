@@ -45,39 +45,51 @@
     </div>  
 </div>
 <!--Modal para Detalle LP-ASNM-->
-<div class="modal" id="modalDetalle" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true" style="width:40%;margin-left: 450px; margin-top: 100px;">
-        <div class="model-dialog" role="document">
-            <div class="modal-content">
-                <div class="modal-header bg-info" id="headerDetalle">
-                    <h5 class="modal-title" id="titleDetalle"></h5>
-                    <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span>
-                </div>
-                <div class="modal-body">
-                    <div class="table-responsive">
-                        <table class="table table-hover table-bordered table-striped">
-                            <tbody>
-                                <tr>
-                                    <th scope="row">Código</th>
-                                    <td id="info00LPASNM"></td>
-                                </tr>
-                                <tr>
-                                    <th scope="row">Descripción</th>
-                                    <td id="info01LPASNM"></td>
-                                </tr>
-                                <tr>
-                                    <th scope="row">Color</th>
-                                    <td id="info02LPASNM"></td>
-                                </tr>
-                            </tbody>
-                        </table>
-                    </div>
-                </div>
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-success" data-dismiss="modal">OK</button>
-                </div>
-            </div>
+<div class="modal fade" id="modalDetalle" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header modalDetalle">
+        <h5 class="modal-title" id="titleDetalle">Modal title</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+        <div class="table-responsive">
+            <table class="table table-hover table-bordered table-striped">
+                <tbody>
+                    <tr>
+                        <th scope="row">Descripción</th>
+                        <td id="info00LP"></td>
+                    </tr>
+                    <tr>
+                        <th scope="row">Posición</th>
+                        <td id="info01LP"></td>
+                    </tr>
+                    <tr>
+                        <th scope="row">Lado</th>
+                        <td id="info02LP"></td>
+                    </tr>
+                    <tr>
+                        <th scope="row">Color</th>
+                        <td id="info03LP"></td>
+                    </tr>
+                    <tr>
+                        <th scope="row">Precio Sin Iva</th>
+                        <td id="info04LP"></td>
+                    </tr>
+                    <tr>
+                        <th scope="row">Instalación Sin Iva</th>
+                        <td id="info05LP"></td>
+                    </tr>
+                </tbody>
+            </table>
         </div>
-    </div>   
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-primary" data-bs-dismiss="modal">OK</button>
+      </div>
+    </div>
+  </div>
+</div>   
 <!----------------------------->
 
 <?php require_once "dash_bottom.php" ?>

@@ -47,14 +47,6 @@ $(document).ready(function() {
             .every(function () {
                 var column = this;
                 if(column[0][0] == 2){
-                   /* var select = $('<select><option value=""></option></select>')
-                        .appendTo($(column.header()).empty())
-                        .on('change', function () {
-                            var val = $.fn.dataTable.util.escapeRegex($(this).val());
-                            column.search(val ? '^' + val + '$' : '', true, false).draw();
-                            console.log("datita", tablaLP.rows().data())
-                            console.log("Cascade 2", tablaLP.search("ALFA ROMEO"))
-                        });*/
                     column
                         .data()
                         .unique()
@@ -146,13 +138,18 @@ $(document).ready(function() {
     $(document).on("click", ".btnDetalleLP", function(){
         fila = $(this).closest("tr");
         data = $('#tablaLP').DataTable().row(fila).data();
-        console.log(data)
-        codigo = data['codigo'];
         descripcion = data['descripcion'];
+        posicion = data['posicion'];
+        lado = data['lado'];
         color = data['color'];
-        $("#info00LP").html(codigo);
-        $("#info01LP").html(descripcion);
-        $("#info02LP").html(color);          
+        precioSinIva = data['precioSinIva'];
+        instalacionSinIva = data['instalacionSinIva'];
+        $("#info00LP").html(descripcion);
+        $("#info01LP").html(posicion);
+        $("#info02LP").html(lado);
+        $("#info03LP").html(color);
+        $("#info04LP").html(precioSinIva);
+        $("#info05LP").html(instalacionSinIva);          
         //$("#headerDetalle").css({"background-color":"#17a2b8","color":"white"});
         $("#titleDetalle").text("Detalle");
         $('#modalDetalle').modal('show');

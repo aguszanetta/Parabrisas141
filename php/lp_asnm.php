@@ -64,16 +64,28 @@
             <table class="table table-hover table-bordered table-striped">
                 <tbody>
                     <tr>
-                        <th scope="row">Código</th>
+                        <th scope="row">Descripción</th>
                         <td id="info00LP"></td>
                     </tr>
                     <tr>
-                        <th scope="row">Descripción</th>
+                        <th scope="row">Posición</th>
                         <td id="info01LP"></td>
                     </tr>
                     <tr>
-                        <th scope="row">Color</th>
+                        <th scope="row">Lado</th>
                         <td id="info02LP"></td>
+                    </tr>
+                    <tr>
+                        <th scope="row">Color</th>
+                        <td id="info03LP"></td>
+                    </tr>
+                    <tr>
+                        <th scope="row">Precio Sin Iva</th>
+                        <td id="info04LP"></td>
+                    </tr>
+                    <tr>
+                        <th scope="row">Instalación Sin Iva</th>
+                        <td id="info05LP"></td>
                     </tr>
                 </tbody>
             </table>
