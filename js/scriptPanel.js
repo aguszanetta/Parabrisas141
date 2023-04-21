@@ -7,7 +7,34 @@
     $("body").toggleClass("sidebar-toggled sidebar-icon-only");
     $(".sidebar").toggleClass("toggled");
     if ($(".sidebar").hasClass("toggled")) {
-      $('.sidebar .collapse').collapse('hide');
+      //Sidebar cerrada
+      $("#turnosNav").attr("data-bs-target", "#dummy-target")
+      $("#collapseTurnos > ul").removeClass("bg-white py-2 collapse-inner rounded")
+      $("#collapseTurnos > ul > li").addClass("nav-item")
+      $("#collapseTurnos > ul > li > a").addClass("nav-link")
+      $("#collapseTurnos > ul > li > a").removeClass("collapse-item")
+
+      $("#lpNav").attr("data-bs-target", "#dummy-target")
+      $("#collapseLp > ul").removeClass("bg-white py-2 collapse-inner rounded")
+      $("#collapseLp > ul > li").addClass("nav-item")
+      $("#collapseLp > ul > li > a").addClass("nav-link")
+      $("#collapseLp > ul > li > a").removeClass("collapse-item")
+      
+      $("#collapseTurnos").removeClass("show")
+      $("#collapseLp").removeClass("show")
+    }else{
+      //Sidebar extendida
+      $("#turnosNav").attr("data-bs-target", "#collapseTurnos")
+      $("#collapseTurnos > ul").addClass("bg-white py-2 collapse-inner rounded")
+      $("#collapseTurnos > ul > li").removeClass("nav-item")
+      $("#collapseTurnos > ul > li > a").removeClass("nav-link")
+      $("#collapseTurnos > ul > li > a").addClass("collapse-item")
+
+      $("#lpNav").attr("data-bs-target", "#collapseLp")
+      $("#collapseLp > ul").addClass("bg-white py-2 collapse-inner rounded")
+      $("#collapseLp > ul > li").removeClass("nav-item")
+      $("#collapseLp > ul > li > a").removeClass("nav-link")
+      $("#collapseLp > ul > li > a").addClass("collapse-item")
     };
   });
 

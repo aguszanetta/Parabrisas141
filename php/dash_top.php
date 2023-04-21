@@ -82,12 +82,12 @@
             </li>-->
 
             <li class="nav-item mb-1">
-                <a class="nav-link" data-toggle="collapse" href="#" aria-expanded="false" >
+                <a id="turnosNav" class="nav-link collapsed" data-toggle="collapse" data-bs-toggle="collapse" data-bs-target="#dummy-target" 
+                aria-expanded="false" aria-controls="collapseTurnos">
                     <i class="fas fa-list-ol"></i>
                     <span class="menu-title">Turnos</span>
-                <!--<i class="menu-arrow"></i>-->
                 </a>
-                <div class="collapse">
+                <div id="collapseTurnos" class="collapse m-01rem">
                     <ul class="nav flex-column">
                         <li class="nav-item"> <a class="nav-link subitem" href="turnos.php">• Nuevo Turno</a></li>
                         <li class="nav-item"> <a class="nav-link subitem" href="historico.php">• Historico</a></li>
@@ -125,13 +125,13 @@
             </li>
 
              <!-- Nav Item - Pages Collapse Menu 2-->
-             <li class="nav-item mb-1">
-                <a class="nav-link" data-toggle="collapse" href="#" aria-expanded="false" >
-                    <i class="fas fa-clipboard-list"></i>
+            <li class="nav-item mb-1">
+                <a id="lpNav" class="nav-link collapsed" data-toggle="collapse" data-bs-toggle="collapse" data-bs-target="#dummy-target" 
+                aria-expanded="false" aria-controls="collapseLp">
+                <i class="fas fa-clipboard-list"></i>
                     <span class="menu-title">Lista de Precios</span>
-                <!--<i class="menu-arrow"></i>-->
                 </a>
-                <div class="collapse">
+                <div id="collapseLp" class="collapse m-01rem">
                     <ul class="nav flex-column">
                         <li class="nav-item"> <a class="nav-link subitem" href="lp_particulares.php">• Particulares</a></li>
                         <li class="nav-item"> <a class="nav-link subitem" href="lp_laCaja.php">• La Caja</a></li>
