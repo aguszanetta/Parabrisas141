@@ -158,3 +158,12 @@ div#tablaLP_filter label input {
         width: auto !important;
     }
 }
+
+.selectTabla {
+    border: 0px;
+    padding: 0px;
+    /*color: #858796;*/
+    font-weight: bold;
+    background-color: #f8f9fc;
+}
+

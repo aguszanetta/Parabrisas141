@@ -198,8 +198,8 @@ $(document).ready(function() {
         marcaID = $("#marca option:selected").val();
         marcaNombre = $("#marca option:selected").text();
         
-        $("#modelo").html("<option value=>Seleccione Modelo</option>");
-        $("#cristal").html("<option value=>Seleccione Cristal</option>");
+        $("#modelo").html("<option value=>Modelo</option>");
+        $("#cristal").html("<option value=>Cristal</option>");
         tablaLP.column(3).search('').draw();
         tablaLP.column(4).search('').draw();
 
@@ -226,7 +226,7 @@ $(document).ready(function() {
         modeloID = $("#modelo option:selected").val();
         modeloNombre = $("#modelo option:selected").text();
         
-        $("#cristal").html("<option value=>Seleccione Cristal</option>");
+        $("#cristal").html("<option value=>Cristal</option>");
         tablaLP.column(4).search('').draw();
 
         if(modeloID){
@@ -260,9 +260,9 @@ $(document).ready(function() {
 	});
 
     $(document).on("click", "#limpiarFiltros", function() {
-        $("#marca").html("<option value=>Seleccione Marca</option>");
-        $("#modelo").html("<option value=>Seleccione Modelo</option>");
-        $("#cristal").html("<option value=>Seleccione Cristal</option>");
+        $("#marca").html("<option value=>Marca</option>");
+        $("#modelo").html("<option value=>Modelo</option>");
+        $("#cristal").html("<option value=>Cristal</option>");
         tablaLP.column(2).search('').draw();
         tablaLP.column(3).search('').draw();
         tablaLP.column(4).search('').draw();

@@ -5,7 +5,7 @@
 <div class="container-fluid">
     <h1>Lista de Precios La Segunda-Sancor</h1>
     
-    <div class="row">
+    <!--<div class="row">
       <div class="col-md-3">
       <select id="marca" class="form-select mb-3">
       <option value="" selected>Seleccione Marca</option>
@@ -24,7 +24,7 @@
       <div class="col-md-3">
         <button id="limpiarFiltros" type="button" class="btn btn-danger"><i class="fas fa-trash"></i></button>
       </div>
-    </div>
+    </div>-->
 	<div class="row">
             <div class="table-responsive">        
                 <table id="tablaLP" data-empresa="lss" class="table table-striped table-bordered table-condensed table-hover">
@@ -32,9 +32,26 @@
                         <tr>
                             <th>idPrecio</th>
                             <th>Código</th>
+                            <th>
+                            <select id="marca" class="form-select selectTabla">
+                              <option value="" selected>Marca</option>
+                            </select>
+                            </th>
+                            <th>
+                            <select id="modelo" class="form-select selectTabla">
+                              <option value="" selected>Modelo</option>
+                            </select>
+                            </th>
+                            <th>
+                            <select id="cristal" class="form-select selectTabla">
+                              <option value="" selected>Cristal</option>
+                            </select>
+                            </th>
+                            <!--
                             <th>Marca</th>
                             <th>Modelo</th>
                             <th>Cristal</th>
+                            -->
                             <th>Descripcion</th>
                             <th>Posición</th>
                             <th>Lado</th>  
