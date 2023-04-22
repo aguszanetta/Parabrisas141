@@ -4,59 +4,34 @@ $objeto = new Conexion();
 $conexion = $objeto->Conectar();
 
 
-$codigo = (isset($_POST['codigo'])) ? $_POST['codigo'] : '';
-$marca = (isset($_POST['marca'])) ? $_POST['marca'] : '';
-$modelo = (isset($_POST['modelo'])) ? $_POST['modelo'] : '';
-$modelo = str_replace("'", "\'", $modelo); /*Contempla las comillas simples dentro de la consulta, por ejemplo Modelo: A3 '02 */
-$cristal = (isset($_POST['cristal'])) ? $_POST['cristal'] : '';
+$idStock = (isset($_POST['idStock'])) ? $_POST['idStock'] : '';
+//$marca = (isset($_POST['marca'])) ? $_POST['marca'] : '';
+//$modelo = (isset($_POST['modelo'])) ? $_POST['modelo'] : '';
+//$modelo = str_replace("'", "\'", $modelo); /*Contempla las comillas simples dentro de la consulta, por ejemplo Modelo: A3 '02 */
+//$cristal = (isset($_POST['cristal'])) ? $_POST['cristal'] : '';
 $cantidad = (isset($_POST['cantidad'])) ? $_POST['cantidad'] : '';
 $opcion = (isset($_POST['opcion'])) ? $_POST['opcion'] : '';
 
 
 
 switch($opcion){   
-    case 1:        
-        $consulta = "UPDATE stock SET cantidad='$cantidad' WHERE codigo='$codigo' ";		
+    case 1:      
+        $consulta = "SELECT m.nombre AS marca, mo.nombre AS modelo, c.*, s.* 
+        FROM stock s
+        INNER JOIN cristal c ON c.idCristal = s.cristalID
+        INNER JOIN modelo mo ON mo.idModelo = c.modeloID
+        INNER JOIN marca m ON m.idMarca = mo.marcaID";
         $resultado = $conexion->prepare($consulta);
         $resultado->execute();        
-        
-        $consulta = "SELECT * FROM stock WHERE codigo='$codigo' ";       
-        $resultado = $conexion->prepare($consulta);
-        $resultado->execute();
         $data=$resultado->fetchAll(PDO::FETCH_ASSOC);
         break;
     case 2:    
-        $consulta = "SELECT * FROM stock";
+        $consulta = "UPDATE stock SET cantidad='$cantidad' WHERE idStock='$idStock' ";	
         $resultado = $conexion->prepare($consulta);
         $resultado->execute();        
         $data=$resultado->fetchAll(PDO::FETCH_ASSOC);
         break;
-    /*--------------Cargar Desplegables--------------*/
-    case 3: 
-        $consulta = "SELECT DISTINCT marca FROM stock";
-        $resultado = $conexion->prepare($consulta);
-        $resultado->execute();
-        $data=$resultado->fetchAll(PDO::FETCH_ASSOC);
-        break;
-    case 4:
-        $consulta = "SELECT DISTINCT modelo FROM stock WHERE marca='$marca'";
-        $resultado = $conexion->prepare($consulta);
-        $resultado->execute();
-        $data=$resultado->fetchAll(PDO::FETCH_ASSOC);
-        break;
-    case 5:
-        $consulta = "SELECT DISTINCT cristal FROM stock WHERE modelo='$modelo'";
-        $resultado = $conexion->prepare($consulta);
-        $resultado->execute();
-        $data=$resultado->fetchAll(PDO::FETCH_ASSOC);
-        break;
-    /*--------------Filtrar Tabla--------------*/
-    case 6:
-        $consulta = "SELECT * FROM stock WHERE marca='$marca'";
-        $resultado = $conexion->prepare($consulta);
-        $resultado->execute();        
-        $data=$resultado->fetchAll(PDO::FETCH_ASSOC);
-        break;
+    /*--------------Filtrar Tabla--------------
     case 7:
         $consulta = "SELECT * FROM stock WHERE marca='$marca' AND modelo='$modelo'";
         $resultado = $conexion->prepare($consulta);
@@ -74,7 +49,7 @@ switch($opcion){
         $resultado = $conexion->prepare($consulta);
         $resultado->execute();        
         $data=$resultado->fetchAll(PDO::FETCH_ASSOC);
-        break;
+        break;*/
 }
 
 print json_encode($data, JSON_UNESCAPED_UNICODE);

@@ -1099,8 +1099,18 @@ footer.sticky-footer .copyright {
 
 /*------ ------*/
 
+.modalLogout{
+    background-color: #d5693b;
+    color:#fff;
+}
+
 .modalDetalle{
     background-color: #17a2b8;
+    color:#fff;
+}
+
+.modalEditar{
+    background-color: #0b5ed7;
     color:#fff;
 }
 

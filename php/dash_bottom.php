@@ -25,12 +25,12 @@
     </a>
 
     <!-- Logout Modal-->
-    <div class="modal fade" id="logoutModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal fade" id="logoutModal" tabindex="-1" aria-hidden="true">
         <div class="modal-dialog">
             <div class="modal-content">
-            <div class="modal-header">
-                <h5 class="modal-title" id="exampleModalLabel">¿Listo para salir?</h5>
-                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            <div class="modal-header modalLogout">
+                <h5 class="modal-title">¿Listo para salir?</h5>
+                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
             <div class="modal-body">Seleccione "Cerrar sesión" a continuación si desea finalizar la sesión.</div>
             <div class="modal-footer">
@@ -51,25 +51,12 @@
     <script src="../js/scriptPanel.js"></script>
     <script src="../js/template.js"></script>
     <script src="../js/hoverable-collapse.js"></script>
-    <script type="text/javascript" src="../js/scriptTurnos.js"></script>
-    <script type="text/javascript" src="../js/scriptHistorico.js"></script>    
-    <script type="text/javascript" src="../js/scriptStock.js"></script>
-    <script type="text/javascript" src="../js/scriptListaPrecios.js"></script>
-    <script type="text/javascript" src="../js/scriptApedir.js"></script>
 
     <!-- Fontawesome -->
     <script src="../libraries/fontawesome-6.4.0/js/all.min.js" type="text/javascript"></script>
 
-    <!-- Bootstrap 
-    <script src="../libraries/bootstrap-5.3.0/js/bootstrap.min.js" type="text/javascript"></script>-->
-
-    <!-- Bootstrap core JavaScript
-    <script src="../libraries/jquery/jquery.min.js"></script>
-    <script src="../libraries/bootstrap 4.3.1/vendor/twbs/bootstrap/dist/js/bootstrap.bundle.min.js"></script>-->
+    <!-- Bootstrap core JavaScript -->
     <script src="../libraries/bootstrap-5.3.0/js/bootstrap.bundle.min.js"></script>
-
-    <!-- Core plugin JavaScript
-    <script src="../libraries/jquery-easing/jquery.easing.min.js"></script>-->
 
     <!-- datatables JS -->
     <script type="text/javascript" src="../libraries/DataTables/datatables.min.js"></script>
@@ -87,8 +74,6 @@
     <!--MomentJS -->
     <script src="../libraries/moment/moment.js"></script>
     <script src="../libraries/moment/moment-with-locales.js"></script>
-    <!--<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.8.4/moment.min.js"></script>
-    <script type="text/javascript" src="https://cdn.datatables.net/plug-ins/1.10.24/sorting/datetime-moment.js"></script>-->
 
     <!--BootstrapMultiselect -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-multiselect/0.9.13/js/bootstrap-multiselect.js"></script>

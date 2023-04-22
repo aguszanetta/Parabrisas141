@@ -39,11 +39,11 @@
               <h6 class="fw-light text-center fs-5 mb-4">Inicia sesión para continuar.</h6>
               <form id="formlogin" class="pt-3" action="" method="POST">
                 <div class="form-group mb-3">
-                	<input id="usuario" type="text" class="form-control form-control-lg inputForm br4px h-3rem" name="usuario" placeholder="Usuario">
+                	<input id="usuario" type="text" class="form-control form-control-lg inputForm orangeFocus br4px h-3rem" name="usuario" placeholder="Usuario">
                 </div>
                 <div class="form-group mb-5">
                   <div class="input-group">
-                    <input id="password" type="password" class="form-control form-control-lg inputForm br4px h-3rem" name="password" placeholder="Contraseña">
+                    <input id="password" type="password" class="form-control form-control-lg inputForm orangeFocus br4px h-3rem" name="password" placeholder="Contraseña">
                     <div id="btn-password" class="input-group-append w-12pct">
                       <span class="input-group-text justify-content-center h-3rem"><i id="eye" class="fa-solid fa-eye fs-110pct"></i></span>
                     </div>

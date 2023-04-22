@@ -7,14 +7,20 @@
 }
 
 .btn-orange{
-    background-color:#d5693b;
 	color: white;
+    background-color:#d5693b;
 }
 
 .btn-orange:hover{
     color: #fff;
     background-color: #c15629;
     border-color: #b65227;
+}
+
+.btn-orange:active{
+	color: white !important;
+    background-color:#d5693b !important; 
+    border-color: #d5693b !important;
 }
 
 #btn-login:focus{
@@ -36,7 +42,7 @@
     background: #fffffff2;
 }
 
-.inputForm:focus {
+.orangeFocus:focus {
     border-color: rgb(206 212 218);
     box-shadow: 0 0 0 0.2rem rgba(213, 105, 58, 0.5)
 }
@@ -121,15 +127,18 @@
     display: none !important;
 }
 
-#tablaLP {
+#tablaLP,
+#tablaStock {
     width: 100% !important;
 }
 
-#tablaLP_filter{
+#tablaLP_filter,
+#tablaStock_filter {
     margin-bottom: 15px;
 }
 
-div#tablaLP_filter label input {
+div#tablaLP_filter label input,
+div#tablaStock_filter label input {
     height: 2.375rem;
 }
 
@@ -140,23 +149,26 @@ div#tablaLP_filter label input {
 }
 
 @media only screen and (max-width: 766px) {
-    
-
-    div#tablaLP_filter label {
+    div#tablaLP_filter label,
+    div#tablaStock_filter label {
         text-indent: 100%;
         overflow: hidden;
         margin-bottom: 1.5rem;
     }
-    div#tablaLP_filter label input {
+    div#tablaLP_filter label input,
+    div#tablaStock_filter label input {
         position: absolute;
         left: 150px;
     }
-    div#tablaLP_filter label input:focus {
+    div#tablaLP_filter label input:focus,
+    div#tablaStock_filter label input:focus {
         z-index: 10;
     }
     div.dt-buttons {
         width: auto !important;
     }
+
+
 }
 
 .selectTabla {

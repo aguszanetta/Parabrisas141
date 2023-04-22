@@ -72,7 +72,7 @@ $(document).ready(function() {
             {"data": "instalacionSinIva", "visible": false},
             {"data": "totalSinIva", "sortable": false},
             {"data": "totalConIva", "sortable": false},
-            {"defaultContent": "<div class='text-center'><div class='btn-group'><button type='button' class='btn btn-info btn-sm text-white btnDetalleLP'><i class='fas fa-info-circle'></i></button></div></div>", "sortable": false}
+            {"defaultContent": "<div class='text-center'><div class='btn-group'><button type='button' class='btn btn-info text-white btnDetalleLP'><i class='fas fa-info-circle'></i></button></div></div>", "sortable": false}
         ],
         "language": {
             "lengthMenu": "Mostrar _MENU_ registros",
@@ -96,6 +96,18 @@ $(document).ready(function() {
             extend: 'excelHtml5',
             exportOptions: {
                 columns: [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12],
+                format:{
+                    header: function ( data, columnIdx ) {
+                        if(columnIdx==2){
+                            return "Marca"
+                        }else if(columnIdx==3){
+                            return "Modelo"
+                        }else if(columnIdx==4){
+                            return "Cristal"
+                        }else{
+                            return data
+                        }
+                    }}
             },
             title: 'Lista de Precios - '+ nombreEmpresa +'',
             text: '<i class="fas fa-file-excel"></i> ',
@@ -105,6 +117,18 @@ $(document).ready(function() {
             extend: 'pdfHtml5',
             exportOptions: {
                 columns: [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12],
+                format:{
+                    header: function ( data, columnIdx ) {
+                        if(columnIdx==2){
+                            return "Marca"
+                        }else if(columnIdx==3){
+                            return "Modelo"
+                        }else if(columnIdx==4){
+                            return "Cristal"
+                        }else{
+                            return data
+                        }
+                    }}
             },
             title: 'Lista de Precios - '+ nombreEmpresa +'',
             text: '<i class="fas fa-file-pdf"></i> ',
@@ -155,7 +179,9 @@ $(document).ready(function() {
         $('#modalDetalle').modal('show');
     });
 
-
+    $('#tablaLP').on( 'click', 'tbody td', function () {
+        tablaLP.cell( this ).edit();
+    } );
 
     /*$(document).on("click", ".btnDetalleLPGlasscom", function(){
         fila = $(this).closest("tr");
@@ -197,7 +223,6 @@ $(document).ready(function() {
     $(document).on("change", "#marca", function() {
         marcaID = $("#marca option:selected").val();
         marcaNombre = $("#marca option:selected").text();
-        
         $("#modelo").html("<option value=>Modelo</option>");
         $("#cristal").html("<option value=>Cristal</option>");
         tablaLP.column(3).search('').draw();
@@ -208,7 +233,13 @@ $(document).ready(function() {
                 type: "POST",
                 url: 'readListaPrecios.php',
                 datatype:"json",    
-                data:  { marcaID: marcaID, opcion: "modelos" }, 
+                data:  { marcaID: marcaID, opcion: "modelos" },
+                /*beforeSend: function() {
+                    $('#loader').removeClass('hidden')
+                },
+                complete: function() {
+                    $('#loader').addClass('hidden')
+                },*/
                 success: function(data) {
                     var datos = JSON.parse(data);
                     for (let i = 0; i < datos.length; i++) {
@@ -234,7 +265,13 @@ $(document).ready(function() {
                 type: "POST",
                 url: 'readListaPrecios.php',
                 datatype:"json",    
-                data:  { modeloID: modeloID, opcion: "cristales" }, 
+                data:  { modeloID: modeloID, opcion: "cristales" },
+                /*beforeSend: function() {
+                    $('#loader').removeClass('hidden')
+                },
+                complete: function() {
+                    $('#loader').addClass('hidden')
+                },*/
                 success: function(data) {
                     var datos = JSON.parse(data);
                     for (let i = 0; i < datos.length; i++) {
@@ -259,12 +296,12 @@ $(document).ready(function() {
         }
 	});
 
-    $(document).on("click", "#limpiarFiltros", function() {
+    /*$(document).on("click", "#limpiarFiltros", function() {
         $("#marca").html("<option value=>Marca</option>");
         $("#modelo").html("<option value=>Modelo</option>");
         $("#cristal").html("<option value=>Cristal</option>");
         tablaLP.column(2).search('').draw();
         tablaLP.column(3).search('').draw();
         tablaLP.column(4).search('').draw();
-	});
+	});*/
 })

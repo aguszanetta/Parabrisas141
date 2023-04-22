@@ -34,7 +34,6 @@
     <link rel="stylesheet" type="text/css" href="../libraries/DataTables/datatables.min.css"/>
     <!--Datables estilo bootstrap 5 CSS -->
     <link rel="stylesheet"  type="text/css" href="../libraries/DataTables/DataTables-1.13.4/css/dataTables.bootstrap5.min.css">
-    <link rel="stylesheet" type="text/css" href="../libraries/DataTables/Buttons-2.3.6/css/dataTables.min.css">
     <!--BootstrapMultiselect -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-multiselect/0.9.13/css/bootstrap-multiselect.css">
 </head>

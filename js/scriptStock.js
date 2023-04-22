@@ -1,26 +1,47 @@
 $(document).ready(function() {
-    var opcion = 2;
-    var fila;
-
     tablaStock = $('#tablaStock').DataTable({
         "ajax": {
             "url": "crudStock.php",
             "method": 'POST',
-            "data": { opcion: opcion },
-            "dataSrc": ""
+            "data": { opcion: 1 },
+            "dataSrc": "",
+            beforeSend: function() {
+                $('#loader').removeClass('hidden')
+            },
+            complete: function() {
+                $('#loader').addClass('hidden')
+            },
+        },
+        initComplete: function(){
+            this.api()
+            .columns()
+            .every(function () {
+                var column = this;
+                if(column[0][0] == 2){
+                    column
+                        .data()
+                        .unique()
+                        .sort()
+                        .each(function (d, j) {
+                            id = parseInt(j)+1
+                            $("#marcaStock").append('<option value="' + id + '">' + d + '</option>');
+                        });
+                }
+            });
         },
         "columns": [
-            { "data": "codigo", "visible": false },
+            { "data": "idStock", "visible": false },
+            { "data": "codigo", "sortable": false },
             { "data": "marca", "sortable": false },
             { "data": "modelo", "sortable": false },
+            { "data": "tipo", "sortable": false },
             { "data": "descripcion", "visible": false },
-            { "data": "cristal", "sortable": false },
-            { "data": "posicion" },
-            { "data": "lado" },
+            { "data": "posicion", "visible": false },
+            { "data": "lado", "visible": false },
             { "data": "color", "visible": false },
-            { "data": "cantidad" },
-            { "data": "precioFinal" },
-            { "defaultContent": "<div class='text-center'><div class='btn-group'><button class='btn btn-success btn-sm btnSumarStock'><i class='material-icons'>add</i></button><button class='btn btn-danger btn-sm btnRestarStock'><i class='material-icons'>remove</i></button><button class='btn btn-info btn-sm btnDetalleStock'><i class='material-icons'>info</i></button></div></div>", "sortable": false }
+            { "data": "cantidad", "sortable": false },
+            { "data": "precioFinal", "sortable": false },
+            { "defaultContent": "<div class='text-center'><div class='btn-group'><button class='btn btn-primary btnEditarStock'><i class='fas fa-pen-to-square'></i></button><button class='btn btn-info text-white btnDetalleStock'><i class='fas fa-info-circle'></i></button></div></div>", "sortable": false }
         ],
         "pageLength": 50,
         "language": {
@@ -39,13 +60,24 @@ $(document).ready(function() {
             },
             "sProcessing": "Procesando...",
         },
-        responsive: "true",
+        //responsive: "true",
         dom: 'Bfrtilp',
         buttons: [{
                 extend: 'excelHtml5',
                 exportOptions: {
-                    format: { header: function(data, column, row) { return data.substring(data.indexOf("value") + 9, data.indexOf("</option")); } },
-                    columns: [0, 1, 2, 3, 4, 5, 6, 7]
+                    columns: [1, 2, 3, 4, 5, 6, 7, 8, 9, 10],
+                    format:{
+                        header: function ( data, columnIdx ) {
+                            if(columnIdx==2){
+                                return "Marca"
+                            }else if(columnIdx==3){
+                                return "Modelo"
+                            }else if(columnIdx==4){
+                                return "Cristal"
+                            }else{
+                                return data
+                            }
+                        }}
                 },
                 title: 'Stock Parabrisas 141',
                 text: '<i class="fas fa-file-excel"></i> ',
@@ -55,190 +87,173 @@ $(document).ready(function() {
             {
                 extend: 'pdfHtml5',
                 exportOptions: {
-                    format: { header: function(data, column, row) { return data.substring(data.indexOf("value") + 9, data.indexOf("</option")); } },
-                    columns: [0, 1, 2, 3, 4, 5, 6, 7]
+                    columns: [1, 2, 3, 4, 5, 6, 7, 8, 9, 10],
+                    format:{
+                    header: function ( data, columnIdx ) {
+                        if(columnIdx==2){
+                            return "Marca"
+                        }else if(columnIdx==3){
+                            return "Modelo"
+                        }else if(columnIdx==4){
+                            return "Cristal"
+                        }else{
+                            return data
+                        }
+                    }}
                 },
                 title: 'Stock Parabrisas 141',
                 text: '<i class="fas fa-file-pdf"></i> ',
                 titleAttr: 'Exportar a PDF',
-                className: 'btn btn-danger'
-            },
-            {
-                extend: 'print',
-                exportOptions: {
-                    format: { header: function(data, column, row) { return data.substring(data.indexOf("value") + 9, data.indexOf("</option")); } },
-                    columns: [0, 1, 2, 3, 4, 5, 6, 7]
+                className: 'btn btn-danger',
+                orientation: 'landscape',
+                PageSize: 'LEGAL',
+                customize: function(doc) {
+                    doc.styles.tableHeader.fillColor = '#ffffff',
+                        doc.styles.tableHeader.color = '#000000',
+                        doc.styles.tableBodyOdd.fillColor = '#ffffff',
+                        doc.content[1].margin = [0, 0, 0, 0], //left, top, right, bottom
+                        doc.content[1].layout = {
+                            hLineWidth: function(i, node) {
+                                return (i === 0 || i === node.table.body.length) ? 2 : 1;
+                            },
+                            vLineWidth: function(i, node) {
+                                return (i === 0 || i === node.table.widths.length) ? 2 : 1;
+                            },
+                            hLineColor: function(i, node) {
+                                return (i === 0 || i === node.table.body.length) ? 'black' : 'gray';
+                            },
+                            vLineColor: function(i, node) {
+                                return (i === 0 || i === node.table.widths.length) ? 'black' : 'gray';
+                            }
+                        };
                 },
-                title: 'Stock Parabrisas 141',
-                text: '<i class="fa fa-print"></i> ',
-                titleAttr: 'Imprimir',
-                className: 'btn btn-info'
             },
         ]
     });
 
-    //Sumar      
-    $(document).on("click", ".btnSumarStock", function() {
+    //Editar      
+    $(document).on("click", ".btnEditarStock", function() {
         fila = $(this).closest("tr");
         data = $('#tablaStock').DataTable().row(fila).data();
-        codigo = data['codigo'];
-        cantidad = parseInt(data['cantidad']) + 1;
+        idStock = data['idStock'];
+        cantidad = data['cantidad'];
+        $("#cantidad").val(cantidad);
+        
+        $('#modalEditar').modal('show');
+        
+    });
+
+    $('#formEditarCantidad').submit(function(e){
+		e.preventDefault();
+		var cantidad = $("#cantidad").val();
+        
         $.ajax({
             url: "crudStock.php",
             type: "POST",
             datatype: "json",
-            data: { codigo: codigo, cantidad: cantidad, opcion: 1 },
+            data: { idStock: idStock, cantidad: cantidad, opcion: 2 },
             success: function(data) {
-                dropDownStock();
+                Swal.fire({
+                    title: 'Exito',
+                    text: 'La cantidad ha sido actualizada correctamente',
+                    icon: 'success',
+                    showConfirmButton: false,
+                    timer: 1500,
+                  }).then( function(){
+                    $('#modalEditar').modal('hide');
+                    tablaStock.ajax.reload()
+                })
             }
         });
+	});
 
-    });
-    //Restar      
-    $(document).on("click", ".btnRestarStock", function() {
-        fila = $(this).closest("tr");
-        data = $('#tablaStock').DataTable().row(fila).data();
-        codigo = data['codigo'];
-        cantidad = parseInt(data['cantidad'])
-        if (cantidad == 0) {
-            Swal.fire({
-                title: 'Cantidad en cero',
-                text: '¡no se puede restar!',
-                icon: 'error',
-                confirmButtonColor: '#d33',
-                confirmButtonText: 'OK'
-            });
-        } else {
-            cantidad = cantidad - 1;
-        }
-        $.ajax({
-            url: "crudStock.php",
-            type: "POST",
-            datatype: "json",
-            data: { codigo: codigo, cantidad: cantidad, opcion: 1 },
-            success: function(data) {
-                dropDownStock();
-            }
-        });
-
-    });
     //ModalDetalle     
-    $(document).on("click", ".btnDetalleStock", function() {
+    $(document).on("click", ".btnDetalleStock", function(){
         fila = $(this).closest("tr");
         data = $('#tablaStock').DataTable().row(fila).data();
-        codigo = data['codigo'];
         descripcion = data['descripcion'];
+        posicion = data['posicion'];
+        lado = data['lado'];
         color = data['color'];
-        $("#info00Stock").html(codigo);
-        $("#info01Stock").html(descripcion);
-        $("#info02Stock").html(color);
-        $("#headerDetalle").css("background-color", "#17a2b8");
-        $("#headerDetalle").css("color", "white");
+        $("#info00Stock").html(descripcion);
+        $("#info01Stock").html(posicion);
+        $("#info02Stock").html(lado);
+        $("#info03Stock").html(color);        
+        //$("#headerDetalle").css({"background-color":"#17a2b8","color":"white"});
         $("#titleDetalle").text("Detalle");
         $('#modalDetalle').modal('show');
     });
 
-    //Cargar marca del desplegable STOCK
-    $.ajax({
-        type: "POST",
-        url: 'crudStock.php',
-        datatype: "json",
-        data: { opcion: 3 },
-        success: function(data) {
-            var i = 0;
-            var datos = JSON.parse(data);
-            $("#listaMarcaStock").html("<option value=>Marca</option>");
-            while (i < datos.length) {
-                $("#listaMarcaStock").append("<option value=" + i + ">" + datos[i].marca + "</option>");
-                i = i + 1;
-            };
+    $(document).on("change", "#marcaStock", function() {
+        marcaID = $("#marcaStock option:selected").val();
+        marcaNombre = $("#marcaStock option:selected").text();
+        
+        $("#modeloStock").html("<option value=>Modelo</option>");
+        $("#cristalStock").html("<option value=>Cristal</option>");
+        tablaStock.column(3).search('').draw();
+        tablaStock.column(4).search('').draw();
+
+        if(marcaID){
+            $.ajax({
+                type: "POST",
+                url: 'readListaPrecios.php',
+                datatype:"json",    
+                data:  { marcaID: marcaID, opcion: "modelos" },
+                /*beforeSend: function() {
+                    $('#loader').removeClass('hidden')
+                },
+                complete: function() {
+                    $('#loader').addClass('hidden')
+                },*/
+                success: function(data) {
+                    var datos = JSON.parse(data);
+                    console.log("data", datos)
+                    for (let i = 0; i < datos.length; i++) {
+                        $("#modeloStock").append("<option value=" + datos[i].idModelo + ">" + datos[i].modelo + "</option>");
+                    } 
+                    tablaStock.column(2).search(marcaNombre ? '^' + marcaNombre + '$' : '', true, false).draw();
+                }
+            });
+        } else{
+            tablaStock.column(2).search('').draw();
         }
-    });
+	});
 
+    $(document).on("change", "#modeloStock", function() {
+        modeloID = $("#modeloStock option:selected").val();
+        modeloNombre = $("#modeloStock option:selected").text();
+        
+        $("#cristalStock").html("<option value=>Cristal</option>");
+        tablaStock.column(4).search('').draw();
 
+        if(modeloID){
+            $.ajax({
+                type: "POST",
+                url: 'readListaPrecios.php',
+                datatype:"json",    
+                data:  { modeloID: modeloID, opcion: "cristales" }, 
+                success: function(data) {
+                    var datos = JSON.parse(data);
+                    for (let i = 0; i < datos.length; i++) {
+                        $("#cristalStock").append("<option value=" + i + ">" + datos[i].tipo + "</option>");
+                    } 
+                    tablaStock.column(3).search(modeloNombre ? '^' + modeloNombre + '$' : '', true, false).draw();
+                }
+            });
+        } else{
+            tablaStock.column(3).search('').draw();
+        }
+	});
+
+    $(document).on("change", "#cristalStock", function() {
+        cristalVal = $("#cristalStock option:selected").val();
+        cristalNombre = $("#cristalStock option:selected").text();
+
+        if(cristalVal){
+            tablaStock.column(4).search(cristalNombre ? '^' + cristalNombre + '$' : '', true, false).draw();
+        } else{
+            tablaStock.column(4).search('').draw();
+        }
+	});
+ 
 });
-
-//Cargar modelo del desplegable STOCK, a partir de marca
-function getModeloStock() {
-    marca = $("#listaMarcaStock option:selected").text();
-    $.ajax({
-        type: "POST",
-        url: 'crudStock.php',
-        datatype: "json",
-        data: { marca: marca, opcion: 4 },
-        success: function(data) {
-            var i = 0;
-            var datos = JSON.parse(data);
-            $("#listaModeloStock").html("<option  value=>Modelo</option>");
-            $("#listaCristalStock").html("<option  value=>Cristal</option>");
-            while (i < datos.length) {
-                $("#listaModeloStock").append("<option value=" + i + ">" + datos[i].modelo + "</option>");
-                i = i + 1;
-            };
-        }
-    });
-};
-
-//Cargar cristal del desplegable STOCK, a partir de modelo
-function getMarcaStock() {
-    modelo = $("#listaModeloStock option:selected").text();
-    $.ajax({
-        type: "POST",
-        url: 'crudStock.php',
-        datatype: "json",
-        data: { modelo: modelo, opcion: 5 },
-        success: function(data) {
-            var i = 0;
-            var datos = JSON.parse(data);
-            $("#listaCristalStock").html("<option value=>Cristal</option>");
-            while (i < datos.length) {
-                $("#listaCristalStock").append("<option value=" + i + ">" + datos[i].cristal + "</option>");
-                i = i + 1;
-            };
-        }
-    });
-};
-
-function dropDownStock() {
-    setTimeout(function() {
-        marca = $("#listaMarcaStock option:selected").text();
-        modelo = $("#listaModeloStock option:selected").text();
-        cristal = $("#listaCristalStock option:selected").text();
-        if (marca === "Marca") {
-            tablaStock.ajax.reload(null, false);
-        } else if (marca != "Marca" & modelo == "Modelo" & cristal == "Cristal") { //Filtro por marcca
-            $.ajax({
-                url: "crudStock.php",
-                type: "POST",
-                datatype: "json",
-                data: { marca: marca, opcion: 6 },
-                success: function(data) {
-                    var datos = JSON.parse(data);
-                    tablaStock.clear().rows.add(datos).draw();
-                }
-            });
-        } else if (marca != "Marca" & modelo != "Modelo" & cristal == "Cristal") { //Filtro por modelo
-            $.ajax({
-                url: "crudStock.php",
-                type: "POST",
-                datatype: "json",
-                data: { marca: marca, modelo: modelo, opcion: 7 },
-                success: function(data) {
-                    var datos = JSON.parse(data);
-                    tablaStock.clear().rows.add(datos).draw();
-                }
-            });
-        } else if (marca != "Marca" & modelo != "Modelo" & cristal != "Cristal") { //Filtro por cristal
-            $.ajax({
-                url: "crudStock.php",
-                type: "POST",
-                datatype: "json",
-                data: { marca: marca, modelo: modelo, cristal: cristal, opcion: 8 },
-                success: function(data) {
-                    var datos = JSON.parse(data);
-                    tablaStock.clear().rows.add(datos).draw();
-                }
-            });
-        }
-    }, 200);
-};
