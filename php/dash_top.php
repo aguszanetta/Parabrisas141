@@ -117,7 +117,7 @@
 
             <!-- Nav Item - Charts -->
             <li class="nav-item mb-1">
-                <a class="nav-link" href="Apedir.php">
+                <a class="nav-link" href="aPedir.php">
                     <i class="fa-solid fa-truck-fast"></i>
                     <span class="menu-title" >A Pedir</span>
                 </a>
