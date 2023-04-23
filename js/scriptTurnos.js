@@ -32,7 +32,6 @@ $(document).ready(function() {
                     opcion: 1
                   },
                   success: function(doc) {
-                    console.log(doc)
                     var events = [];
                     $(doc).each(function(i) {
                       events.push({
@@ -41,7 +40,6 @@ $(document).ready(function() {
                         start: doc[i].fechaHora
                       })
                     });
-                    console.log(events)
                     successCallback(events);
                   }
                 });
@@ -98,7 +96,7 @@ $(document).ready(function() {
                     }
                 });
             } else if(tipoForm == 'editar'){
-                console.log("evento", evento.event)
+                console.log("evento", evento.event.id)
                 /*$.ajax({
                     url: "crudTurnos.php",
                     type: "POST",
