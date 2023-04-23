@@ -128,17 +128,20 @@
 }
 
 #tablaLP,
-#tablaStock {
+#tablaStock,
+#tablaAPedir {
     width: 100% !important;
 }
 
 #tablaLP_filter,
-#tablaStock_filter {
+#tablaStock_filter,
+#tablaAPedir_filter {
     margin-bottom: 15px;
 }
 
 div#tablaLP_filter label input,
-div#tablaStock_filter label input {
+div#tablaStock_filter label input,
+div#tablaAPedir_filter label input {
     height: 2.375rem;
 }
 
@@ -167,8 +170,6 @@ div#tablaStock_filter label input {
     div.dt-buttons {
         width: auto !important;
     }
-
-
 }
 
 .selectTabla {
@@ -179,3 +180,20 @@ div#tablaStock_filter label input {
     background-color: #f8f9fc;
 }
 
+/* --- Styles Turnos --- */
+.fc-toolbar,
+.fc-col-header-cell-cushion { 
+    text-transform: capitalize; 
+}
+#calendar>div.fc-view-harness.fc-view-harness-active{
+    background-color: #fff;
+}
+
+.fc-day:hover:not([role=columnheader]){
+    background-color: #add8e68c;
+    cursor: pointer;
+}
+
+.fc .fc-daygrid-day.fc-day-today {
+    background-color: #fd8b5a8c;
+}

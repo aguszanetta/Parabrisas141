@@ -4,90 +4,27 @@ $objeto = new Conexion();
 $conexion = $objeto->Conectar();
 
 
+$idAPedir = (isset($_POST['idAPedir'])) ? $_POST['idAPedir'] : '';
 $codigo = (isset($_POST['codigo'])) ? $_POST['codigo'] : '';
-$marca = (isset($_POST['marca'])) ? $_POST['marca'] : '';
-$modelo = (isset($_POST['modelo'])) ? $_POST['modelo'] : '';
-$modelo = str_replace("'", "\'", $modelo); /*Contempla las comillas simples dentro de la consulta, por ejemplo Modelo: A3 '02 */
-$cristal = (isset($_POST['cristal'])) ? $_POST['cristal'] : '';
 $cantidad = (isset($_POST['cantidad'])) ? $_POST['cantidad'] : '';
 $opcion = (isset($_POST['opcion'])) ? $_POST['opcion'] : '';
 
 switch($opcion){
-    case 1:        
-        $consulta = "DELETE FROM pedidos WHERE codigo='$codigo' ";		
+    case 1:      
+        $consulta = "SELECT m.nombre AS marca, mo.nombre AS modelo, c.*, s.idStock, s.cantidad, s.cristalID 
+        FROM stock s
+        INNER JOIN cristal c ON c.idCristal = s.cristalID
+        INNER JOIN modelo mo ON mo.idModelo = c.modeloID
+        INNER JOIN marca m ON m.idMarca = mo.marcaID
+        WHERE s.cantidad < 0";
         $resultado = $conexion->prepare($consulta);
-        $resultado->execute();                           
+        $resultado->execute();        
+        $data=$resultado->fetchAll(PDO::FETCH_ASSOC);
         break;
     case 2:    
-        $consulta = "SELECT * FROM pedidos";
+        $consulta = "UPDATE stock SET cantidad='$cantidad' WHERE idStock='$idStock' ";	
         $resultado = $conexion->prepare($consulta);
-        $resultado->execute();        
-        $data=$resultado->fetchAll(PDO::FETCH_ASSOC);
-        break;
-    /*--------------Cargar Desplegables--------------*/
-    case 3: 
-        $consulta = "SELECT DISTINCT marca FROM pedidos";
-        $resultado = $conexion->prepare($consulta);
-        $resultado->execute();
-        $data=$resultado->fetchAll(PDO::FETCH_ASSOC);
-        break;
-    case 4:
-        $consulta = "SELECT DISTINCT modelo FROM pedidos WHERE marca='$marca'";
-        $resultado = $conexion->prepare($consulta);
-        $resultado->execute();
-        $data=$resultado->fetchAll(PDO::FETCH_ASSOC);
-        break;
-    case 5:
-        $consulta = "SELECT DISTINCT cristal FROM pedidos WHERE modelo='$modelo'";
-        $resultado = $conexion->prepare($consulta);
-        $resultado->execute();
-        $data=$resultado->fetchAll(PDO::FETCH_ASSOC);
-        break;
-    /*--------------Filtrar Tabla--------------*/
-    case 6:
-        $consulta = "SELECT * FROM pedidos WHERE marca='$marca'";
-        $resultado = $conexion->prepare($consulta);
-        $resultado->execute();        
-        $data=$resultado->fetchAll(PDO::FETCH_ASSOC);
-        break;
-    case 7:
-        $consulta = "SELECT * FROM pedidos WHERE marca='$marca' AND modelo='$modelo'";
-        $resultado = $conexion->prepare($consulta);
-        $resultado->execute();        
-        $data=$resultado->fetchAll(PDO::FETCH_ASSOC);
-        break;
-    case 8:
-        $consulta = "SELECT * FROM pedidos WHERE marca='$marca' AND modelo='$modelo' AND cristal='$cristal'";
-        $resultado = $conexion->prepare($consulta);
-        $resultado->execute();        
-        $data=$resultado->fetchAll(PDO::FETCH_ASSOC);
-        break;
-    case 9:
-        $consulta = "SELECT COUNT(1) FROM pedidos WHERE codigo = '$codigo' ";
-        $resultado = $conexion->prepare($consulta);
-        $resultado->execute();        
-        $data=$resultado->fetchAll(PDO::FETCH_ASSOC);
-        break;
-    case 10:
-        $consulta = "SELECT cantidad FROM pedidos WHERE codigo='$codigo'";
-        $resultado = $conexion->prepare($consulta);
-        $resultado->execute();
-        $data=$resultado->fetchAll(PDO::FETCH_ASSOC);
-        break;
-    case 11:
-        $consulta = "UPDATE pedidos SET cantidad='$cantidad' WHERE codigo='$codigo'";
-        $resultado = $conexion->prepare($consulta);
-        $resultado->execute();        
-        $data=$resultado->fetchAll(PDO::FETCH_ASSOC);
-        break;
-    case 12:
-        $consulta = "UPDATE pedidos SET cantidad='$cantidad' WHERE codigo='$codigo' ";		
-        $resultado = $conexion->prepare($consulta);
-        $resultado->execute();        
-        
-        $consulta = "SELECT * FROM pedidos WHERE codigo='$codigo' ";       
-        $resultado = $conexion->prepare($consulta);
-        $resultado->execute();
+        $resultado->execute();    
         $data=$resultado->fetchAll(PDO::FETCH_ASSOC);
         break;
 }

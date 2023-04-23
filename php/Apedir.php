@@ -1,19 +1,19 @@
 <?php require_once "dash_top.php" ?>
 <!---- Contenido Principal ---->
-
 <div class="container-fluid">
     <h1>Cristales a Pedir</h1>
         <div class="row">
             <div class="col-lg-12">
             <div class="table-responsive">     
-                <table id="tablaApedir" class="table table-striped table-bordered table-condensed" style="width:100%">
+                <table id="tablaAPedir" class="table table-striped table-bordered table-condensed table-hover">
                     <thead class="text-center">
                         <tr>
+                            <th>idAPedir</th>
                             <th>Código</th>
                             <th>Marca</th>
-                            <th>Modelo</th>                                
-                            <th>Descripción</th>
+                            <th>Modelo</th>
                             <th>Cristal</th>
+                            <th>Descripción</th>
                             <th>Posición</th>
                             <th>Lado</th>  
                             <th>Color</th>
@@ -27,6 +27,46 @@
             </div>
             </div>
         </div>  
+</div>
+
+<!--Modal para Detalle Stock-->
+<div class="modal fade" id="modalDetalle" tabindex="-1" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered">
+    <div class="modal-content">
+      <div class="modal-header modalDetalle">
+        <h5 class="modal-title" id="titleDetalle">Modal title</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+        <div class="table-responsive">
+            <table class="table table-hover table-bordered table-striped">
+                <tbody>
+                    <tr>
+                        <th scope="row">Descripción</th>
+                        <td id="info00APedir"></td>
+                    </tr>
+                    <tr>
+                        <th scope="row">Posición</th>
+                        <td id="info01APedir"></td>
+                    </tr>
+                    <tr>
+                        <th scope="row">Lado</th>
+                        <td id="info02APedir"></td>
+                    </tr>
+                    <tr>
+                        <th scope="row">Color</th>
+                        <td id="info03APedir"></td>
+                    </tr>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-primary" data-bs-dismiss="modal">OK</button>
+      </div>
+    </div>
+  </div>
 </div>
 <!----------------------------->
 </div>
@@ -77,7 +117,7 @@
 <script src="../js/scriptPanel.js"></script>
 <script src="../js/template.js"></script>
 <script src="../js/hoverable-collapse.js"></script>
-<script type="text/javascript" src="../js/scriptListaPrecios.js"></script>
+<script type="text/javascript" src="../js/scriptApedir.js"></script>
 
 <!-- SweetAlert2 -->
 <script src="../libraries/sweetalert2/sweetalert2.all.min.js"></script>

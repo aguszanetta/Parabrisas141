@@ -3,8 +3,8 @@ include_once '../database/conexion.php';
 $objeto = new Conexion();
 $conexion = $objeto->Conectar();
 
-$fecha = (isset($_POST['fecha'])) ? $_POST['fecha'] : '';
-$nombre = (isset($_POST['nombre'])) ? $_POST['nombre'] : '';
+$fechaHora = (isset($_POST['fechaHora'])) ? $_POST['fechaHora'] : '';
+$contacto = (isset($_POST['contacto'])) ? $_POST['contacto'] : '';
 $telefono = (isset($_POST['telefono'])) ? $_POST['telefono'] : '';
 $mail = (isset($_POST['mail'])) ? $_POST['mail'] : '';
 $marca = (isset($_POST['marca'])) ? $_POST['marca'] : '';
@@ -27,27 +27,20 @@ $numero = (isset($_POST['numero'])) ? $_POST['numero'] : '';
 
 switch($opcion){
     case 1:
-        $consulta = "INSERT INTO turnos (fecha, nombre, telefono, mail, marca, modelo, dominio, cristal, codCristal, compania, trabajo, descripcion, valor, efectivo ) VALUES('$fecha', '$nombre', '$telefono', '$mail', '$marca', '$modelo', '$dominio', 
-            '$cristal', '$codCristal', '$compania', '$trabajo', '$descripcion', '$valor', '$efectivo') ";			
+        $consulta = "SELECT * FROM turno";			
         $resultado = $conexion->prepare($consulta);
         $resultado->execute(); 
-        
-        $consulta = "SELECT * FROM turnos ORDER BY numero DESC LIMIT 1";
-        $resultado = $conexion->prepare($consulta);
-        $resultado->execute();
         $data=$resultado->fetchAll(PDO::FETCH_ASSOC);       
         break;    
     case 2:
-        $consulta = "UPDATE turnos SET fecha='$fecha', nombre='$nombre', telefono='$telefono', mail='$mail', marca='$marca',
-            modelo='$modelo', dominio='$dominio', cristal='$cristal', codCristal='$codCristal', compania='$compania', trabajo='$trabajo', 
-            descripcion='$descripcion', valor='$valor', efectivo='$efectivo'  WHERE numero='$numero' ";		
-        $resultado = $conexion->prepare($consulta);
-        $resultado->execute();        
-        
-        $consulta = "SELECT * FROM turnos WHERE numero='$numero' ";       
+        $consulta = "INSERT INTO turnos 
+        (fechaHora, contacto, telefono, mail, dominio, siniestro, observacion, efectivo, estado, modeloID, empresaID) 
+        VALUES('$fechaHora', 'Jorge', '2215485663', 'mav@gmail.com', 'FGH456', '111', '', 'No', 'Activo', 3, 3) ";	
         $resultado = $conexion->prepare($consulta);
         $resultado->execute();
-        $data=$resultado->fetchAll(PDO::FETCH_ASSOC);
+        /*$data=$resultado->fetchAll(PDO::FETCH_ASSOC);*/
+        /*$data = array_push($data, $last_insert_id);*/
+        $data=$conexion->lastInsertId();
         break;
     case 3:        
         $consulta = "DELETE FROM turnos WHERE numero='$numero' ";		

@@ -17,9 +17,7 @@
   <link rel="stylesheet" type="text/css" href="../libraries/bootstrap-5.3.0/css/bootstrap.min.css" >
 
 	<!-- Fontawesome -->
-    <link rel="stylesheet" type="text/css" href="../libraries/fontawesome-6.4.0/css/all.min.css" >
-	<!--<link rel="stylesheet" type="text/css" href="../css/stylesLoginUtil.css">
-	<link rel="stylesheet" type="text/css" href="../css/stylesLoginMain.css">-->
+  <link rel="stylesheet" type="text/css" href="../libraries/fontawesome-6.4.0/css/all.min.css" >
 	<link rel="stylesheet" type="text/css" href="../css/styles.css">
 	<link rel="stylesheet" href="../libraries/sweetalert2/sweetalert2.min.css">
 </head>
