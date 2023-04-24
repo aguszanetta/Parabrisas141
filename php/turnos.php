@@ -9,16 +9,19 @@
 <div class="modal fade" id="modalTurno" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
   <div class="modal-dialog modal-dialog-centered">
     <div class="modal-content">
-      <div class="modal-header modalAlta" id="modalTurnoHeader">
+      <div class="modal-header modalColor" id="modalTurnoHeader">
         <h5 class="modal-title" id="modalTurnoTitle">Turno</h5>
-        <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
-      </div>
+        <button id="btn-editarTurno" type="button" class="btn text-white-50 ms-auto btn-header"><i class="fa-solid fa-pen-to-square fa-lg"></i></button>
+        <button id="btn-finalizarTurno" type="button" class="btn text-white-50 ms-2 btn-header"><i class="fa-solid fa-check fa-lg"></i></button>
+        <!--<button type="button" class="btn-close btn-close-white ms-2 btn-header" data-bs-dismiss="modal" aria-label="Close"></button>-->
+        <button type="button" class="btn text-white-50 ms-2 btn-header" data-bs-dismiss="modal" aria-label="Close"><i class="fa-solid fa-xmark fa-xl"></i></button>  
+    </div>
       <form id="formTurno" class="form-sample" action="" method="POST">
         <div class="modal-body">
             <div class="row">
-                <label for="nombre" class="form-label text-dark">Nombre</label>
+                <label for="contacto" class="form-label text-dark">Contacto</label>
                 <div class="input-group mb-3">
-                    <input id="nombre" name="nombre" type="text" class="form-control inputForm">
+                    <input id="contacto" name="contacto" type="text" class="form-control inputForm">
                 </div>
                 <label for="fecha" class="form-label text-dark">Fecha</label>
                 <div class="input-group mb-3">
@@ -31,8 +34,10 @@
             </div>
         </div>
         <div class="modal-footer">
-            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
-            <button type="submit" class="btn btn-primary">Guardar</button>
+            <button id="btn-eliminarTurno" type="button" class="btn btn-danger me-auto">Eliminar</button>
+            <button id="btn-ok" type="button" class="btn btn-primary" data-bs-dismiss="modal">OK</button>
+            <button type="button" class="btn btn-secondary btn-editar" data-bs-dismiss="modal">Cancelar</button>
+            <button type="submit" class="btn btn-primary btn-editar">Guardar</button>
         </div>
       </form>  
     </div>

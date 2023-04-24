@@ -3,6 +3,7 @@ include_once '../database/conexion.php';
 $objeto = new Conexion();
 $conexion = $objeto->Conectar();
 
+$idTurno = (isset($_POST['idTurno'])) ? $_POST['idTurno'] : '';
 $fechaHora = (isset($_POST['fechaHora'])) ? $_POST['fechaHora'] : '';
 $contacto = (isset($_POST['contacto'])) ? $_POST['contacto'] : '';
 $telefono = (isset($_POST['telefono'])) ? $_POST['telefono'] : '';
@@ -35,7 +36,7 @@ switch($opcion){
     case 2:
         $consulta = "INSERT INTO turnos 
         (fechaHora, contacto, telefono, mail, dominio, siniestro, observacion, efectivo, estado, modeloID, empresaID) 
-        VALUES('$fechaHora', 'Jorge', '2215485663', 'mav@gmail.com', 'FGH456', '111', '', 'No', 'Activo', 3, 3) ";	
+        VALUES('$fechaHora', '$contacto', '2215485663', 'mav@gmail.com', 'FGH456', '111', '', 'No', 'Activo', 3, 3) ";	
         $resultado = $conexion->prepare($consulta);
         $resultado->execute();
         /*$data=$resultado->fetchAll(PDO::FETCH_ASSOC);*/
@@ -43,18 +44,21 @@ switch($opcion){
         $data=$conexion->lastInsertId();
         break;
     case 3:        
-        $consulta = "DELETE FROM turnos WHERE numero='$numero' ";		
+        $consulta = "UPDATE turno SET contacto='$contacto', fechaHora='$fechaHora' WHERE idTurno='$idTurno'";		
         $resultado = $conexion->prepare($consulta);
-        $resultado->execute();                           
+        $resultado->execute();
+        $data=$resultado->fetchAll(PDO::FETCH_ASSOC);                           
         break;
     case 4:
-        $consulta = "SELECT * FROM turnos";
+        $consulta = "DELETE FROM turnodetalle WHERE turnoID='$idTurno';
+        DELETE FROM trabajoturno WHERE turnoID='$idTurno';
+        DELETE FROM turno WHERE idTurno='$idTurno' ";
         $resultado = $conexion->prepare($consulta);
         $resultado->execute();        
         $data=$resultado->fetchAll(PDO::FETCH_ASSOC);
         break;
     case 5:
-        $consulta = "INSERT INTO historico SELECT * FROM turnos WHERE numero='$numero';DELETE FROM turnos WHERE numero='$numero' ";
+        $consulta = "UPDATE turno SET estado='Finalizado' WHERE idTurno='$idTurno'";
         $resultado = $conexion->prepare($consulta);
         $resultado->execute();        
         $data=$resultado->fetchAll(PDO::FETCH_ASSOC);

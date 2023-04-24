@@ -182,7 +182,8 @@ div#tablaAPedir_filter label input {
 
 /* --- Styles Turnos --- */
 .fc-toolbar,
-.fc-col-header-cell-cushion { 
+.fc-col-header-cell-cushion,
+.fc-list-day-text { 
     text-transform: capitalize; 
 }
 #calendar>div.fc-view-harness.fc-view-harness-active{
@@ -196,4 +197,8 @@ div#tablaAPedir_filter label input {
 
 .fc .fc-daygrid-day.fc-day-today {
     background-color: #fd8b5a8c;
+}
+
+.btn-header:hover {
+    color:white !important;
 }

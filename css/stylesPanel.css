@@ -1119,6 +1119,17 @@ footer.sticky-footer .copyright {
     color:#fff;
 }
 
+.modalColor{
+    color:#fff;   
+}
+
+#modalTurnoHeader,
+form#formTurno div.row input
+/*form#formTurno div.modal-footer button*/
+{
+    transition: 1000ms linear 0s;
+}
+
 .decorationNone{
     text-decoration: none;
 }
