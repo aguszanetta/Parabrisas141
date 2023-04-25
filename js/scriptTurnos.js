@@ -75,6 +75,8 @@ $(document).ready(function() {
         /*---------- ALTA ----------*/
         calendar.on('dateClick', function(info) {
             tipoForm="alta";
+            $(".inputForm").prop("disabled", false);
+            $("#fecha").prop("disabled", true);
             $("#btn-editarTurno").css('visibility', 'hidden');
             $("#btn-finalizarTurno").css('visibility', 'hidden');
             $("#btn-eliminarTurno").css('visibility', 'hidden');
@@ -151,9 +153,8 @@ $(document).ready(function() {
                             $('#modalTurno').modal('hide');
                             turno = calendar.getEventById(evento.event.id);
                             turno.setProp('display', 'block');
-                            turno.setProp('color', 'green');
-                            turno.setProp('textColor', '#d5693b')
-                            //click derecho cambiar evento con el estado salu3
+                            turno.setProp('color', '#d5693b');
+                            turno.setProp('textColor', 'white')
                         })
                     }
                 });
@@ -269,5 +270,15 @@ $(document).ready(function() {
               })
           }
         });
+
+        $('#trabajo').multiselect({
+          maxHeight: 250,
+          nonSelectedText: 'Seleccione',
+          nSelectedText: 'Seleccionados',
+          numberDisplayed: 1, // Cantidad maxima de nombres que muestra
+          templates: {
+            button: '<button type="button" class="multiselect dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false"><span class="multiselect-selected-text"></span></button>',
+          }, 
+      });
 
 });

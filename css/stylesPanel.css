@@ -1124,7 +1124,7 @@ footer.sticky-footer .copyright {
 }
 
 #modalTurnoHeader,
-form#formTurno div.row input
+form#formTurno div.row input:not([type=checkbox]):not(:hover)
 /*form#formTurno div.modal-footer button*/
 {
     transition: 1000ms linear 0s;
