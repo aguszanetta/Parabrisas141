@@ -36,6 +36,11 @@
     <link rel="stylesheet"  type="text/css" href="../libraries/DataTables/DataTables-1.13.4/css/dataTables.bootstrap5.min.css">
     <!--BootstrapMultiselect -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-multiselect/0.9.13/css/bootstrap-multiselect.css">
+
+    <!-- Select 2 -->
+    <link rel="stylesheet" type="text/css" href="../libraries/select2/dist/css/select2.min.css"/>
+    <!--<link rel="stylesheet" href="../libraries/select2/dist/css/select2-bootstrap4.min.css" />-->
+    <link rel="stylesheet" href="../libraries/select2/dist/css/select2-bootstrap-5-theme.min.css" />
 </head>
 
 <body id="page-top" class="sidebar-icon-only">

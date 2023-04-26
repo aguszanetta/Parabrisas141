@@ -181,6 +181,11 @@ div#tablaAPedir_filter label input {
 }
 
 /* --- Styles Turnos --- */
+
+div#calendar div[aria-labelledby=fc-dom-1].fc-view-harness.fc-view-harness-active {
+    z-index: 0;
+}
+
 .fc-toolbar,
 .fc-col-header-cell-cushion,
 .fc-list-day-text { 
@@ -190,7 +195,7 @@ div#tablaAPedir_filter label input {
     background-color: #fff;
 }
 
-.fc-day:hover:not([role=columnheader]){
+.fc-day:hover:not([role=columnheader], .fc-popover){
     background-color: #add8e68c;
     cursor: pointer;
 }
@@ -202,7 +207,6 @@ div#tablaAPedir_filter label input {
 .btn-header:hover {
     color:white !important;
 }
-
 
 /*----- -----*/
 
@@ -269,5 +273,4 @@ div.btn-group{
     color: #212529;
 }
 
-
-
+/**/

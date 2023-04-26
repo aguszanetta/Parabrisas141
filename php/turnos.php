@@ -64,6 +64,19 @@
                     </div>
                     <div class="col-md-3">
                         <div class="form-group">
+                            <label for="empresa" class="form-label text-dark">Compañía</label>
+                            <div class="input-group mb-3">
+                                <select name="empresa" id="cristal" class="form-select">
+                                    <option value="">Compañía</option>
+                                    <option value="1">Allianz</option>
+                                    <option value="2">Fed Pat</option>
+                                    <option value="3">Sure</option>
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-3">
+                        <div class="form-group">
                             <label for="marca" class="form-label text-dark">Marca</label>
                             <div class="input-group mb-3">
                                 <select name="marca" id="marca" class="form-select">
@@ -86,6 +99,8 @@
                             </div>
                         </div>
                     </div>
+                </div>
+                <div class="row mb-3">
                     <div class="col-md-3">
                         <div class="form-group">
                             <label for="cristal" class="form-label text-dark">Cristal</label>
@@ -98,13 +113,11 @@
                             </div>
                         </div>
                     </div>
-                </div>
-                <div class="row mb-3">
-                    <label for="cantidad" class="form-label text-dark">Cantidad</label>
                     <div class="col-md-3">
-                        <input id="cantidad" name="cantidad" type="text" class="form-control inputForm">
+                        <label for="cantidad" class="form-label text-dark">Cantidad</label>
+                        <input id="cantidad" name="cantidad" type="number" min="0" class="form-control inputForm">
                     </div>
-                    <div class="col-md-6 form-group">
+                    <div class="col-md-3 pb-3 d-flex align-items-end">
                         <button type="button" id="eliminarCristal" class="btn btn-danger">Eliminar</button>
                         <button type="button" id="agregarCristal" class="btn btn-success ms-2">Agregar</button>
                     </div>
@@ -117,7 +130,7 @@
                                     <thead class="text-center">
                                         <tr class="text-primary">
                                             <th>Código</th>
-                                            <th>Descripcion</th>
+                                            <th>Descripción</th>
                                             <th>Cantidad</th>
                                             <!--<th>Otro</th>-->
                                             <th>Importe S/IVA</th>
@@ -140,7 +153,7 @@
                     </div>
                 </div>
                 <div class="row">
-                    <div class="col-md-3">
+                    <div class="col-md-6">
                         <div class="form-group">
                             <label for="cristal" class="form-label text-dark">Trabajo</label>
                             <div class="input-group mb-3">
@@ -169,22 +182,19 @@
                             </div>
                         </div>
                     </div>
-                    <div class="col-md-3">
-                        <div class="form-group">
-                            <label for="empresa" class="form-label text-dark">Compañía</label>
-                            <div class="input-group mb-3">
-                                <select name="empresa" id="cristal" class="form-select">
-                                    <option value="">Compañía</option>
-                                    <option value="1">Allianz</option>
-                                    <option value="2">Fed Pat</option>
-                                    <option value="3">Sure</option>
-                                </select>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="col-md-3">
+                    <!--<div class="col-md-3">
                         <div class="form-group">
                             <label for="grabado" class="form-label text-dark">Grabado</label>
+                            <div class="form-check d-flex justify-content-center">
+                                <input class="form-check-input checkForm" type="checkbox" id="grabado" name="grabado">
+                            </div>
+                        </div>
+                    </div>-->
+                </div>
+                <div class="row">
+                <div class="col-md-3">
+                        <div class="form-group">
+                            <label for="pago" class="form-label text-dark">Pagó</label>
                             <div class="form-check d-flex justify-content-center">
                                 <input class="form-check-input checkForm" type="checkbox" id="grabado" name="grabado">
                             </div>
@@ -192,19 +202,14 @@
                     </div>
                     <div class="col-md-3">
                         <div class="form-group">
-                            <label for="pago" class="form-label text-dark">Pago</label>
+                            <label for="tipo" class="form-label text-dark">Tipo de Pago</label>
                             <div class="input-group mb-3">
-                                <input id="pago" name="pago" type="text" class="form-control inputForm">
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                <div class="row">
-                    <div class="col-md-3">
-                        <div class="form-group">
-                            <label for="tipo" class="form-label text-dark">Tipo</label>
-                            <div class="input-group mb-3">
-                                <input id="tipo" name="tipo" type="text" class="form-control inputForm">
+                            <select name="tipoPago" id="tipoPago" class="form-select">
+                                    <option value="">Tipo</option>
+                                    <option value="1">Efectivo</option>
+                                    <option value="2">Débito</option>
+                                    <option value="3">Crédito</option>
+                                </select>
                             </div>
                         </div>
                     </div>
@@ -213,14 +218,6 @@
                             <label for="siniestro" class="form-label text-dark">Siniestro</label>
                             <div class="input-group mb-3">
                                 <input id="siniestro" name="siniestro" type="text" class="form-control inputForm">
-                            </div>
-                        </div>
-                    </div>
-                    <div class="col-md-3">
-                        <div class="form-group">
-                            <label for="mora" class="form-label text-dark">Mora</label>
-                            <div class="input-group mb-3">
-                                <input id="mora" name="mora" type="text" class="form-control inputForm">
                             </div>
                         </div>
                     </div>
@@ -324,5 +321,8 @@
 
 <!--BootstrapMultiselect-->
 <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-multiselect/0.9.13/js/bootstrap-multiselect.js"></script>
+
+<!-- Select 2 -->
+<script src="../libraries/select2/dist/js/select2.min.js"></script>
 </body>
 </html>

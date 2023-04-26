@@ -7,6 +7,11 @@ $(document).ready(function() {
             initialView: 'dayGridMonth',
             locale: 'es',
             allDaySlot: false,
+            views: {
+              dayGridMonth: {
+                dayMaxEventRows: 3
+              }
+            },
             buttonText: {
                 today: 'Hoy',
                 month: 'Mes',
@@ -21,7 +26,7 @@ $(document).ready(function() {
             },
             height: 750,
             timeZone: 'America/Argentina/Buenos_Aires',
-            noEventsContent: 'No hay eventos',
+            noEventsContent: 'No hay turnos',
             //events: turnos,
             events: function(fetchInfo, successCallback, failureCallback) {
                 $.ajax({
@@ -209,7 +214,7 @@ $(document).ready(function() {
                 url: "crudTurnos.php",
                 type: "POST",
                 datatype: "json",
-                data: { fechaHora: fecha+'T'+hora, opcion: 2 },
+                data: { fechaHora: fecha+'T'+hora, contacto: contacto, opcion: 2 },
                 success: function(data) {
                     Swal.fire({
                         title: 'Exito',
@@ -271,14 +276,15 @@ $(document).ready(function() {
           }
         });
 
-        $('#trabajo').multiselect({
-          maxHeight: 250,
-          nonSelectedText: 'Seleccione',
-          nSelectedText: 'Seleccionados',
-          numberDisplayed: 1, // Cantidad maxima de nombres que muestra
-          templates: {
-            button: '<button type="button" class="multiselect dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false"><span class="multiselect-selected-text"></span></button>',
-          }, 
+      $("#trabajo").select2({
+          theme: "bootstrap-5",
+          language: "es",
+          closeOnSelect: false,
       });
 
+      $('#trabajo').on('select2:opening select2:closing', function( event ) {
+        //var $searchfield = $(this).parent().find('.select2-search__field');
+        var $searchfield = $(this).parent().find('.select2-search.select2-search--inline');
+        $searchfield.remove()
+      });
 });

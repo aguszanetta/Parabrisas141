@@ -34,7 +34,7 @@ switch($opcion){
         $data=$resultado->fetchAll(PDO::FETCH_ASSOC);       
         break;    
     case 2:
-        $consulta = "INSERT INTO turnos 
+        $consulta = "INSERT INTO turno 
         (fechaHora, contacto, telefono, mail, dominio, siniestro, observacion, efectivo, estado, modeloID, empresaID) 
         VALUES('$fechaHora', '$contacto', '2215485663', 'mav@gmail.com', 'FGH456', '111', '', 'No', 'Activo', 3, 3) ";	
         $resultado = $conexion->prepare($consulta);
