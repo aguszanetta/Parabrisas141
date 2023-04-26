@@ -17,6 +17,8 @@
         <button type="button" class="btn text-white-50 ms-2 btn-header" data-bs-dismiss="modal" aria-label="Close"><i class="fa-solid fa-xmark fa-xl"></i></button>  
     </div>
       <form id="formTurno" class="form-sample" action="" method="POST">
+        <input id="cristales" name="cristales" type="text" value="" hidden="">
+        <input id="cristalEliminar" name="cristalEliminar" value="" hidden>
         <div class="modal-body">
             <div class="container-fluid">
                 <div class="row">
@@ -66,11 +68,8 @@
                         <div class="form-group">
                             <label for="empresa" class="form-label text-dark">Compañía</label>
                             <div class="input-group mb-3">
-                                <select name="empresa" id="cristal" class="form-select">
+                                <select name="empresa" id="empresa" class="form-select">
                                     <option value="">Compañía</option>
-                                    <option value="1">Allianz</option>
-                                    <option value="2">Fed Pat</option>
-                                    <option value="3">Sure</option>
                                 </select>
                             </div>
                         </div>
@@ -81,7 +80,6 @@
                             <div class="input-group mb-3">
                                 <select name="marca" id="marca" class="form-select">
                                     <option value="">Marca</option>
-                                    <option value="1">ALFA ROMEO</option>
                                 </select>
                             </div>
                         </div>
@@ -92,9 +90,6 @@
                             <div class="input-group mb-3">
                                 <select name="modelo" id="modelo" class="form-select">
                                     <option value="">Modelo</option>
-                                    <option value="1">MITO</option>
-                                    <option value="2">155</option>
-                                    <option value="3">156</option>
                                 </select>
                             </div>
                         </div>
@@ -107,8 +102,6 @@
                             <div class="input-group mb-3">
                                 <select name="cristal" id="cristal" class="form-select">
                                     <option value="">Cristal</option>
-                                    <option value="1">Parabrisas</option>
-                                    <option value="2">Luneta</option>
                                 </select>
                             </div>
                         </div>
@@ -120,6 +113,14 @@
                     <div class="col-md-3 pb-3 d-flex align-items-end">
                         <button type="button" id="eliminarCristal" class="btn btn-danger">Eliminar</button>
                         <button type="button" id="agregarCristal" class="btn btn-success ms-2">Agregar</button>
+                        <div class="form-check ms-3" style="">
+                            <input class="form-check-input" type="checkbox" value="" id="otro">
+                            <label class="form-check-label text-dark" for="flexCheckDefault">Otro</label>
+                        </div>
+                    </div>
+                    <div id="colImporte" class="col-md-3" style="display: none;">
+                        <label for="importe" class="form-label text-dark">Importe</label>
+                        <input id="importe" name="importe" type="number" step="0.01" min="0" class="form-control inputForm">
                     </div>
                 </div>
                 <div class="container mb-3 mxWth">
@@ -129,23 +130,16 @@
                                 <table id="tablaCristales" name="tablaCristales" class="table table-striped table-hover">
                                     <thead class="text-center">
                                         <tr class="text-primary">
-                                            <th>Código</th>
-                                            <th>Descripción</th>
-                                            <th>Cantidad</th>
-                                            <!--<th>Otro</th>-->
-                                            <th>Importe S/IVA</th>
-                                            <th>Importe C/IVA</th>
-                                            <!--<th>IdCristal</th>-->
+                                        <th>Código</th>
+                                        <th>Descripción</th>
+                                        <th>Cantidad</th>
+                                        <th>Otro</th>
+                                        <th>Importe S/IVA</th>
+                                        <th>Importe C/IVA</th>
+                                        <th>IdCristal</th>
                                         </tr>
                                     </thead>
                                     <tbody class="text-center">
-                                        <tr>
-                                            <td>011031VSLP</td>
-                                            <td>PSAS. ALFA ROMEO MITO</td>
-                                            <td>1</td>
-                                            <td>56370.63</td>
-                                            <td>68208.46</td>
-                                        </tr>
                                     </tbody>
                                 </table>
                             </div>
@@ -155,7 +149,7 @@
                 <div class="row">
                     <div class="col-md-6">
                         <div class="form-group">
-                            <label for="cristal" class="form-label text-dark">Trabajo</label>
+                            <label for="trabajo" class="form-label text-dark">Trabajo</label>
                             <div class="input-group mb-3">
                                 <select class="form-control" id="trabajo" multiple="multiple">
                                     <option value="1">Parabrisas</option>
@@ -312,6 +306,12 @@
 
 <!-- Bootstrap  -->
 <script src="../libraries/bootstrap-5.3.0/js/bootstrap.bundle.min.js"></script>
+
+
+<!-- datatables JS -->
+<script type="text/javascript" src="../libraries/DataTables/datatables.min.js"></script>
+<script type="text/javascript" src="../libraries/DataTables/DataTables-1.13.4/js/jquery.dataTables.min.js"></script>
+<script type="text/javascript" src="../libraries/DataTables/DataTables-1.13.4/js/dataTables.bootstrap5.min.js"></script>
 
 <!-- Full Calendar -->
 <script src="../libraries/fullcalendar-6.1.5/dist/index.global.min.js"></script>

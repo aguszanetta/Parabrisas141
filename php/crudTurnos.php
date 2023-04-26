@@ -20,6 +20,11 @@ $descripcion = (isset($_POST['descripcion'])) ? $_POST['descripcion'] : '';
 $valor = (isset($_POST['valor'])) ? $_POST['valor'] : '';
 $efectivo = (isset($_POST['efectivo'])) ? $_POST['efectivo'] : '';
 $cantidad = (isset($_POST['cantidad'])) ? $_POST['cantidad'] : '';
+$marcaID = (isset($_POST['marcaID'])) ? $_POST['marcaID'] : '';
+$modeloID = (isset($_POST['modeloID'])) ? $_POST['modeloID'] : '';
+$cristalID = (isset($_POST['cristalID'])) ? $_POST['cristalID'] : '';
+$empresaID = (isset($_POST['empresaID'])) ? $_POST['empresaID'] : '';
+$idCristales = (isset($_POST['idCristales'])) ? $_POST['idCristales'] : '';
 
 
 $opcion = (isset($_POST['opcion'])) ? $_POST['opcion'] : '';
@@ -63,39 +68,44 @@ switch($opcion){
         $resultado->execute();        
         $data=$resultado->fetchAll(PDO::FETCH_ASSOC);
         break;
+    /*--------------Cargar Desplegables--------------*/
     case 6:
-        $consulta = "INSERT INTO total (precio) VALUES ('$valor') ";
+        $consulta = "SELECT * FROM empresa;";
         $resultado = $conexion->prepare($consulta);
         $resultado->execute();        
         $data=$resultado->fetchAll(PDO::FETCH_ASSOC);
         break;
     case 7:
-        $consulta = "SELECT SUM(precio) FROM total";
+        $consulta = "SELECT * FROM marca;";
         $resultado = $conexion->prepare($consulta);
         $resultado->execute();        
         $data=$resultado->fetchAll(PDO::FETCH_ASSOC);
         break;
     case 8:
-        $consulta = "DELETE FROM total ";
+        $consulta = "SELECT * FROM modelo WHERE marcaID='$marcaID';";
         $resultado = $conexion->prepare($consulta);
         $resultado->execute();        
         $data=$resultado->fetchAll(PDO::FETCH_ASSOC);
         break;
-    /*--------------Cargar Desplegables--------------*/
-    case 9: 
-        $consulta = "SELECT DISTINCT marca FROM stock";
+    case 9:
+        $consulta = "SELECT * FROM cristal WHERE modeloID='$modeloID';";
         $resultado = $conexion->prepare($consulta);
-        $resultado->execute();
+        $resultado->execute();        
         $data=$resultado->fetchAll(PDO::FETCH_ASSOC);
         break;
-    case 10:
-        $consulta = "SELECT DISTINCT modelo FROM stock WHERE marca='$marca'";
+    /*--------------Precio--------------*/
+    case 10: 
+        $consulta = "SELECT p.totalSinIva, p.totalConIva FROM precio p 
+        INNER JOIN empresaprecio ep ON ep.precioID = p.idPrecio
+        WHERE (p.cristalID = '$cristalID') AND (ep.empresaID = '$empresaID');";
         $resultado = $conexion->prepare($consulta);
         $resultado->execute();
         $data=$resultado->fetchAll(PDO::FETCH_ASSOC);
         break;
     case 11:
-        $consulta = "SELECT DISTINCT cristal FROM stock WHERE modelo='$modelo'";
+        $consulta = "SELECT p.totalSinIva, p.totalConIva, p.cristalID FROM precio p 
+        INNER JOIN empresaprecio ep ON ep.precioID = p.idPrecio
+        WHERE p.cristalID IN ($idCristales) AND (ep.empresaID = '$empresaID');";
         $resultado = $conexion->prepare($consulta);
         $resultado->execute();
         $data=$resultado->fetchAll(PDO::FETCH_ASSOC);
