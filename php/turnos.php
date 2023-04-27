@@ -60,7 +60,7 @@
                         <div class="form-group">
                             <label for="dominio" class="form-label text-dark">Dominio</label>
                             <div class="input-group mb-3">
-                                <input id="dominio" name="dominio" type="text" class="form-control inputForm">
+                                <input id="dominio" name="dominio" type="text" class="form-control inputForm text-uppercase">
                             </div>
                         </div>
                     </div>
@@ -68,8 +68,20 @@
                         <div class="form-group">
                             <label for="empresa" class="form-label text-dark">Compañía</label>
                             <div class="input-group mb-3">
-                                <select name="empresa" id="empresa" class="form-select">
+                                <select name="empresa" id="empresa" class="form-select inputForm">
                                     <option value="">Compañía</option>
+                                    <option value="1">Allianz</option>
+                                    <option value="2">Común</option>
+                                    <option value="3">Fed Pat</option>
+                                    <option value="4">Glasscom</option>
+                                    <option value="5">La Caja</option>
+                                    <option value="6">La Segunda</option>
+                                    <option value="7">Mapfre</option>
+                                    <option value="8">Nación</option>
+                                    <option value="9">Particulares</option>
+                                    <option value="10">San Cristobal</option>
+                                    <option value="11">Sancor</option>
+                                    <option value="12">Sure</option>
                                 </select>
                             </div>
                         </div>
@@ -78,8 +90,39 @@
                         <div class="form-group">
                             <label for="marca" class="form-label text-dark">Marca</label>
                             <div class="input-group mb-3">
-                                <select name="marca" id="marca" class="form-select">
+                                <select name="marca" id="marca" class="form-select inputForm">
                                     <option value="">Marca</option>
+                                    <option value="1">ALFA ROMEO</option>
+                                    <option value="2">AUDI</option>
+                                    <option value="3">BMW</option>
+                                    <option value="4">CHERY</option>
+                                    <option value="5">CHEVROLET</option>
+                                    <option value="6">CITROEN</option>
+                                    <option value="7">DAEWOO</option>
+                                    <option value="8">DAIHATSU</option>
+                                    <option value="9">DODGE/CHRYSLER</option>
+                                    <option value="10">FIAT</option>
+                                    <option value="11">FORD</option>
+                                    <option value="12">HONDA</option>
+                                    <option value="13">HYUNDAI</option>
+                                    <option value="14">KIA-ASIA</option>
+                                    <option value="15">MAZDA</option>
+                                    <option value="16">MERCEDES BENZ</option>
+                                    <option value="17">MITSUBISHI</option>
+                                    <option value="18">NISSAN</option>
+                                    <option value="19">OPEL</option>
+                                    <option value="20">PEUGEOT</option>
+                                    <option value="21">RENAULT</option>
+                                    <option value="22">ROVER</option>
+                                    <option value="23">SCANIA</option>
+                                    <option value="24">SEAT</option>
+                                    <option value="25">SMART</option>
+                                    <option value="26">SSANG YONG</option>
+                                    <option value="27">SUBARU</option>
+                                    <option value="28">SUZUKI</option>
+                                    <option value="29">TOYOTA</option>
+                                    <option value="30">VOLKSWAGEN</option>
+                                    <option value="31">VOLVO</option>
                                 </select>
                             </div>
                         </div>
@@ -88,7 +131,7 @@
                         <div class="form-group">
                             <label for="modelo" class="form-label text-dark">Modelo</label>
                             <div class="input-group mb-3">
-                                <select name="modelo" id="modelo" class="form-select">
+                                <select name="modelo" id="modelo" class="form-select inputForm">
                                     <option value="">Modelo</option>
                                 </select>
                             </div>
@@ -100,7 +143,7 @@
                         <div class="form-group">
                             <label for="cristal" class="form-label text-dark">Cristal</label>
                             <div class="input-group mb-3">
-                                <select name="cristal" id="cristal" class="form-select">
+                                <select name="cristal" id="cristal" class="form-select inputForm">
                                     <option value="">Cristal</option>
                                 </select>
                             </div>
@@ -113,12 +156,12 @@
                     <div class="col-md-3 pb-3 d-flex align-items-end">
                         <button type="button" id="eliminarCristal" class="btn btn-danger">Eliminar</button>
                         <button type="button" id="agregarCristal" class="btn btn-success ms-2">Agregar</button>
-                        <div class="form-check ms-3" style="">
-                            <input class="form-check-input" type="checkbox" value="" id="otro">
+                        <div class="form-check ms-3">
+                            <input class="form-check-input inputForm" type="checkbox" value="" id="otro">
                             <label class="form-check-label text-dark" for="flexCheckDefault">Otro</label>
                         </div>
                     </div>
-                    <div id="colImporte" class="col-md-3" style="display: none;">
+                    <div id="colImporte" class="col-md-3">
                         <label for="importe" class="form-label text-dark">Importe</label>
                         <input id="importe" name="importe" type="number" step="0.01" min="0" class="form-control inputForm">
                     </div>
@@ -151,46 +194,44 @@
                         <div class="form-group">
                             <label for="trabajo" class="form-label text-dark">Trabajo</label>
                             <div class="input-group mb-3">
-                                <select class="form-control" id="trabajo" multiple="multiple">
-                                    <option value="1">Parabrisas</option>
-                                    <option value="2">Lunetas</option>
-                                    <option value="3">Puertas</option>
-                                    <option value="4">Ventilete / Custodias</option>
-                                    <option value="5">Cerrajeria</option>
-                                    <option value="6">Polarizado</option>
-                                    <option value="7">Sacabollo</option>
-                                    <option value="8">Telepase</option>
-                                    <option value="9">Grabado</option>
-                                    <option value="10">Escobilla</option>
-                                    <option value="11">Maq lev vidrio</option>
-                                    <option value="12">Despegar PSAS</option>
-                                    <option value="13">Pegado espejo</option>
-                                    <option value="14">Diferencia de Cliente</option>
-                                    <option value="15">Burlete</option>
-                                    <option value="16">Seña</option>
-                                    <option value="17">Pegado en domicilio</option>
-                                    <option value="18">Mano de Obra</option>
-                                    <option value="19">Pegamento Salchicha</option>
+                                <select class="form-control inputForm" id="trabajo" multiple="multiple">
+                                    <option value="1">Burlete</option>
+                                    <option value="2">Cerrajeria</option>
+                                    <option value="3">Despegar PSAS</option>
+                                    <option value="4">Diferencia de Cliente</option>
+                                    <option value="5">Escobilla</option>
+                                    <option value="6">Grabado</option>
+                                    <option value="7">Lunetas</option>
+                                    <option value="8">Mano de Obra</option>
+                                    <option value="9">Maq lev vidrio</option>
+                                    <option value="10">Parabrisas</option>
+                                    <option value="11">Pegado en domicilio</option>
+                                    <option value="12">Pegado espejo</option>
+                                    <option value="13">Pegamento Salchicha</option>
+                                    <option value="14">Polarizado</option>
+                                    <option value="15">Puertas</option>
+                                    <option value="16">Sacabollo</option>
+                                    <option value="17">Seña</option>
+                                    <option value="18">Telepase</option>
+                                    <option value="19">Ventilete / Custodias</option>
                                     <option value="20">Vidrios a medida</option>
                                 </select>
                             </div>
                         </div>
                     </div>
-                    <!--<div class="col-md-3">
+                    <div class="col-md-6">
                         <div class="form-group">
-                            <label for="grabado" class="form-label text-dark">Grabado</label>
-                            <div class="form-check d-flex justify-content-center">
-                                <input class="form-check-input checkForm" type="checkbox" id="grabado" name="grabado">
-                            </div>
+                            <label for="" class="form-label text-dark">Observacion</label>
+                            <textarea class="form-control inputForm" id="observacion" rows="1"></textarea>
                         </div>
-                    </div>-->
+                    </div>
                 </div>
                 <div class="row">
-                <div class="col-md-3">
+                    <div class="col-md-3">
                         <div class="form-group">
                             <label for="pago" class="form-label text-dark">Pagó</label>
                             <div class="form-check d-flex justify-content-center">
-                                <input class="form-check-input checkForm" type="checkbox" id="grabado" name="grabado">
+                                <input class="form-check-input checkForm inputForm" type="checkbox" id="esPago" name="esPago">
                             </div>
                         </div>
                     </div>
@@ -198,8 +239,8 @@
                         <div class="form-group">
                             <label for="tipo" class="form-label text-dark">Tipo de Pago</label>
                             <div class="input-group mb-3">
-                            <select name="tipoPago" id="tipoPago" class="form-select">
-                                    <option value="">Tipo</option>
+                            <select name="tipoPago" id="tipoPago" class="form-select inputForm">
+                                    <option value="0">Tipo</option>
                                     <option value="1">Efectivo</option>
                                     <option value="2">Débito</option>
                                     <option value="3">Crédito</option>
@@ -209,17 +250,17 @@
                     </div>
                     <div class="col-md-3">
                         <div class="form-group">
-                            <label for="siniestro" class="form-label text-dark">Siniestro</label>
+                            <label for="factura" class="form-label text-dark">N° Factura</label>
                             <div class="input-group mb-3">
-                                <input id="siniestro" name="siniestro" type="text" class="form-control inputForm">
+                                <input id="numFactura" name="numFactura" type="text" class="form-control inputForm">
                             </div>
                         </div>
                     </div>
                     <div class="col-md-3">
                         <div class="form-group">
-                            <label for="factura" class="form-label text-dark">Factura</label>
+                            <label for="siniestro" class="form-label text-dark">Siniestro</label>
                             <div class="input-group mb-3">
-                                <input id="factura" name="factura" type="text" class="form-control inputForm">
+                                <input id="siniestro" name="siniestro" type="text" class="form-control inputForm">
                             </div>
                         </div>
                     </div>
@@ -236,41 +277,6 @@
                 </div>-->
                 <div id="contentArchivos">
                     <label for="" class="form-label text-dark">Archivos</label>
-                    <!--<div class="row" id="rowArchivos">
-                        <div id="71" class="col-sm-2">
-                            <i class="fas fa-times eliminarArchivo mb-1"></i>
-                            <a href="../archivos/8hgKmbSguftIXZzmvaxr.jpg" data-lightbox="roadtrip" data-title="Fiat_Siena.jpg">
-                                <img src="../archivos/8hgKmbSguftIXZzmvaxr.jpg" alt="Imagen 0" class="img-fluid img-modal">
-                            </a>
-                            <p class="text-center mt-2 font-italic nombreArchivo">Fiat_Siena.jpg</p>
-                        </div>
-                        <div id="72" class="col-sm-2">
-                            <i class="fas fa-times eliminarArchivo mb-1"></i>
-                            <a href="../archivos/rQFcLtxgtWXKKk1aIdoY.jpg" data-lightbox="roadtrip" data-title="Fiat_Siena_2.jpg">
-                                <img src="../archivos/rQFcLtxgtWXKKk1aIdoY.jpg" alt="Imagen 1" class="img-fluid img-modal">
-                            </a>
-                            <p class="text-center mt-2 font-italic nombreArchivo">Fiat_Siena_2.jpg</p>
-                        </div>
-                        <div id="68" class="col-sm-2">
-                            <i class="fas fa-times eliminarArchivo mb-1"></i>
-                            <a href="../archivos/NgKpfPPkbBM9YoiaF6Q1.pdf" target="_blank">
-                                <img src="../img/archivoPDF.png" alt="Archivo PDF" class="img-fluid pdf-modal">
-                            </a>
-                            <p class="text-center mt-2 font-italic nombreArchivo">pdf_Falso.pdf</p>
-                        </div>
-                        <div id="73" class="col-sm-2">
-                            <i class="fas fa-times eliminarArchivo mb-1"></i>
-                            <a href="../archivos/ql7Udsi9piYbYLomspz1.pdf" target="_blank">
-                                <img src="../img/archivoPDF.png" alt="Archivo PDF" class="img-fluid pdf-modal">
-                            </a>
-                            <p class="text-center mt-2 font-italic nombreArchivo">pdf_Falso_2.pdf</p>
-                        </div>
-                        <div id="wrapperArchivo" class="wrapperArchivo col-sm-2">
-                            <input id="archivo" name="archivo" class="file-input" type="file" accept=".pdf, .jpg, .jpeg, .png, .tif" multiple="multiple" hidden="">
-                            <i class="fa-solid fa-cloud-arrow-up fa-2xl"></i>
-                            <p class="mb-0">Subir Archivos</p>
-                        </div>
-                    </div>-->
                 </div>
             </div>
         </div>

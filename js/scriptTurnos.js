@@ -48,27 +48,27 @@ $(document).ready(function() {
                 var events = [];
                 $(doc).each(function(i) {
                   
-                  if(doc[i].estado == 'Finalizado' || doc[i].estado == 'Cancelado'){
+                  if(doc[i].estado == 'Finalizado'){
                     tipoRender = 'block';
-                    colorEstado = (doc[i].estado == 'Finalizado') ? '#d5693b' : '#2c3e50'
+                    colorEstado = '#d5693b';
                   }else{
                     tipoRender = 'auto';
-                    colorEstado = 'primary'
+                    colorEstado = 'primary';
                   }
                   
                   events.push({
                       id: doc[i].idTurno,
                       title: doc[i].contacto,
                       start: doc[i].fechaHora,
-                      end: doc[i].fechaHora,
-                      tel: '2215754',
+                      //end: doc[i].fechaHora,
+                      /*tel: '2215754',
                       trabajo: ['Trabajo1','Trabajo 2'],
                       idArchivo: doc[i].idArchivo,
                       archivoNombre: doc[i].archivoNombre,
                       archivoHash: doc[i].archivoHash,
-                      archivoExt: doc[i].archivoExt,
-                      color  : colorEstado,
-                      display:tipoRender
+                      archivoExt: doc[i].archivoExt,*/
+                      color: colorEstado,
+                      display: tipoRender
                     })            
                 });
                 successCallback(events);
@@ -88,11 +88,13 @@ $(document).ready(function() {
         tipoForm="alta";
         $(".inputForm").prop("disabled", false);
         $("#fecha").prop("disabled", true);
+        $('#trabajo').val(null).trigger('change');
         $("#btn-editarTurno").css('visibility', 'hidden');
         $("#btn-finalizarTurno").css('visibility', 'hidden');
         $("#btn-eliminarTurno").css('visibility', 'hidden');
         $(".btn-editar").show();
         $("#btn-ok").hide();
+        $(".select2-search.select2-search--inline").remove();
         $("#fecha").val(info.dateStr);
         $("#hora").val(hoy.toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'}));
         $("#modalTurnoHeader").css("background-color", "#d5693b");
@@ -104,49 +106,95 @@ $(document).ready(function() {
     calendar.on('eventClick', function(event, info) {
       tipoForm="detalle"
       evento = event
-      fechaHora = evento.event.startStr.split('T')
-      $("#contacto").val(evento.event.title)
-      $("#fecha").val(fechaHora[0])
-      $("#hora").val(fechaHora[1])
-      $("#contentArchivos").html("<label for='' class='form-label text-dark'>Archivos</label><div class='row' id='rowArchivos'></div>");
-      
-      console.log(evento.event.extendedProps)
-      if(evento.event.extendedProps.idArchivo){
-        idArchivos = evento.event.extendedProps.idArchivo.split('/')
-        archivosNombre = evento.event.extendedProps.archivoNombre.split('/')
-        archivosHash = evento.event.extendedProps.archivoHash.split('/')
-        archivosExt = evento.event.extendedProps.archivoExt.split('/')
-        console.log(idArchivos)
-        console.log(archivosNombre)
-        console.log(archivosHash)
-        console.log(archivosExt)
-        for(j=0; j<idArchivos.length; j++){
-            if(archivosExt[j] == 'pdf'){
-              $("#rowArchivos").append('<div id="'+idArchivos[j]+'" class="col-sm-2"> \
-                <i class="fas fa-times eliminarArchivo mb-1"></i> \
-                <a href="../archivos/'+archivosHash[j]+'" target="_blank"> \
-                    <img src="../img/archivoPDF.png" alt="Archivo PDF" class="img-fluid pdf-modal"> \
-                </a> \
-                <p class="text-center mt-2 font-italic nombreArchivo">'+archivosNombre[j]+'</p> \
-                </div>');
-            } else{
-                $("#rowArchivos").append('<div id="'+idArchivos[j]+'" class="col-sm-2"> \
-                  <i class="fas fa-times eliminarArchivo mb-1"></i> \
-                  <a href="../archivos/'+archivosHash[j]+'" data-lightbox="roadtrip" data-title="Fiat_Siena_2.jpg"> \
-                      <img src="../archivos/'+archivosHash[j]+'" alt="Imagen 1" class="img-fluid img-modal"> \
-                  </a> \
-                  <p class="text-center mt-2 font-italic nombreArchivo">'+archivosNombre[j]+'</p> \
-                </div> \
-                ');
+      $.ajax({
+        type: "POST",
+        url: 'crudTurnos.php',
+        datatype:"json",
+        data: {
+            opcion: 6,
+            idTurno: evento.event.id
+        },
+        beforeSend: function() {
+            $('#loader').removeClass('hidden')
+        },
+        complete: function() {
+            $('#loader').addClass('hidden')
+        },
+        success: function(data) {
+          //datos = JSON.parse(data)
+          console.log(data);
+          fechaHora = evento.event.startStr.split('T');
+          $("#contacto").val(evento.event.title);
+          /*$("#fecha").val(fechaHora[0]);
+          $("#hora").val(fechaHora[1]);
+          $("#telefono").val(datos[0].telefono);
+          $("#dominio").val(datos[0].dominio);
+          $("#empresa").val(datos[0].empresaID);
+          $("#marca").val(datos[0].marcaID);
+          $("#observacion").val(datos[0].observacion);
+          $("#numFactura").val(datos[0].numFactura);
+          $("#siniestro").val(datos[0].siniestro);
+          $("#trabajo").val(datos[0].trabajo.split(","));
+          $('#trabajo').trigger('change');
+
+          if(datos[0].esPago == "Si"){
+            $("#esPago").prop("checked", true)
+          } else {
+            $("#esPago").prop("checked", false)
+          }
+
+          switch (datos[0].tipoPago) {
+            case "Efectivo":
+              $("#tipoPago").val(1)
+            break;
+            case "Débito":
+              $("#tipoPago").val(2)
+            break;
+            case "Crédito":
+              $("#tipoPago").val(3)
+            break;
+            default:
+              $("#tipoPago").val(0)
+            break;
+          }
+
+
+          if(datos[0].idArchivo){
+            idArchivos = datos[0].idArchivo.split('/')
+            archivosNombre = datos[0].archivoNombre.split('/')
+            archivosHash = datos[0].archivoHash.split('/')
+            archivosExt = datos[0].archivoExt.split('/')
+            $("#contentArchivos").html("<label for='' class='form-label text-dark'>Archivos</label><div class='row' id='rowArchivos'></div>");
+            for(j=0; j<idArchivos.length; j++){
+                if(archivosExt[j] == 'pdf'){
+                  $("#rowArchivos").append('<div id="'+idArchivos[j]+'" class="col-sm-2"> \
+                    <i class="fas fa-times eliminarArchivo mb-1"></i> \
+                    <a href="../archivos/'+archivosHash[j]+'" target="_blank"> \
+                        <img src="../img/archivoPDF.png" alt="Archivo PDF" class="img-fluid pdf-modal"> \
+                    </a> \
+                    <p class="text-center mt-2 font-italic nombreArchivo">'+archivosNombre[j]+'</p> \
+                    </div>');
+                } else{
+                    $("#rowArchivos").append('<div id="'+idArchivos[j]+'" class="col-sm-2"> \
+                      <i class="fas fa-times eliminarArchivo mb-1"></i> \
+                      <a href="../archivos/'+archivosHash[j]+'" data-lightbox="roadtrip" data-title="Fiat_Siena_2.jpg"> \
+                          <img src="../archivos/'+archivosHash[j]+'" alt="Imagen 1" class="img-fluid img-modal"> \
+                      </a> \
+                      <p class="text-center mt-2 font-italic nombreArchivo">'+archivosNombre[j]+'</p> \
+                    </div> \
+                    ');
+                }
             }
+          }
+          $("#rowArchivos").append('<div id="wrapperArchivo" class="wrapperArchivo col-sm-2"> \
+            <input id="archivo" name="archivo" class="file-input" type="file" accept=".pdf, .jpg, .jpeg, .png, .tif" multiple="multiple" hidden=""> \
+            <i class="fa-solid fa-cloud-arrow-up fa-2xl"></i> \
+            <p class="mb-0">Subir Archivos</p> \
+          </div> ');*/
         }
-      }
+    })
       
-      $("#rowArchivos").append('<div id="wrapperArchivo" class="wrapperArchivo col-sm-2"> \
-        <input id="archivo" name="archivo" class="file-input" type="file" accept=".pdf, .jpg, .jpeg, .png, .tif" multiple="multiple" hidden=""> \
-        <i class="fa-solid fa-cloud-arrow-up fa-2xl"></i> \
-        <p class="mb-0">Subir Archivos</p> \
-      </div> ');
+      
 
       $(".inputForm").prop("disabled", true);
       $("#btn-editarTurno").css('visibility', 'visible');
@@ -154,6 +202,7 @@ $(document).ready(function() {
       $("#btn-eliminarTurno").css('visibility', 'visible');
       $(".btn-editar").hide();
       $("#btn-ok").show();
+      $(".select2-search.select2-search--inline").remove();
       $("#modalTurnoHeader").css("background-color", "#17a2b8");
       $("#modalTurnoTitle").text("Detalle Turno");
       $("#modalTurno").modal('show');
@@ -167,6 +216,7 @@ $(document).ready(function() {
       $("#btn-finalizarTurno").css('visibility', 'hidden');
       $(".btn-editar").show();
       $("#btn-ok").hide();
+      $(".select2-search.select2-search--inline").remove();
       $("#modalTurnoTitle").text("Editar Turno");
       $("#modalTurnoHeader").css("background-color", "#0b5ed7");
     });
@@ -253,13 +303,53 @@ $(document).ready(function() {
       var contacto = $("#contacto").val();
       var fecha = $("#fecha").val();
       var hora = $("#hora").val();
+      var telefono = $("#telefono").val();
+      var dominio = ($("#dominio").val()).toUpperCase();
+      var modeloID =$("#modelo").val();
+      var cristales = JSON.parse($("#cristales").val());
+      var empresa = $("#empresa option:selected").val();  
+      var trabajo = $("#trabajo").val();
+      var observacion = $("#observacion").val();
+
+      if($("#pago").is(":checked")){
+        var esPago = "Si";
+      }else{
+        var esPago = "No";
+      }
+      
+      if($("#tipoPago option:selected").text() == "Tipo"){
+        var tipoPago = "";
+      }else{
+        var tipoPago = $("#tipoPago option:selected").text();
+      }
+      
+      var numFactura = $("#numFactura").val();
+      var siniestro = $("#siniestro").val();
+
       if(tipoForm == 'alta'){
         $.ajax({
             url: "crudTurnos.php",
             type: "POST",
             datatype: "json",
-            data: { fechaHora: fecha+'T'+hora, contacto: contacto, opcion: 2 },
+            data: {
+              opcion: 2,
+              fechaHora: fecha+'T'+hora,
+              contacto: contacto,
+              telefono: telefono,
+              dominio: dominio,
+              empresaID: empresa,
+              cristales: cristales,
+              trabajo: trabajo,
+              observacion: observacion,
+              esPago: esPago,
+              tipoPago: tipoPago,
+              siniestro: siniestro,
+              numFactura: numFactura,
+              modeloID: modeloID
+              //Archivos
+            },
             success: function(data) {
+                console.log(data);
                 Swal.fire({
                     title: 'Exito',
                     text: 'El turno se cargó correctamente',
@@ -310,8 +400,6 @@ $(document).ready(function() {
                         turno = calendar.getEventById(evento.event.id)
                         turno.setProp('title', contacto)
                         turno.setStart(fecha+'T'+hora)
-                        turno.setExtendedProp('tel', '4859623')
-                        turno.setExtendedProp('trabajo', 'Trabajo4')
                     })
                 }
             });
@@ -326,16 +414,15 @@ $(document).ready(function() {
         closeOnSelect: false,
     });
 
-    $('#trabajo').on('select2:opening select2:closing', function( event ) {
-      //var $searchfield = $(this).parent().find('.select2-search__field');
-      var $searchfield = $(this).parent().find('.select2-search.select2-search--inline');
+    /*$('#trabajo').on('select2:opening select2:closing select2:change', function( event ) {
+      var $searchfield = $(this).parent().find('.select2-search');
       $searchfield.remove()
-    });
+    });*/
 
 
     /*-------CARGAR DESPLEGABLES COMP - MARCA - MODELO - CRISTAL-------*/
     
-    $.ajax({
+    /*$.ajax({
       type: "POST",
       url: 'crudTurnos.php',
       datatype:"json",    
@@ -359,7 +446,7 @@ $(document).ready(function() {
               $("#marca").append("<option value=" + datos[i].idMarca + ">" + datos[i].nombre + "</option>");
           } 
       }
-    });
+    });*/
 
     $(document).on("change", "#marca", function() {
       marcaID = $("#marca option:selected").val();
@@ -573,7 +660,7 @@ $(document).ready(function() {
               if ($("#cristales").val()) {
                   arrayCristales = JSON.parse($("#cristales").val())
               }
-              arrayCristal.push(cristalOtro, importeTotalSinIva, importeTotalConIva, cantidad, idCristal);
+              arrayCristal.push("'"+cristalOtro+"'", importeTotalSinIva, importeTotalConIva, cantidad, idCristal);
               arrayCristales.push(arrayCristal);
               $("#cristales").attr('value', JSON.stringify(arrayCristales))
               tablaCristales.row.add([

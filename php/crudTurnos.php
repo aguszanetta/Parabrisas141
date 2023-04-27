@@ -7,52 +7,61 @@ $idTurno = (isset($_POST['idTurno'])) ? $_POST['idTurno'] : '';
 $fechaHora = (isset($_POST['fechaHora'])) ? $_POST['fechaHora'] : '';
 $contacto = (isset($_POST['contacto'])) ? $_POST['contacto'] : '';
 $telefono = (isset($_POST['telefono'])) ? $_POST['telefono'] : '';
-$mail = (isset($_POST['mail'])) ? $_POST['mail'] : '';
-$marca = (isset($_POST['marca'])) ? $_POST['marca'] : '';
-$modelo = (isset($_POST['modelo'])) ? $_POST['modelo'] : '';
-$modelo = str_replace("'", "\'", $modelo);
 $dominio = (isset($_POST['dominio'])) ? $_POST['dominio'] : '';
-$cristal = (isset($_POST['cristal'])) ? $_POST['cristal'] : '';
-$codCristal = (isset($_POST['codCristal'])) ? $_POST['codCristal'] : '';
-$compania = (isset($_POST['compania'])) ? $_POST['compania'] : '';
-$trabajo = (isset($_POST['trabajo'])) ? $_POST['trabajo'] : '';
-$descripcion = (isset($_POST['descripcion'])) ? $_POST['descripcion'] : '';
-$valor = (isset($_POST['valor'])) ? $_POST['valor'] : '';
-$efectivo = (isset($_POST['efectivo'])) ? $_POST['efectivo'] : '';
-$cantidad = (isset($_POST['cantidad'])) ? $_POST['cantidad'] : '';
-$marcaID = (isset($_POST['marcaID'])) ? $_POST['marcaID'] : '';
-$modeloID = (isset($_POST['modeloID'])) ? $_POST['modeloID'] : '';
-$cristalID = (isset($_POST['cristalID'])) ? $_POST['cristalID'] : '';
 $empresaID = (isset($_POST['empresaID'])) ? $_POST['empresaID'] : '';
-$idCristales = (isset($_POST['idCristales'])) ? $_POST['idCristales'] : '';
-
+$trabajos = (isset($_POST['trabajo'])) ? $_POST['trabajo'] : '';
+$siniestro = (isset($_POST['siniestro'])) ? $_POST['siniestro'] : '';
+$observacion = (isset($_POST['observacion'])) ? $_POST['observacion'] : '';
+$esPago = (isset($_POST['esPago'])) ? $_POST['esPago'] : '';
+$tipoPago = (isset($_POST['tipoPago'])) ? $_POST['tipoPago'] : '';
+$numFactura = (isset($_POST['numFactura'])) ? $_POST['numFactura'] : '';
+$modeloID = (isset($_POST['modeloID'])) ? $_POST['modeloID'] : '';
+$marcaID = (isset($_POST['marcaID'])) ? $_POST['marcaID'] : '';
+$cristalID = (isset($_POST['cristalID'])) ? $_POST['cristalID'] : '';
+$cristales = (isset($_POST['cristales'])) ? $_POST['cristales'] : '';
 
 $opcion = (isset($_POST['opcion'])) ? $_POST['opcion'] : '';
-$numero = (isset($_POST['numero'])) ? $_POST['numero'] : '';
 
 
 switch($opcion){
     case 1:
-        $consulta = "SELECT t.*, GROUP_CONCAT(a.idArchivo ORDER BY substring_index(a.path,'.',-1) SEPARATOR '/') AS idArchivo, 
-        GROUP_CONCAT(a.nombre ORDER BY substring_index(a.path,'.',-1) SEPARATOR '/') AS archivoNombre, 
-        GROUP_CONCAT(a.path ORDER BY substring_index(a.path,'.',-1) SEPARATOR '/') AS archivoHash,
-        GROUP_CONCAT(substring_index(a.path,'.',-1) ORDER BY substring_index(a.path,'.',-1) SEPARATOR '/') AS archivoExt
-        FROM turno t 
-        LEFT JOIN archivo a ON t.idTurno = a.turnoID 
-        GROUP BY idTurno;";			
+        
+        $consulta = "SELECT idTurno, fechaHora, contacto, estado FROM turno";			
         $resultado = $conexion->prepare($consulta);
         $resultado->execute(); 
         $data=$resultado->fetchAll(PDO::FETCH_ASSOC);       
         break;    
     case 2:
+        /* --- Insertar Turno --- */
         $consulta = "INSERT INTO turno 
-        (fechaHora, contacto, telefono, mail, dominio, siniestro, observacion, efectivo, estado, modeloID, empresaID) 
-        VALUES('$fechaHora', '$contacto', '2215485663', 'mav@gmail.com', 'FGH456', '111', '', 'No', 'Activo', 3, 3) ";	
+        (fechaHora, contacto, telefono, dominio, siniestro, observacion, esPago, tipoPago, numFactura, estado, modeloID, empresaID) 
+        VALUES('$fechaHora', '$contacto', '$telefono', '$dominio', '$siniestro', '$observacion', '$esPago', '$tipoPago', '$numFactura', 'Activo', '$modeloID', '$empresaID');
+        INSERT INTO turnodetalle (importe, cantidad, turnoID, cristalID) VALUES ('13489','8','25','526'), ('12586','1','8','528')";	
         $resultado = $conexion->prepare($consulta);
         $resultado->execute();
-        /*$data=$resultado->fetchAll(PDO::FETCH_ASSOC);*/
-        /*$data = array_push($data, $last_insert_id);*/
-        $data=$conexion->lastInsertId();
+        $turnoID=$conexion->lastInsertId();
+        
+        /* --- Insertar Cristales --- */
+        $valuesCristales='';
+        foreach ($cristales as $cristal){
+            $valuesCristales = $valuesCristales . '(' .  implode(", ", $cristal) . ', ' . $turnoID . '),';
+        }
+        $valuesCristales = substr($valuesCristales , 0, -1);
+        $consulta="INSERT INTO turnodetalle (otro, importeSinIva, importeConIva, cantidad, cristalID, turnoID) VALUES $valuesCristales ";
+        $resultado = $conexion->prepare($consulta);
+        $resultado->execute();
+        $data=$resultado->fetchAll(PDO::FETCH_ASSOC);
+
+        /* --- Insertar Turnos --- */
+        $valuesTrabajos='';
+        foreach ($trabajos as $trabajo){
+            $valuesTrabajos = $valuesTrabajos . '(' .  $trabajo . ', ' . $turnoID . '),';
+        }
+        $valuesTrabajos = substr($valuesTrabajos , 0, -1);
+        $consulta="INSERT INTO trabajoturno (trabajoID, turnoID) VALUES $valuesTrabajos ";
+        $resultado = $conexion->prepare($consulta);
+        $resultado->execute();
+        $data=$resultado->fetchAll(PDO::FETCH_ASSOC);
         break;
     case 3:        
         $consulta = "UPDATE turno SET contacto='$contacto', fechaHora='$fechaHora' WHERE idTurno='$idTurno'";		
@@ -74,12 +83,54 @@ switch($opcion){
         $resultado->execute();        
         $data=$resultado->fetchAll(PDO::FETCH_ASSOC);
         break;
-    /*--------------Cargar Desplegables--------------*/
     case 6:
-        $consulta = "SELECT * FROM empresa;";
+        /* --- Marca --- */
+        $consulta="SELECT m.marcaID
+        FROM turno t
+        INNER JOIN modelo m ON m.idModelo = t.modeloID
+        WHERE t.idTurno = $idTurno";
         $resultado = $conexion->prepare($consulta);
-        $resultado->execute();        
+        $resultado->execute();
         $data=$resultado->fetchAll(PDO::FETCH_ASSOC);
+        if(!$data){
+            $data=[];
+        }
+
+        /* --- Trabajos --- */
+        $consulta = "SELECT trabajoID
+        FROM trabajoturno 
+        WHERE turnoID = $idTurno";
+        $resultado2 = $conexion->prepare($consulta);
+        $resultado2->execute();
+        $data2=$resultado2->fetchAll(PDO::FETCH_ASSOC);
+        if(!$data2){
+            $data2=[];
+        }
+
+        /* --- Turno Detalle --- */
+        $consulta="SELECT * 
+        FROM turnodetalle 
+        WHERE turnoID = $idTurno";
+        $resultado3 = $conexion->prepare($consulta);
+        $resultado3->execute();
+        $data3=$resultado3->fetchAll(PDO::FETCH_ASSOC);
+        if(!$data3){
+            $data3=[];
+        }
+
+        /* --- Archivos --- */
+        $consulta="SELECT *, substring_index(path,'.',-1) AS ext
+        FROM archivo a
+        WHERE turnoID = $idTurno
+        ORDER BY ext='pdf', ext;";
+        $resultado4 = $conexion->prepare($consulta);
+        $resultado4->execute();
+        $data4=$resultado4->fetchAll(PDO::FETCH_ASSOC);
+        if(!$data4){
+            $data4=[];
+        }
+
+        $data=array_merge([$data], [$data2], [$data3], [$data4]);
         break;
     case 7:
         $consulta = "SELECT * FROM marca;";
@@ -87,6 +138,7 @@ switch($opcion){
         $resultado->execute();        
         $data=$resultado->fetchAll(PDO::FETCH_ASSOC);
         break;
+        /*--------------Cargar Desplegables--------------*/
     case 8:
         $consulta = "SELECT * FROM modelo WHERE marcaID='$marcaID';";
         $resultado = $conexion->prepare($consulta);
@@ -116,7 +168,9 @@ switch($opcion){
         $resultado->execute();
         $data=$resultado->fetchAll(PDO::FETCH_ASSOC);
         break;
-    case 12:
+
+        
+    /*case 12:
         $consulta = "SELECT DISTINCT cantidad FROM stock WHERE codigo='$codCristal' ";
         $resultado = $conexion->prepare($consulta);
         $resultado->execute();
@@ -132,7 +186,7 @@ switch($opcion){
         $consulta = "UPDATE stock SET cantidad='$cantidad' WHERE codigo='$codCristal' ";        
         $resultado = $conexion->prepare($consulta);
         $resultado->execute();
-        break;
+        break;*/
     case 15:
         $consulta = "SELECT DISTINCT codigo, posicion, lado, color FROM stock WHERE marca='$marca' and modelo='$modelo' and cristal='$cristal' ";
         $resultado = $conexion->prepare($consulta);

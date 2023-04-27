@@ -221,6 +221,10 @@ div.mxWth {
     width: 2.375rem;
 }
 
+#colImporte {
+    display: none;
+}
+
 /*-----MDB MultiSelect------*/
 
 button.multiselect {
@@ -289,6 +293,10 @@ div.btn-group{
 
 .pdf-modal:hover{
    transform: scale(1.05); 
+}
+
+#observaciones {
+    resize: none;
 }
 
 /*----------------------DragFiles----------------------*/
