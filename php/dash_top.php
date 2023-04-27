@@ -39,8 +39,11 @@
 
     <!-- Select 2 -->
     <link rel="stylesheet" type="text/css" href="../libraries/select2/dist/css/select2.min.css"/>
-    <!--<link rel="stylesheet" href="../libraries/select2/dist/css/select2-bootstrap4.min.css" />-->
     <link rel="stylesheet" href="../libraries/select2/dist/css/select2-bootstrap-5-theme.min.css" />
+
+    <!-- Lightbox 2 -->
+    <link rel="stylesheet" type="text/css" href="../libraries/lightbox2-2.11.3/dist/css/lightbox.css"/>
+
 </head>
 
 <body id="page-top" class="sidebar-icon-only">

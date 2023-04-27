@@ -224,7 +224,7 @@
                         </div>
                     </div>
                 </div>
-                <div class="row">
+                <!--<div class="row">
                     <div class="col-md-12">
                         <div class="form-group">
                             <label for="imagen" class="form-label text-dark">Imagen</label>
@@ -233,6 +233,44 @@
                             </div>
                         </div>
                     </div>
+                </div>-->
+                <div id="contentArchivos">
+                    <label for="" class="form-label text-dark">Archivos</label>
+                    <!--<div class="row" id="rowArchivos">
+                        <div id="71" class="col-sm-2">
+                            <i class="fas fa-times eliminarArchivo mb-1"></i>
+                            <a href="../archivos/8hgKmbSguftIXZzmvaxr.jpg" data-lightbox="roadtrip" data-title="Fiat_Siena.jpg">
+                                <img src="../archivos/8hgKmbSguftIXZzmvaxr.jpg" alt="Imagen 0" class="img-fluid img-modal">
+                            </a>
+                            <p class="text-center mt-2 font-italic nombreArchivo">Fiat_Siena.jpg</p>
+                        </div>
+                        <div id="72" class="col-sm-2">
+                            <i class="fas fa-times eliminarArchivo mb-1"></i>
+                            <a href="../archivos/rQFcLtxgtWXKKk1aIdoY.jpg" data-lightbox="roadtrip" data-title="Fiat_Siena_2.jpg">
+                                <img src="../archivos/rQFcLtxgtWXKKk1aIdoY.jpg" alt="Imagen 1" class="img-fluid img-modal">
+                            </a>
+                            <p class="text-center mt-2 font-italic nombreArchivo">Fiat_Siena_2.jpg</p>
+                        </div>
+                        <div id="68" class="col-sm-2">
+                            <i class="fas fa-times eliminarArchivo mb-1"></i>
+                            <a href="../archivos/NgKpfPPkbBM9YoiaF6Q1.pdf" target="_blank">
+                                <img src="../img/archivoPDF.png" alt="Archivo PDF" class="img-fluid pdf-modal">
+                            </a>
+                            <p class="text-center mt-2 font-italic nombreArchivo">pdf_Falso.pdf</p>
+                        </div>
+                        <div id="73" class="col-sm-2">
+                            <i class="fas fa-times eliminarArchivo mb-1"></i>
+                            <a href="../archivos/ql7Udsi9piYbYLomspz1.pdf" target="_blank">
+                                <img src="../img/archivoPDF.png" alt="Archivo PDF" class="img-fluid pdf-modal">
+                            </a>
+                            <p class="text-center mt-2 font-italic nombreArchivo">pdf_Falso_2.pdf</p>
+                        </div>
+                        <div id="wrapperArchivo" class="wrapperArchivo col-sm-2">
+                            <input id="archivo" name="archivo" class="file-input" type="file" accept=".pdf, .jpg, .jpeg, .png, .tif" multiple="multiple" hidden="">
+                            <i class="fa-solid fa-cloud-arrow-up fa-2xl"></i>
+                            <p class="mb-0">Subir Archivos</p>
+                        </div>
+                    </div>-->
                 </div>
             </div>
         </div>
@@ -307,7 +345,6 @@
 <!-- Bootstrap  -->
 <script src="../libraries/bootstrap-5.3.0/js/bootstrap.bundle.min.js"></script>
 
-
 <!-- datatables JS -->
 <script type="text/javascript" src="../libraries/DataTables/datatables.min.js"></script>
 <script type="text/javascript" src="../libraries/DataTables/DataTables-1.13.4/js/jquery.dataTables.min.js"></script>
@@ -324,5 +361,9 @@
 
 <!-- Select 2 -->
 <script src="../libraries/select2/dist/js/select2.min.js"></script>
+
+<!-- LightBox 2 -->
+<script src="../libraries/lightbox2-2.11.3/dist/js/lightbox.js"></script>
+
 </body>
 </html>

@@ -33,7 +33,13 @@ $numero = (isset($_POST['numero'])) ? $_POST['numero'] : '';
 
 switch($opcion){
     case 1:
-        $consulta = "SELECT * FROM turno";			
+        $consulta = "SELECT t.*, GROUP_CONCAT(a.idArchivo ORDER BY substring_index(a.path,'.',-1) SEPARATOR '/') AS idArchivo, 
+        GROUP_CONCAT(a.nombre ORDER BY substring_index(a.path,'.',-1) SEPARATOR '/') AS archivoNombre, 
+        GROUP_CONCAT(a.path ORDER BY substring_index(a.path,'.',-1) SEPARATOR '/') AS archivoHash,
+        GROUP_CONCAT(substring_index(a.path,'.',-1) ORDER BY substring_index(a.path,'.',-1) SEPARATOR '/') AS archivoExt
+        FROM turno t 
+        LEFT JOIN archivo a ON t.idTurno = a.turnoID 
+        GROUP BY idTurno;";			
         $resultado = $conexion->prepare($consulta);
         $resultado->execute(); 
         $data=$resultado->fetchAll(PDO::FETCH_ASSOC);       
