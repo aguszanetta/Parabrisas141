@@ -81,7 +81,11 @@ $(document).ready(function() {
     /*---------- RESET MODAL CUANDO CIERRA ----------*/
     $("#modalTurno").on("hidden.bs.modal", function(){
       $("#formTurno").trigger("reset");
+      $("#empresa").val("");
       tablaCristales.clear().draw();
+      $("#cristales").attr('value', '');
+      $("#banderaCristales").attr('value', '');
+      $("#banderaTrabajos").attr('value', '');
     });
 
     /*---------- ALTA ----------*/
@@ -131,15 +135,30 @@ $(document).ready(function() {
           $("#dominio").val(datos[0][0].dominio);
           $("#empresa").val(datos[0][0].empresaID);
           $("#marca").val(datos[0][0].marcaID);
-          $("#modelo").append($('<option>', {value: datos[0][0].idModelo, text: datos[0][0].nombre}));
-          $("#modelo").val( datos[0][0].idModelo);
           $("#observacion").val(datos[0][0].observacion);
           $("#numFactura").val(datos[0][0].numFactura);
           $("#siniestro").val(datos[0][0].siniestro);
 
+          //CARGAR DESPLEGABLE MODELO
+          for (let i = 0; i < datos[4].length; i++) {
+            $("#modelo").append($('<option>', {value: datos[4][i].idModelo, text: datos[4][i].nombre}));
+          }
+          $("#modelo").val(datos[0][0].idModelo);
+
+          //CARGAR DESPLEGABLE CRISTAL
+          idCristal = datos[0][0].idCristales.split(',')
+          codigos = datos[0][0].codigos.split(',')
+          descripciones = datos[0][0].descripciones.split(',')
+          for (let i = 0; i < codigos.length; i++) {
+            $("#cristal").append($('<option>', {value: idCristal[i], text: codigos[i] + " — " + descripciones[i]}));
+          }
+
           //CARGAR TABLA CRISTALES
+          arrayCristales = []
           for (let i = 0; i < datos[2].length; i++) {
-          //arrayCristales para editar
+          arrayCristal = []
+          arrayCristal.push("'"+datos[2][i].otro+"'", datos[2][i].importeSinIva, datos[2][i].importeConIva, datos[2][i].cantidad, datos[2][i].cristalID);
+          arrayCristales.push(arrayCristal);
           tablaCristales.row.add([
               datos[2][i].codigo,
               datos[2][i].descripcion,
@@ -150,6 +169,7 @@ $(document).ready(function() {
               datos[2][i].cristalID
           ]).draw(false);
           }
+          $("#cristales").attr('value', JSON.stringify(arrayCristales))
 
           //TRABAJO
           arrayTrabajos = []
@@ -182,7 +202,7 @@ $(document).ready(function() {
           }
 
           //ARCHIVOS
-          if(datos[3][0].idArchivo){
+          if(datos[3][0]){
             idArchivos = []
             archivosNombre = []
             archivosHash = []
@@ -222,9 +242,7 @@ $(document).ready(function() {
             <p class="mb-0">Subir Archivos</p> \
           </div> ');
         }
-    })
-      
-      
+      });
 
       $(".inputForm").prop("disabled", true);
       $("#btn-editarTurno").css('visibility', 'visible');
@@ -340,8 +358,8 @@ $(document).ready(function() {
       var empresa = $("#empresa option:selected").val();  
       var trabajo = $("#trabajo").val();
       var observacion = $("#observacion").val();
-
-      if($("#pago").is(":checked")){
+      
+      if($("#esPago").is(":checked")){
         var esPago = "Si";
       }else{
         var esPago = "No";
@@ -388,10 +406,10 @@ $(document).ready(function() {
                   }).then( function(){
                     $('#modalTurno').modal('hide');
                     calendar.addEvent({
-                        id: data,
-                        title: contacto,
-                        start: fecha+'T'+hora,
-                      });
+                      id: data,
+                      title: contacto,
+                      start: fecha+'T'+hora,
+                    });
                 })
             }
         });
@@ -408,28 +426,44 @@ $(document).ready(function() {
           cancelButtonColor: '#d33',
         }).then((result) => {
             if (result.isConfirmed) {
+              banderaCristales = $("#banderaCristales").val();
+              banderaTrabajos = $("#banderaTrabajos").val();
               $.ajax({
                 url: "crudTurnos.php",
                 type: "POST",
                 datatype: "json",
                 data: { 
-                  fechaHora: fecha+'T'+hora,
-                  contacto: contacto, 
                   opcion: 3, 
-                  idTurno: evento.event.id },
+                  idTurno: evento.event.id,
+                  fechaHora: fecha+'T'+hora,
+                  contacto: contacto,
+                  telefono: telefono,
+                  dominio: dominio,
+                  empresaID: empresa,
+                  cristales: cristales,
+                  trabajo: trabajo,
+                  observacion: observacion,
+                  esPago: esPago,
+                  tipoPago: tipoPago,
+                  siniestro: siniestro,
+                  numFactura: numFactura,
+                  modeloID: modeloID,
+                  banderaCristales: banderaCristales,
+                  banderaTrabajos: banderaTrabajos
+                },
                 success: function(data) {
-                    Swal.fire({
-                        title: 'Exito',
-                        text: 'El turno se editó correctamente',
-                        icon: 'success',
-                        showConfirmButton: false,
-                        timer: 1500,
-                      }).then( function(){
-                        $('#modalTurno').modal('hide');
-                        turno = calendar.getEventById(evento.event.id)
-                        turno.setProp('title', contacto)
-                        turno.setStart(fecha+'T'+hora)
-                    })
+                  Swal.fire({
+                      title: 'Exito',
+                      text: 'El turno se editó correctamente',
+                      icon: 'success',
+                      showConfirmButton: false,
+                      timer: 1500,
+                    }).then( function(){
+                      $('#modalTurno').modal('hide');
+                      turno = calendar.getEventById(evento.event.id)
+                      turno.setProp('title', contacto)
+                      turno.setStart(fecha+'T'+hora)
+                  })
                 }
             });
             }
@@ -686,6 +720,7 @@ $(document).ready(function() {
               }
               
               arrayCristal = [];
+              arrayCristales = [];
               if ($("#cristales").val()) {
                   arrayCristales = JSON.parse($("#cristales").val())
               }
@@ -708,6 +743,7 @@ $(document).ready(function() {
               $("#cristal").val(0);
               $("#cantidad").val('')
               //$("#cristal").prop("disabled", false);
+              $("#banderaCristales").attr('value', "cambio")
           } else {
               Swal.fire({
                   title: 'Importe vacío',
@@ -768,6 +804,7 @@ $(document).ready(function() {
                   $("#otro").prop("checked", false)
                   //$("#cristal").prop("disabled", false)
                   $("#cristalEliminar").attr("value", "")
+                  $("#banderaCristales").attr('value', "cambio")
               }else{
                   tablaCristales.row('.selected').deselect();
               }
@@ -781,6 +818,11 @@ $(document).ready(function() {
       }
     });
 
+    $('#trabajo').on('change', function() {
+      if(tipoForm == 'editar'){
+        $("#banderaTrabajos").attr('value', "cambio")
+      }
+    })
 });
 
 

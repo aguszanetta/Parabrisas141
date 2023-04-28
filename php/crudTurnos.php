@@ -19,13 +19,13 @@ $modeloID = (isset($_POST['modeloID'])) ? $_POST['modeloID'] : '';
 $marcaID = (isset($_POST['marcaID'])) ? $_POST['marcaID'] : '';
 $cristalID = (isset($_POST['cristalID'])) ? $_POST['cristalID'] : '';
 $cristales = (isset($_POST['cristales'])) ? $_POST['cristales'] : '';
+$banderaCristales = (isset($_POST['banderaCristales'])) ? $_POST['banderaCristales'] : '';
+$banderaTrabajos = (isset($_POST['banderaTrabajos'])) ? $_POST['banderaTrabajos'] : '';
 
 $opcion = (isset($_POST['opcion'])) ? $_POST['opcion'] : '';
 
-
 switch($opcion){
     case 1:
-        
         $consulta = "SELECT idTurno, fechaHora, contacto, estado FROM turno";			
         $resultado = $conexion->prepare($consulta);
         $resultado->execute(); 
@@ -35,8 +35,7 @@ switch($opcion){
         /* --- Insertar Turno --- */
         $consulta = "INSERT INTO turno 
         (fechaHora, contacto, telefono, dominio, siniestro, observacion, esPago, tipoPago, numFactura, estado, modeloID, empresaID) 
-        VALUES('$fechaHora', '$contacto', '$telefono', '$dominio', '$siniestro', '$observacion', '$esPago', '$tipoPago', '$numFactura', 'Activo', '$modeloID', '$empresaID');
-        INSERT INTO turnodetalle (importe, cantidad, turnoID, cristalID) VALUES ('13489','8','25','526'), ('12586','1','8','528')";	
+        VALUES('$fechaHora', '$contacto', '$telefono', '$dominio', '$siniestro', '$observacion', '$esPago', '$tipoPago', '$numFactura', 'Activo', '$modeloID', '$empresaID');";
         $resultado = $conexion->prepare($consulta);
         $resultado->execute();
         $turnoID=$conexion->lastInsertId();
@@ -52,7 +51,7 @@ switch($opcion){
         $resultado->execute();
         $data=$resultado->fetchAll(PDO::FETCH_ASSOC);
 
-        /* --- Insertar Turnos --- */
+        /* --- Insertar Trabajos --- */
         $valuesTrabajos='';
         foreach ($trabajos as $trabajo){
             $valuesTrabajos = $valuesTrabajos . '(' .  $trabajo . ', ' . $turnoID . '),';
@@ -62,17 +61,50 @@ switch($opcion){
         $resultado = $conexion->prepare($consulta);
         $resultado->execute();
         $data=$resultado->fetchAll(PDO::FETCH_ASSOC);
+        $data=$turnoID;
         break;
-    case 3:        
-        $consulta = "UPDATE turno SET contacto='$contacto', fechaHora='$fechaHora' WHERE idTurno='$idTurno'";		
+    case 3:
+        $consulta = "UPDATE turno SET contacto='$contacto', fechaHora='$fechaHora', telefono='$telefono', dominio='$dominio',
+        siniestro='$siniestro', observacion='$observacion', esPago='$esPago', tipoPago='$tipoPago', numFactura='$numFactura', modeloID='$modeloID',
+        empresaID='$empresaID'
+        WHERE idTurno='$idTurno'";		
         $resultado = $conexion->prepare($consulta);
         $resultado->execute();
-        $data=$resultado->fetchAll(PDO::FETCH_ASSOC);                           
+        $data=$resultado->fetchAll(PDO::FETCH_ASSOC);
+        
+        if($banderaCristales){
+            /* --- Actulizar Cristales --- */
+            $valuesCristales='';
+            foreach ($cristales as $cristal){
+                $valuesCristales = $valuesCristales . '(' .  implode(", ", $cristal) . ', ' . $idTurno . '),';
+            }
+            $valuesCristales = substr($valuesCristales , 0, -1);
+            $consulta = "DELETE FROM turnodetalle WHERE turnoID='$idTurno';
+            INSERT INTO turnodetalle (otro, importeSinIva, importeConIva, cantidad, cristalID, turnoID) VALUES $valuesCristales";		
+            $resultado = $conexion->prepare($consulta);
+            $resultado->execute();
+            $data=$resultado->fetchAll(PDO::FETCH_ASSOC);
+        };
+
+        if($banderaTrabajos){
+            /* --- Actulizar Trabajos --- */
+            $valuesTrabajos='';
+            foreach ($trabajos as $trabajo){
+                $valuesTrabajos = $valuesTrabajos . '(' .  $trabajo . ', ' . $idTurno . '),';
+            }
+            $valuesTrabajos = substr($valuesTrabajos , 0, -1);
+            $consulta = "DELETE FROM trabajoturno WHERE turnoID='$idTurno';
+            INSERT INTO trabajoturno (trabajoID, turnoID) VALUES $valuesTrabajos ";		
+            $resultado = $conexion->prepare($consulta);
+            $resultado->execute();
+            $data=$resultado->fetchAll(PDO::FETCH_ASSOC);
+        };
+
         break;
     case 4:
         $consulta = "DELETE FROM turnodetalle WHERE turnoID='$idTurno';
         DELETE FROM trabajoturno WHERE turnoID='$idTurno';
-        DELETE FROM turno WHERE idTurno='$idTurno' ";
+        DELETE FROM turno WHERE idTurno='$idTurno'";
         $resultado = $conexion->prepare($consulta);
         $resultado->execute();        
         $data=$resultado->fetchAll(PDO::FETCH_ASSOC);
@@ -84,11 +116,12 @@ switch($opcion){
         $data=$resultado->fetchAll(PDO::FETCH_ASSOC);
         break;
     case 6:
-        /* --- Marca --- */
-        $consulta="SELECT m.marcaID, m.idModelo, m.nombre, t.*
+        /* --- Turno + Marca + Cristales --- */
+        $consulta="SELECT m.marcaID, m.idModelo, m.nombre, t.*, GROUP_CONCAT(c.idCristal) AS idCristales, GROUP_CONCAT(c.codigo) AS codigos, GROUP_CONCAT(c.descripcion) AS descripciones
         FROM turno t
         INNER JOIN modelo m ON m.idModelo = t.modeloID
-        WHERE t.idTurno = $idTurno";
+        INNER JOIN cristal c ON m.idModelo = c.modeloID
+        WHERE t.idTurno = $idTurno;";
         $resultado = $conexion->prepare($consulta);
         $resultado->execute();
         $data=$resultado->fetchAll(PDO::FETCH_ASSOC);
@@ -130,7 +163,16 @@ switch($opcion){
             $data4=[];
         }
 
-        $data=array_merge([$data], [$data2], [$data3], [$data4]);
+        /* --- Modelos --- */
+        $consulta="SELECT idModelo, nombre FROM modelo WHERE marcaID =" . $data[0]['marcaID'];
+        $resultado5 = $conexion->prepare($consulta);
+        $resultado5->execute();
+        $data5=$resultado5->fetchAll(PDO::FETCH_ASSOC);
+        if(!$data5){
+            $data5=[];
+        }
+
+        $data=array_merge([$data], [$data2], [$data3], [$data4] , [$data5]);
         break;
     case 7:
         $consulta = "SELECT * FROM marca;";

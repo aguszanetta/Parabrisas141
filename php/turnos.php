@@ -19,6 +19,8 @@
       <form id="formTurno" class="form-sample" action="" method="POST">
         <input id="cristales" name="cristales" type="text" value="" hidden="">
         <input id="cristalEliminar" name="cristalEliminar" value="" hidden>
+        <input id="banderaCristales" name="banderaCristales" value="" hidden>
+        <input id="banderaTrabajos" name="banderaTrabajos" value="" hidden>
         <div class="modal-body">
             <div class="container-fluid">
                 <div class="row">
@@ -154,16 +156,18 @@
                         <input id="cantidad" name="cantidad" type="number" min="0" class="form-control inputForm">
                     </div>
                     <div class="col-md-3 pb-3 d-flex align-items-end">
-                        <button type="button" id="eliminarCristal" class="btn btn-danger">Eliminar</button>
-                        <button type="button" id="agregarCristal" class="btn btn-success ms-2">Agregar</button>
-                        <div class="form-check ms-3">
+                        <div class="form-check col-md-4">
                             <input class="form-check-input inputForm" type="checkbox" value="" id="otro">
                             <label class="form-check-label text-dark" for="flexCheckDefault">Otro</label>
                         </div>
+                        <div id="colImporte" class="col-md-8">
+                            <label for="importe" class="form-label text-dark">Importe</label>
+                            <input id="importe" name="importe" type="number" step="0.01" min="0" class="form-control inputForm">
+                        </div>
                     </div>
-                    <div id="colImporte" class="col-md-3">
-                        <label for="importe" class="form-label text-dark">Importe</label>
-                        <input id="importe" name="importe" type="number" step="0.01" min="0" class="form-control inputForm">
+                    <div class="col-md-3 pb-3 d-flex align-items-end justify-content-end">
+                        <button type="button" id="eliminarCristal" class="btn btn-danger inputForm">Eliminar</button>
+                        <button type="button" id="agregarCristal" class="btn btn-success ms-2 inputForm">Agregar</button>
                     </div>
                 </div>
                 <div class="container mb-3 mxWth">
@@ -362,8 +366,8 @@
 <!-- MomentJs 
 <script src="../libraries/moment/moment.js"></script>-->
 
-<!--BootstrapMultiselect-->
-<script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-multiselect/0.9.13/js/bootstrap-multiselect.js"></script>
+<!--BootstrapMultiselect
+<script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-multiselect/0.9.13/js/bootstrap-multiselect.js"></script>-->
 
 <!-- Select 2 -->
 <script src="../libraries/select2/dist/js/select2.min.js"></script>
