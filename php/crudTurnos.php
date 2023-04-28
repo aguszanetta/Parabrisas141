@@ -85,7 +85,7 @@ switch($opcion){
         break;
     case 6:
         /* --- Marca --- */
-        $consulta="SELECT m.marcaID
+        $consulta="SELECT m.marcaID, m.idModelo, m.nombre, t.*
         FROM turno t
         INNER JOIN modelo m ON m.idModelo = t.modeloID
         WHERE t.idTurno = $idTurno";
@@ -108,8 +108,8 @@ switch($opcion){
         }
 
         /* --- Turno Detalle --- */
-        $consulta="SELECT * 
-        FROM turnodetalle 
+        $consulta="SELECT td.*, c.codigo, c.descripcion FROM turnodetalle td
+        INNER JOIN cristal c ON td.cristalID = c.idCristal
         WHERE turnoID = $idTurno";
         $resultado3 = $conexion->prepare($consulta);
         $resultado3->execute();

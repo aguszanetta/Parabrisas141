@@ -81,6 +81,7 @@ $(document).ready(function() {
     /*---------- RESET MODAL CUANDO CIERRA ----------*/
     $("#modalTurno").on("hidden.bs.modal", function(){
       $("#formTurno").trigger("reset");
+      tablaCristales.clear().draw();
     });
 
     /*---------- ALTA ----------*/
@@ -121,29 +122,51 @@ $(document).ready(function() {
             $('#loader').addClass('hidden')
         },
         success: function(data) {
-          //datos = JSON.parse(data)
-          console.log(data);
+          datos = JSON.parse(data)
           fechaHora = evento.event.startStr.split('T');
           $("#contacto").val(evento.event.title);
-          /*$("#fecha").val(fechaHora[0]);
+          $("#fecha").val(fechaHora[0]);
           $("#hora").val(fechaHora[1]);
-          $("#telefono").val(datos[0].telefono);
-          $("#dominio").val(datos[0].dominio);
-          $("#empresa").val(datos[0].empresaID);
-          $("#marca").val(datos[0].marcaID);
-          $("#observacion").val(datos[0].observacion);
-          $("#numFactura").val(datos[0].numFactura);
-          $("#siniestro").val(datos[0].siniestro);
-          $("#trabajo").val(datos[0].trabajo.split(","));
+          $("#telefono").val(datos[0][0].telefono);
+          $("#dominio").val(datos[0][0].dominio);
+          $("#empresa").val(datos[0][0].empresaID);
+          $("#marca").val(datos[0][0].marcaID);
+          $("#modelo").append($('<option>', {value: datos[0][0].idModelo, text: datos[0][0].nombre}));
+          $("#modelo").val( datos[0][0].idModelo);
+          $("#observacion").val(datos[0][0].observacion);
+          $("#numFactura").val(datos[0][0].numFactura);
+          $("#siniestro").val(datos[0][0].siniestro);
+
+          //CARGAR TABLA CRISTALES
+          for (let i = 0; i < datos[2].length; i++) {
+          //arrayCristales para editar
+          tablaCristales.row.add([
+              datos[2][i].codigo,
+              datos[2][i].descripcion,
+              datos[2][i].cantidad,
+              datos[2][i].otro,
+              datos[2][i].importeSinIva,
+              datos[2][i].importeConIva,
+              datos[2][i].cristalID
+          ]).draw(false);
+          }
+
+          //TRABAJO
+          arrayTrabajos = []
+          for (let i = 0; i < datos[1].length; i++) {
+            arrayTrabajos.push(datos[1][i].trabajoID)
+          }
+          $("#trabajo").val(arrayTrabajos)
           $('#trabajo').trigger('change');
 
-          if(datos[0].esPago == "Si"){
+          //PAGO - TIPO DE PAGO
+          if(datos[0][0].esPago == "Si"){
             $("#esPago").prop("checked", true)
           } else {
             $("#esPago").prop("checked", false)
           }
 
-          switch (datos[0].tipoPago) {
+          switch (datos[0][0].tipoPago) {
             case "Efectivo":
               $("#tipoPago").val(1)
             break;
@@ -158,12 +181,19 @@ $(document).ready(function() {
             break;
           }
 
+          //ARCHIVOS
+          if(datos[3][0].idArchivo){
+            idArchivos = []
+            archivosNombre = []
+            archivosHash = []
+            archivosExt = []
+            for (let i = 0; i < datos[3].length; i++) {
+              idArchivos.push(datos[3][i].idArchivo)
+              archivosNombre.push(datos[3][i].nombre)
+              archivosHash.push(datos[3][i].path)
+              archivosExt.push(datos[3][i].ext)
+            }
 
-          if(datos[0].idArchivo){
-            idArchivos = datos[0].idArchivo.split('/')
-            archivosNombre = datos[0].archivoNombre.split('/')
-            archivosHash = datos[0].archivoHash.split('/')
-            archivosExt = datos[0].archivoExt.split('/')
             $("#contentArchivos").html("<label for='' class='form-label text-dark'>Archivos</label><div class='row' id='rowArchivos'></div>");
             for(j=0; j<idArchivos.length; j++){
                 if(archivosExt[j] == 'pdf'){
@@ -190,7 +220,7 @@ $(document).ready(function() {
             <input id="archivo" name="archivo" class="file-input" type="file" accept=".pdf, .jpg, .jpeg, .png, .tif" multiple="multiple" hidden=""> \
             <i class="fa-solid fa-cloud-arrow-up fa-2xl"></i> \
             <p class="mb-0">Subir Archivos</p> \
-          </div> ');*/
+          </div> ');
         }
     })
       
@@ -349,7 +379,6 @@ $(document).ready(function() {
               //Archivos
             },
             success: function(data) {
-                console.log(data);
                 Swal.fire({
                     title: 'Exito',
                     text: 'El turno se cargó correctamente',
