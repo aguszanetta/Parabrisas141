@@ -86,6 +86,7 @@ $(document).ready(function() {
       $("#cristales").attr('value', '');
       $("#banderaCristales").attr('value', '');
       $("#banderaTrabajos").attr('value', '');
+      $("#rowArchivos").children().not("#wrapperArchivo").remove();
     });
 
     /*---------- ALTA ----------*/
@@ -200,7 +201,6 @@ $(document).ready(function() {
               $("#tipoPago").val(0)
             break;
           }
-
           //ARCHIVOS
           if(datos[3][0]){
             idArchivos = []
@@ -214,21 +214,20 @@ $(document).ready(function() {
               archivosExt.push(datos[3][i].ext)
             }
 
-            $("#contentArchivos").html("<label for='' class='form-label text-dark'>Archivos</label><div class='row' id='rowArchivos'></div>");
             for(j=0; j<idArchivos.length; j++){
                 if(archivosExt[j] == 'pdf'){
-                  $("#rowArchivos").append('<div id="'+idArchivos[j]+'" class="col-sm-2"> \
+                  $("#rowArchivos").prepend('<div id="'+idArchivos[j]+'" class="col-sm-2"> \
                     <i class="fas fa-times eliminarArchivo mb-1"></i> \
-                    <a href="../archivos/'+archivosHash[j]+'" target="_blank"> \
+                    <a href="../files/'+archivosHash[j]+'" target="_blank"> \
                         <img src="../img/archivoPDF.png" alt="Archivo PDF" class="img-fluid pdf-modal"> \
                     </a> \
                     <p class="text-center mt-2 font-italic nombreArchivo">'+archivosNombre[j]+'</p> \
                     </div>');
                 } else{
-                    $("#rowArchivos").append('<div id="'+idArchivos[j]+'" class="col-sm-2"> \
+                    $("#rowArchivos").prepend('<div id="'+idArchivos[j]+'" class="col-sm-2"> \
                       <i class="fas fa-times eliminarArchivo mb-1"></i> \
-                      <a href="../archivos/'+archivosHash[j]+'" data-lightbox="roadtrip" data-title="Fiat_Siena_2.jpg"> \
-                          <img src="../archivos/'+archivosHash[j]+'" alt="Imagen 1" class="img-fluid img-modal"> \
+                      <a href="../files/'+archivosHash[j]+'" data-lightbox="roadtrip" data-title="Fiat_Siena_2.jpg"> \
+                          <img src="../files/'+archivosHash[j]+'" alt="Imagen 1" class="img-fluid img-modal"> \
                       </a> \
                       <p class="text-center mt-2 font-italic nombreArchivo">'+archivosNombre[j]+'</p> \
                     </div> \
@@ -236,11 +235,6 @@ $(document).ready(function() {
                 }
             }
           }
-          $("#rowArchivos").append('<div id="wrapperArchivo" class="wrapperArchivo col-sm-2"> \
-            <input id="archivo" name="archivo" class="file-input" type="file" accept=".pdf, .jpg, .jpeg, .png, .tif" multiple="multiple" hidden=""> \
-            <i class="fa-solid fa-cloud-arrow-up fa-2xl"></i> \
-            <p class="mb-0">Subir Archivos</p> \
-          </div> ');
         }
       });
 
@@ -823,6 +817,50 @@ $(document).ready(function() {
         $("#banderaTrabajos").attr('value', "cambio")
       }
     })
+
+    /*---------- ARCHIVOS ----------*/
+    const dt = new DataTransfer();
+    $(document).on("click", "#wrapperArchivo", function(e){
+      $("#archivo").click();
+    })
+
+    $(document).on("change", "#archivo", function(){
+      console.log("Se agrego archivo")
+        agregarArchivo(dt, this.files)
+        //agregarArchivo()
+    })
+
+    /*$(document).on("click", ".quitarArchivo", function(){
+        let nombre = $(this).prev().text();
+        for(let i = 0; i < dt.items.length; i++){
+            if(nombre === dt.items[i].getAsFile().name){
+                $(this).parents()[2].remove();
+                dt.items.remove(i);
+                continue;
+            }
+        }
+        
+        $("#archivo").prop('files', dt.files)
+    })*/
+
+    $(document).on("drop", "#wrapperArchivo", function(e){
+        e.preventDefault();
+        $("#wrapperArchivo").removeAttr('style');
+        console.log("se agrego archivo por drag")
+        agregarArchivo(dt, e.originalEvent.dataTransfer.files)
+        //agregarArchivo()
+    })
+
+    $(document).on("dragover", "#wrapperArchivo", function(e){
+        e.preventDefault();
+        $("#wrapperArchivo").css("background", "#00000024")
+    })
+
+    $(document).on("dragleave", "#wrapperArchivo", function(e){
+        e.preventDefault();
+        $("#wrapperArchivo").removeAttr('style');
+    })
+
 });
 
 
@@ -851,4 +889,77 @@ async function cargarImporte(idCristal, idEmpresa, cantidad) {
           }
       })
   });
+}
+
+async function agregarArchivo(dt, files){
+  //const $inputArchivos = document.querySelector("#filesC");
+  //const archivosParaSubir = $inputArchivos.files;
+  archivos = [];
+  for (i = 0; i < files.length; i++) {
+      archivos.push(files[i].name);
+  }
+  if (files.length <= 0) {
+      // Si no hay archivos, no continuamos
+      return;
+  }
+  // Preparamos el formdata
+  const formData = new FormData();
+  // Agregamos cada archivo a "archivos[]". Los corchetes son importantes
+  for (const archivo of files) {
+      formData.append("archivos[]", archivo);
+  }
+  // Los enviamos
+  $.ajax({
+      url: 'upload.php',
+      type: 'post',
+      data: formData,
+      contentType: false,
+      processData: false,
+      success: function(response) {
+        console.log("response", response)
+          if (response != 0) {
+              archivosHash = JSON.parse(response);
+              //--------------Muestra de archivos cargados--------------//
+              if(archivosExt[j] == 'pdf'){
+                $("#rowArchivos").prepend('<div id="'+idArchivos[j]+'" class="col-sm-2"> \
+                  <i class="fas fa-times eliminarArchivo mb-1"></i> \
+                  <a href="../files/'+archivosHash[j]+'" target="_blank"> \
+                      <img src="../img/archivoPDF.png" alt="Archivo PDF" class="img-fluid pdf-modal"> \
+                  </a> \
+                  <p class="text-center mt-2 font-italic nombreArchivo">'+archivosNombre[j]+'</p> \
+                  </div>');
+              } else{
+                  $("#rowArchivos").prepend('<div id="'+idArchivos[j]+'" class="col-sm-2"> \
+                    <i class="fas fa-times eliminarArchivo mb-1"></i> \
+                    <a href="../files/'+archivosHash[j]+'" data-lightbox="roadtrip" data-title="Fiat_Siena_2.jpg"> \
+                        <img src="../files/'+archivosHash[j]+'" alt="Imagen 1" class="img-fluid img-modal"> \
+                    </a> \
+                    <p class="text-center mt-2 font-italic nombreArchivo">'+archivosNombre[j]+'</p> \
+                  </div> \
+                  ');
+              }
+                //-------------------------------------------------------//
+          } else {
+            Swal.fire({
+              title: 'Error',
+              text: 'El archivo no ha sido cargado',
+              icon: 'error'
+            })
+          }
+      },
+  });
+  //$inputArchivos.value = null;
+}
+
+function existeArchivo(dt, itemNombre){
+  if(dt.items.length == 0){
+      return false
+  } else {
+      for(let i = 0; i < dt.items.length; i++){
+          if(itemNombre === dt.items[i].getAsFile().name){
+              return true
+          }
+      }
+      return false
+  }
 }

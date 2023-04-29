@@ -281,7 +281,14 @@
                 </div>-->
                 <div id="contentArchivos">
                     <label for="" class="form-label text-dark">Archivos</label>
+                    <div class='row' id='rowArchivos'>
+                        <div id="wrapperArchivo" class="wrapperArchivo col-sm-2">
+                            <i class="fa-solid fa-cloud-arrow-up fa-2xl"></i>
+                            <p class="mb-0">Subir Archivos</p>
+                        </div> 
+                    </div>
                 </div>
+                <input id="archivo" name="archivo" class="file-input" type="file" accept=".pdf, .jpg, .jpeg, .png, .tif" multiple="multiple" hidden="">
             </div>
         </div>
         <div class="modal-footer">
