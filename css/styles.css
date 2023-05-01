@@ -345,3 +345,23 @@ div.btn-group{
 div#wrapperArchivo .fa-cloud-arrow-up{
     color: #d5693b;
 }
+
+.eliminarArchivo{
+    float: right;
+    color: #696969;
+}
+
+.eliminarArchivo:hover {
+    cursor: pointer;
+    opacity: 0.8;
+}
+
+.dispNone{
+    display: none;
+}
+
+.nombreArchivo{
+    white-space: nowrap;
+    text-overflow: ellipsis;
+    overflow: hidden;
+}

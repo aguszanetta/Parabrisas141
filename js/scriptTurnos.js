@@ -86,7 +86,8 @@ $(document).ready(function() {
       $("#cristales").attr('value', '');
       $("#banderaCristales").attr('value', '');
       $("#banderaTrabajos").attr('value', '');
-      $("#rowArchivos").children().not("#wrapperArchivo").remove();
+      //$("#rowArchivos").children().not("#wrapperArchivo").remove();
+      $("#contentArchivos").empty();
     });
 
     /*---------- ALTA ----------*/
@@ -202,30 +203,30 @@ $(document).ready(function() {
             break;
           }
           //ARCHIVOS
+          $("#contentArchivos").append('<label for="" class="form-label text-dark">Archivos</label><div class="row" id="rowArchivos"></div>')
+          
           if(datos[3][0]){
-            idArchivos = []
             archivosNombre = []
             archivosHash = []
             archivosExt = []
             for (let i = 0; i < datos[3].length; i++) {
-              idArchivos.push(datos[3][i].idArchivo)
               archivosNombre.push(datos[3][i].nombre)
               archivosHash.push(datos[3][i].path)
               archivosExt.push(datos[3][i].ext)
             }
 
-            for(j=0; j<idArchivos.length; j++){
+            for(j=0; j<archivosHash.length; j++){
                 if(archivosExt[j] == 'pdf'){
-                  $("#rowArchivos").prepend('<div id="'+idArchivos[j]+'" class="col-sm-2"> \
-                    <i class="fas fa-times eliminarArchivo mb-1"></i> \
+                  $("#rowArchivos").append('<div id="'+archivosHash[j]+'" class="col-sm-2"> \
+                    <i class="fas fa-times eliminarArchivo dispNone mb-1"></i> \
                     <a href="../files/'+archivosHash[j]+'" target="_blank"> \
                         <img src="../img/archivoPDF.png" alt="Archivo PDF" class="img-fluid pdf-modal"> \
                     </a> \
                     <p class="text-center mt-2 font-italic nombreArchivo">'+archivosNombre[j]+'</p> \
                     </div>');
                 } else{
-                    $("#rowArchivos").prepend('<div id="'+idArchivos[j]+'" class="col-sm-2"> \
-                      <i class="fas fa-times eliminarArchivo mb-1"></i> \
+                    $("#rowArchivos").append('<div id="'+archivosHash[j]+'" class="col-sm-2"> \
+                      <i class="fas fa-times eliminarArchivo dispNone mb-1"></i> \
                       <a href="../files/'+archivosHash[j]+'" data-lightbox="roadtrip" data-title="Fiat_Siena_2.jpg"> \
                           <img src="../files/'+archivosHash[j]+'" alt="Imagen 1" class="img-fluid img-modal"> \
                       </a> \
@@ -234,6 +235,14 @@ $(document).ready(function() {
                     ');
                 }
             }
+          }else{
+            $("#rowArchivos").append("<i>No hay archivos anexados...</i>")
+          }
+
+          if (datos[0][0].estado == "Finalizado"){
+            $("#btn-finalizarTurno").hide()
+          }else{
+            $("#btn-finalizarTurno").show()
           }
         }
       });
@@ -258,7 +267,13 @@ $(document).ready(function() {
       $("#btn-finalizarTurno").css('visibility', 'hidden');
       $(".btn-editar").show();
       $("#btn-ok").hide();
+      $(".eliminarArchivo").show();
       $(".select2-search.select2-search--inline").remove();
+      $("#rowArchivos>i").remove()
+      $("#rowArchivos").append('<div id="wrapperArchivo" class="wrapperArchivo col-sm-2"> \
+          <i class="fa-solid fa-cloud-arrow-up fa-2xl"></i> \
+          <p class="mb-0">Subir Archivos</p> \
+      </div>')
       $("#modalTurnoTitle").text("Editar Turno");
       $("#modalTurnoHeader").css("background-color", "#0b5ed7");
     });
@@ -819,36 +834,65 @@ $(document).ready(function() {
     })
 
     /*---------- ARCHIVOS ----------*/
-    const dt = new DataTransfer();
+    //const dt = new DataTransfer();
     $(document).on("click", "#wrapperArchivo", function(e){
       $("#archivo").click();
     })
 
     $(document).on("change", "#archivo", function(){
-      console.log("Se agrego archivo")
-        agregarArchivo(dt, this.files)
-        //agregarArchivo()
+      agregarArchivo(this.files, evento.event.id)
     })
 
-    /*$(document).on("click", ".quitarArchivo", function(){
-        let nombre = $(this).prev().text();
-        for(let i = 0; i < dt.items.length; i++){
-            if(nombre === dt.items[i].getAsFile().name){
-                $(this).parents()[2].remove();
-                dt.items.remove(i);
-                continue;
+    $(document).on("click", ".eliminarArchivo", function(){
+        nombreHash =$(this).parents()[0].id
+        Swal.fire({
+          title: '¿Seguro?',
+          text: '¿Estás seguro que quieres eliminar este archivo?',
+          icon: 'warning',
+          showCancelButton: true,
+          reverseButtons: true,
+          confirmButtonText: 'Confirmar',
+          cancelButtonText: 'Cancelar',
+          confirmButtonColor: '#3085d6',
+          cancelButtonColor: '#d33',
+        }).then((result) => {
+            if (result.isConfirmed) {
+              $.ajax({
+                  url: "delete.php",
+                  type: "POST",
+                  datatype: "json",
+                  data: { 
+                    nombreHash: nombreHash,
+                  },
+                  success: function(response) {
+                    if(response == "OK"){
+                      $('div[id="'+nombreHash+'"]').remove()
+                      Swal.fire({
+                        title: 'Exito',
+                        text: 'El archivo ha sido eliminado correctamente',
+                        icon: 'success',
+                        showConfirmButton: false,
+                        timer: 1500,
+                      })
+                    } else {
+                      Swal.fire({
+                        title: 'Error',
+                        text: 'No se ha podido eliminar el archivo',
+                        icon: 'error',
+                        showConfirmButton: false,
+                        timer: 1500,
+                      })
+                    }
+                  }
+              });
             }
-        }
-        
-        $("#archivo").prop('files', dt.files)
-    })*/
+          })
+    })
 
     $(document).on("drop", "#wrapperArchivo", function(e){
         e.preventDefault();
         $("#wrapperArchivo").removeAttr('style');
-        console.log("se agrego archivo por drag")
-        agregarArchivo(dt, e.originalEvent.dataTransfer.files)
-        //agregarArchivo()
+        agregarArchivo(e.originalEvent.dataTransfer.files, evento.event.id)
     })
 
     $(document).on("dragover", "#wrapperArchivo", function(e){
@@ -891,9 +935,7 @@ async function cargarImporte(idCristal, idEmpresa, cantidad) {
   });
 }
 
-async function agregarArchivo(dt, files){
-  //const $inputArchivos = document.querySelector("#filesC");
-  //const archivosParaSubir = $inputArchivos.files;
+async function agregarArchivo(files, idTurno){
   archivos = [];
   for (i = 0; i < files.length; i++) {
       archivos.push(files[i].name);
@@ -909,6 +951,7 @@ async function agregarArchivo(dt, files){
       formData.append("archivos[]", archivo);
   }
   // Los enviamos
+      formData.append("idTurno", idTurno);
   $.ajax({
       url: 'upload.php',
       type: 'post',
@@ -916,29 +959,30 @@ async function agregarArchivo(dt, files){
       contentType: false,
       processData: false,
       success: function(response) {
-        console.log("response", response)
           if (response != 0) {
-              archivosHash = JSON.parse(response);
-              //--------------Muestra de archivos cargados--------------//
-              if(archivosExt[j] == 'pdf'){
-                $("#rowArchivos").prepend('<div id="'+idArchivos[j]+'" class="col-sm-2"> \
+            arrayNombres = JSON.parse(response);
+            //--------------Muestra de archivos cargados--------------//
+            for(j=0; j<arrayNombres.length; j++){
+              if(arrayNombres[j][2] == 'pdf'){
+                $("#rowArchivos").prepend('<div id="'+arrayNombres[j][1]+'" class="col-sm-2"> \
                   <i class="fas fa-times eliminarArchivo mb-1"></i> \
-                  <a href="../files/'+archivosHash[j]+'" target="_blank"> \
+                  <a href="../files/'+arrayNombres[j][1]+'" target="_blank"> \
                       <img src="../img/archivoPDF.png" alt="Archivo PDF" class="img-fluid pdf-modal"> \
                   </a> \
-                  <p class="text-center mt-2 font-italic nombreArchivo">'+archivosNombre[j]+'</p> \
+                  <p class="text-center mt-2 font-italic nombreArchivo">'+arrayNombres[j][0]+'</p> \
                   </div>');
               } else{
-                  $("#rowArchivos").prepend('<div id="'+idArchivos[j]+'" class="col-sm-2"> \
+                  $("#rowArchivos").prepend('<div id="'+arrayNombres[j][1]+'" class="col-sm-2"> \
                     <i class="fas fa-times eliminarArchivo mb-1"></i> \
-                    <a href="../files/'+archivosHash[j]+'" data-lightbox="roadtrip" data-title="Fiat_Siena_2.jpg"> \
-                        <img src="../files/'+archivosHash[j]+'" alt="Imagen 1" class="img-fluid img-modal"> \
+                    <a href="../files/'+arrayNombres[j][1]+'" data-lightbox="roadtrip" data-title="Fiat_Siena_2.jpg"> \
+                        <img src="../files/'+arrayNombres[j][1]+'" alt="Imagen 1" class="img-fluid img-modal"> \
                     </a> \
-                    <p class="text-center mt-2 font-italic nombreArchivo">'+archivosNombre[j]+'</p> \
+                    <p class="text-center mt-2 font-italic nombreArchivo">'+arrayNombres[j][0]+'</p> \
                   </div> \
                   ');
               }
-                //-------------------------------------------------------//
+            }
+            //-------------------------------------------------------//
           } else {
             Swal.fire({
               title: 'Error',
@@ -948,7 +992,6 @@ async function agregarArchivo(dt, files){
           }
       },
   });
-  //$inputArchivos.value = null;
 }
 
 function existeArchivo(dt, itemNombre){
