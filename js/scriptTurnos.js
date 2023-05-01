@@ -607,7 +607,7 @@ $(document).ready(function() {
             cristalesACambiar = "";
             cristalesCambioEmp = JSON.parse(cristales);
             for (let i = 0; i < cristalesCambioEmp.length; i++) {
-              if (cristalesCambioEmp[i][0] == "No") {
+              if (cristalesCambioEmp[i][0] == "'No'") {
                 if(i==0){
                   cristalesACambiar=cristalesACambiar+cristalesCambioEmp[i][4]
                 } else {
