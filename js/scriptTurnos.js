@@ -865,7 +865,7 @@ $(document).ready(function() {
                     nombreHash: nombreHash,
                   },
                   success: function(response) {
-                    if(response == "OK"){
+                    if(response == 200){
                       $('div[id="'+nombreHash+'"]').remove()
                       Swal.fire({
                         title: 'Exito',

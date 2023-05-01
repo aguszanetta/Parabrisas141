@@ -11,10 +11,10 @@
         $resultado = $conexion->prepare($consulta);
         $resultado->execute();
         $data=$resultado->fetchAll(PDO::FETCH_ASSOC);
-        $response = "OK";
+        $response = 200;
         echo json_encode($response);
     } else {
-        $response = "ERROR";
+        $response = 400;
         echo json_encode($response);
     }
     $conexion=null;
