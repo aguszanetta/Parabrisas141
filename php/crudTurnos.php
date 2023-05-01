@@ -104,6 +104,7 @@ switch($opcion){
     case 4:
         $consulta = "DELETE FROM turnodetalle WHERE turnoID='$idTurno';
         DELETE FROM trabajoturno WHERE turnoID='$idTurno';
+        DELETE FROM archivo WHERE turnoID='$idTurno';
         DELETE FROM turno WHERE idTurno='$idTurno'";
         $resultado = $conexion->prepare($consulta);
         $resultado->execute();        

@@ -986,7 +986,7 @@ async function agregarArchivo(files, idTurno){
           } else {
             Swal.fire({
               title: 'Error',
-              text: 'El archivo no ha sido cargado',
+              text: 'El archivo no ha sido cargado', 
               icon: 'error'
             })
           }
