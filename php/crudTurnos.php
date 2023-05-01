@@ -21,6 +21,7 @@ $cristalID = (isset($_POST['cristalID'])) ? $_POST['cristalID'] : '';
 $cristales = (isset($_POST['cristales'])) ? $_POST['cristales'] : '';
 $banderaCristales = (isset($_POST['banderaCristales'])) ? $_POST['banderaCristales'] : '';
 $banderaTrabajos = (isset($_POST['banderaTrabajos'])) ? $_POST['banderaTrabajos'] : '';
+$idCristales = (isset($_POST['idCristales'])) ? $_POST['idCristales'] : '';
 
 $opcion = (isset($_POST['opcion'])) ? $_POST['opcion'] : '';
 
