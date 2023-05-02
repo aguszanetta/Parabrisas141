@@ -22,6 +22,7 @@ $cristales = (isset($_POST['cristales'])) ? $_POST['cristales'] : '';
 $banderaCristales = (isset($_POST['banderaCristales'])) ? $_POST['banderaCristales'] : '';
 $banderaTrabajos = (isset($_POST['banderaTrabajos'])) ? $_POST['banderaTrabajos'] : '';
 $idCristales = (isset($_POST['idCristales'])) ? $_POST['idCristales'] : '';
+$mes = (isset($_POST['mes'])) ? $_POST['mes'] : '';
 
 $opcion = (isset($_POST['opcion'])) ? $_POST['opcion'] : '';
 
@@ -177,12 +178,13 @@ switch($opcion){
         $data=array_merge([$data], [$data2], [$data3], [$data4] , [$data5]);
         break;
     case 7:
-        $consulta = "SELECT * FROM marca;";
+        $consulta = "SELECT SUM(td.importeConIva) AS total FROM turno t 
+        INNER JOIN turnodetalle td ON t.idTurno = td.turnoID 
+        WHERE t.tipoPago = 'Efectivo' AND t.esPago = 'Si' AND t.estado = 'Finalizado' AND MONTH(t.fechaHora) = $mes";
         $resultado = $conexion->prepare($consulta);
         $resultado->execute();        
         $data=$resultado->fetchAll(PDO::FETCH_ASSOC);
         break;
-        /*--------------Cargar Desplegables--------------*/
     case 8:
         $consulta = "SELECT * FROM modelo WHERE marcaID='$marcaID';";
         $resultado = $conexion->prepare($consulta);
@@ -195,7 +197,6 @@ switch($opcion){
         $resultado->execute();        
         $data=$resultado->fetchAll(PDO::FETCH_ASSOC);
         break;
-    /*--------------Precio--------------*/
     case 10: 
         $consulta = "SELECT p.totalSinIva, p.totalConIva FROM precio p 
         INNER JOIN empresaprecio ep ON ep.precioID = p.idPrecio
@@ -231,12 +232,12 @@ switch($opcion){
         $resultado = $conexion->prepare($consulta);
         $resultado->execute();
         break;*/
-    case 15:
+    /*case 15:
         $consulta = "SELECT DISTINCT codigo, posicion, lado, color FROM stock WHERE marca='$marca' and modelo='$modelo' and cristal='$cristal' ";
         $resultado = $conexion->prepare($consulta);
         $resultado->execute();
         $data=$resultado->fetchAll(PDO::FETCH_ASSOC);
-    break;
+    break;*/
 }
 
 print json_encode($data, JSON_UNESCAPED_UNICODE);

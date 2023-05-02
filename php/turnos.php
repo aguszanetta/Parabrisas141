@@ -4,7 +4,7 @@
 <div class="container-fluid">
 	<h1>Turnos</h1>
     <div id='calendar' class="mb-3"></div>
-   
+    
 <!--Modal para Turno-->
 <div class="modal fade" id="modalTurno" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
   <div class="modal-dialog modal-dialog-centered modal-xl">
@@ -292,6 +292,42 @@
             <button type="submit" class="btn btn-primary btn-editar">Guardar</button>
         </div>
       </form>  
+    </div>
+  </div>
+</div>
+<!--Modal Caja para Turno-->
+<div class="modal fade" id="modalCaja" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered modal-md">
+    <div class="modal-content">
+      <div class="modal-header" id="modalCajaHeader">
+        <h5 class="modal-title" id="modalCajaTitle">Caja De</h5>
+        <button type="button" class="btn-close btn-close-white ms-2 btn-header" data-bs-dismiss="modal" aria-label="Close"></button> 
+    </div>  
+        <div class="modal-body">
+            <div class="form-group">
+                <select name="mes" id="mes" class="form-select inputForm">
+                    <option value="">Seleccione Mes</option>
+                    <option value="1">Enero</option>
+                    <option value="2">Febrero</option>
+                    <option value="3">Marzo</option>
+                    <option value="4">Abril</option>
+                    <option value="5">Mayo</option>
+                    <option value="6">Junio</option>
+                    <option value="7">Julio</option>
+                    <option value="8">Agosto</option>
+                    <option value="9">Septiembre</option>
+                    <option value="10">Octubre</option>
+                    <option value="11">Noviembre</option>
+                    <option value="12">Diciembre</option>
+                </select>
+            </div>
+            <div class="mt-3">
+                <h2><span id="totalMes" class="badge bg-primary"></span><h2>
+            </div>
+        </div>
+        <div class="modal-footer">
+            <button type="button" class="btn btn-primary" data-bs-dismiss="modal">OK</button>
+        </div>
     </div>
   </div>
 </div>

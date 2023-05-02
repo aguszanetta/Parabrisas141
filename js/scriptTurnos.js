@@ -9,6 +9,17 @@ $(document).ready(function() {
         initialView: 'dayGridMonth',
         locale: 'es',
         allDaySlot: false,
+        customButtons: {
+          btnCaja: {
+            icon: 'caja',
+            click: async function() {
+              mesActual = hoy.getMonth()+1;
+              $("#mes").val(mesActual)
+              await cajaMes(mesActual);
+              $("#modalCaja").modal('show')
+            }
+          }
+        },
         views: {
           dayGridMonth: {
             dayMaxEventRows: 3
@@ -22,7 +33,7 @@ $(document).ready(function() {
             listWeek: 'Lista'
         },
         headerToolbar: {
-            left: 'prev,next today',
+            left: 'prev,next today btnCaja',
             center: 'title',
             right: 'dayGridMonth,timeGridWeek,timeGridDay,listWeek'
         },
@@ -77,6 +88,7 @@ $(document).ready(function() {
           }
     });
     calendar.render();
+    $(".fc-icon-caja").html('<i class="fa-solid fa-cash-register"></i>');
 
     /*---------- RESET MODAL CUANDO CIERRA ----------*/
     $("#modalTurno").on("hidden.bs.modal", function(){
@@ -90,6 +102,10 @@ $(document).ready(function() {
       $("#contentArchivos").empty();
     });
 
+    /*---------- CAJA ----------*/
+    $(document).on("change","#mes", function(){
+      cajaMes($("option:selected", this).val())
+    })
     /*---------- ALTA ----------*/
     calendar.on('dateClick', function(info) {
         tipoForm="alta";
@@ -994,15 +1010,29 @@ async function agregarArchivo(files, idTurno){
   });
 }
 
-function existeArchivo(dt, itemNombre){
-  if(dt.items.length == 0){
-      return false
-  } else {
-      for(let i = 0; i < dt.items.length; i++){
-          if(itemNombre === dt.items[i].getAsFile().name){
-              return true
+async function cajaMes(mes){
+  $.ajax({
+        type: "POST",
+        url: "crudTurnos.php",
+        datatype:"json",
+        data: {
+            opcion: 7 ,
+            mes: mes
+        },
+        beforeSend: function() {
+            $('#loader').removeClass('hidden')
+        },
+        complete: function() {
+            $('#loader').addClass('hidden')
+        },
+        success: function(data){
+          datos=JSON.parse(data);
+          if(datos[0].total){
+            total = (parseFloat(datos[0].total)).toLocaleString("es-ES");
+            $("#totalMes").html('$' + total);
+          }else{
+            $("#totalMes").html('$0');
           }
-      }
-      return false
-  }
+        }
+  })
 }

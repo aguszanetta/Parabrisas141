@@ -365,3 +365,8 @@ div#wrapperArchivo .fa-cloud-arrow-up{
     text-overflow: ellipsis;
     overflow: hidden;
 }
+
+.fc-icon-caja {
+    display: flex;
+    align-items: center;
+}
