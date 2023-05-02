@@ -300,7 +300,7 @@
   <div class="modal-dialog modal-dialog-centered modal-md">
     <div class="modal-content">
       <div class="modal-header" id="modalCajaHeader">
-        <h5 class="modal-title" id="modalCajaTitle">Caja De</h5>
+        <h5 class="modal-title" id="modalCajaTitle">Caja</h5>
         <button type="button" class="btn-close btn-close-white ms-2 btn-header" data-bs-dismiss="modal" aria-label="Close"></button> 
     </div>  
         <div class="modal-body">
