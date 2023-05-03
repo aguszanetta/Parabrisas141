@@ -322,7 +322,7 @@
                 </select>
             </div>
             <div class="mt-3">
-                <h2><span id="totalMes" class="badge bg-primary"></span><h2>
+                <h2><span id="totalMes" class="badge bg-gradient-naranja"></span><h2>
             </div>
         </div>
         <div class="modal-footer">

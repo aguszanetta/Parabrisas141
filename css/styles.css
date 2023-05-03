@@ -130,19 +130,22 @@
 #tablaLP,
 #tablaStock,
 #tablaAPedir,
-#tablaCristales {
+#tablaCristales,
+#tablaPagosMora {
     width: 100% !important;
 }
 
 #tablaLP_filter,
 #tablaStock_filter,
-#tablaAPedir_filter {
+#tablaAPedir_filter,
+#tablaPagosMora_filter {
     margin-bottom: 15px;
 }
 
 div#tablaLP_filter label input,
 div#tablaStock_filter label input,
-div#tablaAPedir_filter label input {
+div#tablaAPedir_filter label input,
+div#tablaPagosMora_filter label input{
     height: 2.375rem;
 }
 

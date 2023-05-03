@@ -1016,7 +1016,7 @@ async function cajaMes(mes){
         url: "crudTurnos.php",
         datatype:"json",
         data: {
-            opcion: 7 ,
+            opcion: 7,
             mes: mes
         },
         beforeSend: function() {

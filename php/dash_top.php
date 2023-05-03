@@ -97,7 +97,7 @@
                 <div id="collapseTurnos" class="collapse m-01rem">
                     <ul class="nav flex-column">
                         <li class="nav-item"> <a class="nav-link subitem" href="turnos.php">• Nuevo Turno</a></li>
-                        <li class="nav-item"> <a class="nav-link subitem" href="historico.php">• Historico</a></li>
+                        <li class="nav-item"> <a class="nav-link subitem" href="pagosMora.php">• Pagos Mora</a></li>
                     </ul>
                 </div>
             </li>

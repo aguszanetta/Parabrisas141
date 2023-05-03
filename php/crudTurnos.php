@@ -213,31 +213,26 @@ switch($opcion){
         $resultado->execute();
         $data=$resultado->fetchAll(PDO::FETCH_ASSOC);
         break;
-
-        
-    /*case 12:
-        $consulta = "SELECT DISTINCT cantidad FROM stock WHERE codigo='$codCristal' ";
+    case 12:
+        $consulta = "SELECT t.idTurno, t.fechaHora, t.contacto, CONCAT(m.nombre, ' - ', mo.nombre) AS vehiculo, 
+        e.nombre AS empresa, GREATEST((DATEDIFF(NOW(),fechaHora) - e.plazoPago)*-1, 0) AS diasRestantes, 
+        GREATEST(DATEDIFF(NOW(),fechaHora) - e.plazoPago, 0) AS diasMora, 
+        IF(DATEDIFF(NOW(),fechaHora) - e.plazoPago>0, 'En Mora', 'En Proceso') AS estado
+        FROM turno t 
+        INNER JOIN modelo mo ON mo.idModelo = t.modeloID
+        INNER JOIN marca m ON m.idMarca = mo.marcaID
+        INNER JOIN empresa e ON e.idEmpresa = t.empresaID
+        WHERE t.estado = 'Finalizado' AND t.esPago = 'No';";
         $resultado = $conexion->prepare($consulta);
         $resultado->execute();
         $data=$resultado->fetchAll(PDO::FETCH_ASSOC);
         break;
     case 13:
-        $consulta = "SELECT cantidad FROM stock WHERE codigo='$codCristal' ";
+        $consulta = "UPDATE turno SET esPago = 'Si' WHERE idTurno = '$idTurno'";
         $resultado = $conexion->prepare($consulta);
         $resultado->execute();
         $data=$resultado->fetchAll(PDO::FETCH_ASSOC);
         break;
-    case 14:
-        $consulta = "UPDATE stock SET cantidad='$cantidad' WHERE codigo='$codCristal' ";        
-        $resultado = $conexion->prepare($consulta);
-        $resultado->execute();
-        break;*/
-    /*case 15:
-        $consulta = "SELECT DISTINCT codigo, posicion, lado, color FROM stock WHERE marca='$marca' and modelo='$modelo' and cristal='$cristal' ";
-        $resultado = $conexion->prepare($consulta);
-        $resultado->execute();
-        $data=$resultado->fetchAll(PDO::FETCH_ASSOC);
-    break;*/
 }
 
 print json_encode($data, JSON_UNESCAPED_UNICODE);

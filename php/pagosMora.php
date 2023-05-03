@@ -2,36 +2,21 @@
 
 <!---- Contenido Principal ---->
 <div class="container-fluid">
-    <h1>Stock</h1>
+    <h1>Pagos Mora</h1>
         <div class="row">
             <div class="col-lg-12">
             <div class="table-responsive">     
-                <table id="tablaStock" class="table table-striped table-bordered table-condensed table-hover">
+                <table id="tablaPagosMora" class="table table-striped table-bordered table-condensed table-hover">
                     <thead class="text-center">
                         <tr>
-                            <th>idStock</th>
-                            <th>Código</th>
-                            <th>
-                            <select id="marcaStock" class="form-select selectTabla">
-                              <option value="" selected>Marca</option>
-                            </select>
-                            </th>
-                            <th>
-                            <select id="modeloStock" class="form-select selectTabla">
-                              <option value="" selected>Modelo</option>
-                            </select>
-                            </th>
-                            <th>
-                            <select id="cristalStock" class="form-select selectTabla">
-                              <option value="" selected>Cristal</option>
-                            </select>
-                            </th>
-                            <th>Descripción</th>
-                            <th>Posición</th>
-                            <th>Lado</th>  
-                            <th>Color</th>
-                            <th>Cantidad</th>
-                            <th>Precio Final</th>
+                            <th>idTurno</th>
+                            <th>Fecha</th>
+                            <th>Contacto</th>
+                            <th>Vehículo</th>
+                            <th>Empresa</th>
+                            <th>Días Restante</th>
+                            <th>Días Mora</th>
+                            <th>Estado</th>
                             <th>Acciones</th>
                         </tr>
                     </thead>
@@ -42,32 +27,9 @@
             </div>
         </div>  
 </div>
-<!--Modal para Editar Stock-->
-<div class="modal fade" id="modalEditar" tabindex="-1" aria-hidden="true">
-  <div class="modal-dialog modal-dialog-centered">
-    <div class="modal-content">
-      <div class="modal-header modalEditar">
-        <h5 class="modal-title">Editar</h5>
-        <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
-      </div>
-      <form id="formEditarCantidad" class="form-sample" action="" method="POST">
-        <div class="modal-body">
-            <div class="row">
-                <label for="cantidad" class="form-label text-dark">Cantidad</label>
-                <div class="input-group mb-3">
-                    <input id="cantidad" name="cantidad" type="number" min="0" class="form-control inputForm" required>
-                </div>
-            </div>
-        </div>
-        <div class="modal-footer">
-            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
-            <button type="submit" class="btn btn-primary">Guardar</button>
-        </div>
-      </form>  
-    </div>
-  </div>
-</div>
-<!--Modal para Detalle Stock-->
+
+
+<!--Modal para Pagos Mora-->
 <div class="modal fade" id="modalDetalle" tabindex="-1" aria-hidden="true">
   <div class="modal-dialog modal-dialog-centered">
     <div class="modal-content">
@@ -81,19 +43,19 @@
                 <tbody>
                     <tr>
                         <th scope="row">Descripción</th>
-                        <td id="info00Stock"></td>
+                        <td id="info00PagosMora"></td>
                     </tr>
                     <tr>
                         <th scope="row">Posición</th>
-                        <td id="info01Stock"></td>
+                        <td id="info01PagosMora"></td>
                     </tr>
                     <tr>
                         <th scope="row">Lado</th>
-                        <td id="info02Stock"></td>
+                        <td id="info02PagosMora"></td>
                     </tr>
                     <tr>
                         <th scope="row">Color</th>
-                        <td id="info03Stock"></td>
+                        <td id="info03PagosMora"></td>
                     </tr>
                     </tr>
                 </tbody>
@@ -159,7 +121,7 @@
 <script src="../js/scriptPanel.js"></script>
 <script src="../js/template.js"></script>
 <script src="../js/hoverable-collapse.js"></script>    
-<script type="text/javascript" src="../js/scriptStock.js"></script>
+<script type="text/javascript" src="../js/scriptPagosMora.js"></script>
 
 <!-- Fontawesome -->
 <script src="../libraries/fontawesome-6.4.0/js/all.min.js" type="text/javascript"></script>
@@ -180,6 +142,9 @@
 <script src="../libraries/DataTables/pdfmake-0.1.36/pdfmake.min.js"></script>    
 <script src="../libraries/DataTables/pdfmake-0.1.36/vfs_fonts.js"></script>
 
+<!--MomentJS -->
+<script src="../libraries/moment/moment.js"></script>
+<script src="../libraries/moment/moment-with-locales.js"></script>
 </body>
 
 </html>
