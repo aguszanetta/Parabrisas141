@@ -23,6 +23,7 @@ $banderaCristales = (isset($_POST['banderaCristales'])) ? $_POST['banderaCristal
 $banderaTrabajos = (isset($_POST['banderaTrabajos'])) ? $_POST['banderaTrabajos'] : '';
 $idCristales = (isset($_POST['idCristales'])) ? $_POST['idCristales'] : '';
 $mes = (isset($_POST['mes'])) ? $_POST['mes'] : '';
+$cristalesAPedir = (isset($_POST['cristalesAPedir'])) ? $_POST['cristalesAPedir'] : '';
 
 $opcion = (isset($_POST['opcion'])) ? $_POST['opcion'] : '';
 
@@ -52,6 +53,18 @@ switch($opcion){
         $resultado = $conexion->prepare($consulta);
         $resultado->execute();
         $data=$resultado->fetchAll(PDO::FETCH_ASSOC);
+
+        /* --- Insertar aPedir --- */
+        $cantidadAPedir = is_array($cristalesAPedir) ? count($cristalesAPedir) : 0 ;
+        if($cantidadAPedir){
+            $consulta= "";
+            foreach ($cristalesAPedir as $cristal){
+                $consulta=$consulta."UPDATE Stock SET aPedir = aPedir + $cristal[1] WHERE cristalID = $cristal[0];";
+            }
+            $resultado = $conexion->prepare($consulta);
+            $resultado->execute();
+            $data=$resultado->fetchAll(PDO::FETCH_ASSOC); 
+        }
 
         /* --- Insertar Trabajos --- */
         $valuesTrabajos='';
@@ -101,7 +114,6 @@ switch($opcion){
             $resultado->execute();
             $data=$resultado->fetchAll(PDO::FETCH_ASSOC);
         };
-
         break;
     case 4:
         $consulta = "DELETE FROM turnodetalle WHERE turnoID='$idTurno';
@@ -229,6 +241,12 @@ switch($opcion){
         break;
     case 13:
         $consulta = "UPDATE turno SET esPago = 'Si' WHERE idTurno = '$idTurno'";
+        $resultado = $conexion->prepare($consulta);
+        $resultado->execute();
+        $data=$resultado->fetchAll(PDO::FETCH_ASSOC);
+        break;
+    case 14:
+        $consulta = "SELECT cantidad FROM stock WHERE cristalID = '$cristalID'";
         $resultado = $conexion->prepare($consulta);
         $resultado->execute();
         $data=$resultado->fetchAll(PDO::FETCH_ASSOC);

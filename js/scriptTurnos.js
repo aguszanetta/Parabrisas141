@@ -4,6 +4,9 @@ $(document).ready(function() {
     var hoy = new Date();
     arrayCristales = [];
     arrayCristal = [];
+    //arrayStock = [];
+    cristalesAPedir = [];
+    var cantidadStock = 0;
     var calendarEl = document.getElementById('calendar');
     var calendar = new FullCalendar.Calendar(calendarEl, {
         initialView: 'dayGridMonth',
@@ -100,6 +103,7 @@ $(document).ready(function() {
       $("#banderaTrabajos").attr('value', '');
       //$("#rowArchivos").children().not("#wrapperArchivo").remove();
       $("#contentArchivos").empty();
+      $("#alertaCristal").hide();
     });
 
     /*---------- CAJA ----------*/
@@ -383,7 +387,7 @@ $(document).ready(function() {
       var empresa = $("#empresa option:selected").val();  
       var trabajo = $("#trabajo").val();
       var observacion = $("#observacion").val();
-      
+      var cristalesAPedir = JSON.parse($("#cristalesAPedir").val());
       if($("#esPago").is(":checked")){
         var esPago = "Si";
       }else{
@@ -418,10 +422,11 @@ $(document).ready(function() {
               tipoPago: tipoPago,
               siniestro: siniestro,
               numFactura: numFactura,
-              modeloID: modeloID
-              //Archivos
+              modeloID: modeloID,
+              cristalesAPedir: cristalesAPedir
             },
             success: function(data) {
+                console.log("data", data)
                 Swal.fire({
                     title: 'Exito',
                     text: 'El turno se cargó correctamente',
@@ -540,6 +545,7 @@ $(document).ready(function() {
       marcaID = $("#marca option:selected").val();
       $("#modelo").html("<option value=>Modelo</option>");
       $("#cristal").html("<option value=>Cristal</option>");
+      $("#alertaCristal").hide()
       if(marcaID){
           $.ajax({
               type: "POST",
@@ -563,6 +569,7 @@ $(document).ready(function() {
     $(document).on("change", "#modelo", function() {
       modeloID = $("#modelo option:selected").val();
       $("#cristal").html("<option value=>Cristal</option>");
+      $("#alertaCristal").hide()
       if(modeloID){
           $.ajax({
               type: "POST",
@@ -582,27 +589,30 @@ $(document).ready(function() {
       }*/
     });
 
-    /*$(document).on("change", "#empresa", function() {
-      if($("#cristales").val()){
-          Swal.fire({
-              title: '¿Seguro?',
-              text: '¿Estás seguro que quieres cambiar la empresa?',
-              icon: 'warning',
-              showCancelButton: true,
-              reverseButtons: true,
-              confirmButtonText: 'Confirmar',
-              cancelButtonText: 'Cancelar',
-              confirmButtonColor: '#3085d6',
-              cancelButtonColor: '#d33',
-          }).then((result) => {
-              if (result.isConfirmed) {
-                  arrayCristales = [];
-                  tablaCristales.rows().remove().draw(false);
-                  $("#cristales").attr("value", ""); 
-              }
-          })
-      }
-    });*/
+    $(document).on("change", "#cristal", function() {
+      idCristal = $("option:selected", this).val();
+      $.ajax({
+        type: "POST",
+        url: 'crudTurnos.php',
+        datatype:"json",
+        data: {
+            opcion: 14,
+            cristalID: idCristal
+        },
+        beforeSend: function() {
+            $('#loader').removeClass('hidden')
+        },
+        complete: function() {
+            $('#loader').addClass('hidden')
+        },
+        success: function(data) {
+          var datos = JSON.parse(data);
+          cantidadStock = datos[0].cantidad
+          $("#alertaCristal").text("Cantidad Disponible: " + datos[0].cantidad)
+          $("#alertaCristal").show()
+        }
+      })
+    });
 
     $(document).on("change", "#empresa", function() {
       if($("#cristales").val()){
@@ -732,6 +742,13 @@ $(document).ready(function() {
           otro = $("#otro").prop("checked")
            
           if (!otro || (otro && $("#importe").val())) {
+              cantidadAPedir = cantidadStock - cantidad;
+              //arrayStock = [];
+              if(cantidadAPedir < 0){
+                //arrayStock.push(idCristal, (cantidadAPedir*-1))
+                cristalesAPedir.push([idCristal, (cantidadAPedir*-1)])
+                $("#cristalesAPedir").attr('value', JSON.stringify(cristalesAPedir))
+              }
 
               if (otro) {
                   importeTotalSinIva = ($("#importe").val() * cantidad).toFixed(2);
@@ -769,6 +786,7 @@ $(document).ready(function() {
               $("#cantidad").val('')
               //$("#cristal").prop("disabled", false);
               $("#banderaCristales").attr('value', "cambio")
+              $("#alertaCristal").hide()
           } else {
               Swal.fire({
                   title: 'Importe vacío',
@@ -820,7 +838,9 @@ $(document).ready(function() {
               if(result.isConfirmed){
                   tablaCristales.row('.selected').remove().draw(false);
                   arrayCristales = JSON.parse($("#cristales").val()).filter(elem => elem[4] != $("#cristalEliminar").val()) //Nuevo array donde codCristales != codCristal seleccionado a eliminar
+                  cristalesAPedir = JSON.parse($("#cristalesAPedir").val()).filter(elem => elem[0] != $("#cristalEliminar").val())
                   $("#cristales").attr('value', JSON.stringify(arrayCristales))
+                  $("#cristalesAPedir").attr('value', JSON.stringify(cristalesAPedir))
                   //$("#cristal").val(0).trigger('change');
                   $("#cristal").val(0)
                   $("#cantidad").val('')

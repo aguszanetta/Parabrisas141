@@ -17,10 +17,11 @@
         <button type="button" class="btn text-white-50 ms-2 btn-header" data-bs-dismiss="modal" aria-label="Close"><i class="fa-solid fa-xmark fa-xl"></i></button>  
     </div>
       <form id="formTurno" class="form-sample" action="" method="POST">
-        <input id="cristales" name="cristales" type="text" value="" hidden="">
+        <input id="cristales" name="cristales" type="text" value="" hidden>
         <input id="cristalEliminar" name="cristalEliminar" value="" hidden>
         <input id="banderaCristales" name="banderaCristales" value="" hidden>
         <input id="banderaTrabajos" name="banderaTrabajos" value="" hidden>
+        <input id="cristalesAPedir" name="cristalesAPedir" value="[]" hidden>
         <div class="modal-body">
             <div class="container-fluid">
                 <div class="row">
@@ -144,10 +145,11 @@
                     <div class="col-md-3">
                         <div class="form-group">
                             <label for="cristal" class="form-label text-dark">Cristal</label>
-                            <div class="input-group mb-3">
+                            <div class="mb-3">
                                 <select name="cristal" id="cristal" class="form-select inputForm">
                                     <option value="">Cristal</option>
                                 </select>
+                                <p id="alertaCristal" class="text-danger text-center dispNone"></p>
                             </div>
                         </div>
                     </div>
@@ -155,7 +157,7 @@
                         <label for="cantidad" class="form-label text-dark">Cantidad</label>
                         <input id="cantidad" name="cantidad" type="number" min="0" class="form-control inputForm">
                     </div>
-                    <div class="col-md-3 pb-3 d-flex align-items-end">
+                    <div class="col-md-3 pb-3 d-flex align-items-center">
                         <div class="form-check col-md-4">
                             <input class="form-check-input inputForm" type="checkbox" value="" id="otro">
                             <label class="form-check-label text-dark" for="flexCheckDefault">Otro</label>
@@ -165,7 +167,7 @@
                             <input id="importe" name="importe" type="number" step="0.01" min="0" class="form-control inputForm">
                         </div>
                     </div>
-                    <div class="col-md-3 pb-3 d-flex align-items-end justify-content-end">
+                    <div class="col-md-3 pb-3 d-flex align-items-center justify-content-end">
                         <button type="button" id="eliminarCristal" class="btn btn-danger inputForm">Eliminar</button>
                         <button type="button" id="agregarCristal" class="btn btn-success ms-2 inputForm">Agregar</button>
                     </div>
