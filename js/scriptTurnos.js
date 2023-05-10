@@ -179,7 +179,7 @@ $(document).ready(function() {
           arrayCristales = []
           for (let i = 0; i < datos[2].length; i++) {
           arrayCristal = []
-          arrayCristal.push("'"+datos[2][i].otro+"'", datos[2][i].importeSinIva, datos[2][i].importeConIva, datos[2][i].cantidad, datos[2][i].cristalID);
+          arrayCristal.push("'"+datos[2][i].otro+"'", datos[2][i].importeSinIva, datos[2][i].importeConIva, datos[2][i].cantidad, datos[2][i].cristalID, "'"+datos[2][i].esAPedir+"'");
           arrayCristales.push(arrayCristal);
           tablaCristales.row.add([
               datos[2][i].codigo,
@@ -188,7 +188,8 @@ $(document).ready(function() {
               datos[2][i].otro,
               datos[2][i].importeSinIva,
               datos[2][i].importeConIva,
-              datos[2][i].cristalID
+              datos[2][i].cristalID,
+              datos[2][i].esAPedir
           ]).draw(false);
           }
           $("#cristales").attr('value', JSON.stringify(arrayCristales))
@@ -340,6 +341,12 @@ $(document).ready(function() {
 
     /*---------- ELIMINAR ----------*/
     $(document).on("click", "#btn-eliminarTurno", function(){
+
+      var cristalesEliminar = (arrayCristales.filter(c => c[5] == "'Sí'")).map(e => [e[3], e[4]])
+      //var cristalesEliminar = arrayCristales.map(c => {return (c[5] == "'Sí'") ? [c[3], c[4]] : null})
+      ////var cristalesEliminar = arrayCristales.map(c => {if(c[5] == "'Sí'") return [c[3], c[4]];})
+      console.log("Cristales a eliminar", cristalesEliminar)
+
       Swal.fire({
         title: '¿Seguro?',
         text: '¿Estás seguro que quieres eliminar este turno?',
@@ -356,7 +363,11 @@ $(document).ready(function() {
                 url: "crudTurnos.php",
                 type: "POST",
                 datatype: "json",
-                data: { opcion: 4, idTurno: evento.event.id },
+                data: { 
+                  opcion: 4, 
+                  idTurno: evento.event.id, 
+                  cristalesEliminar: cristalesEliminar 
+                },
                 success: function() {
                     Swal.fire({
                         title: 'Exito',
@@ -705,6 +716,7 @@ $(document).ready(function() {
           null,
           null,
           null,
+          { "visible": false },
           { "visible": false }
         ]
     });
@@ -748,6 +760,9 @@ $(document).ready(function() {
                 //arrayStock.push(idCristal, (cantidadAPedir*-1))
                 cristalesAPedir.push([idCristal, (cantidadAPedir*-1)])
                 $("#cristalesAPedir").attr('value', JSON.stringify(cristalesAPedir))
+                esAPedir = 'Sí'
+              }else{
+                esAPedir = 'No'
               }
 
               if (otro) {
@@ -766,7 +781,7 @@ $(document).ready(function() {
               if ($("#cristales").val()) {
                   arrayCristales = JSON.parse($("#cristales").val())
               }
-              arrayCristal.push("'"+cristalOtro+"'", importeTotalSinIva, importeTotalConIva, cantidad, idCristal);
+              arrayCristal.push("'"+cristalOtro+"'", importeTotalSinIva, importeTotalConIva, cantidad, idCristal, "'"+esAPedir+"'");
               arrayCristales.push(arrayCristal);
               $("#cristales").attr('value', JSON.stringify(arrayCristales))
               tablaCristales.row.add([
@@ -776,7 +791,8 @@ $(document).ready(function() {
                   cristalOtro,
                   importeTotalSinIva,
                   importeTotalConIva,
-                  idCristal
+                  idCristal,
+                  esAPedir
               ]).draw(false);
               $("#importe").val('')
               $("#colImporte").hide();

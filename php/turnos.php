@@ -186,6 +186,7 @@
                                         <th>Importe S/IVA</th>
                                         <th>Importe C/IVA</th>
                                         <th>IdCristal</th>
+                                        <th>esAPedir</th>
                                         </tr>
                                     </thead>
                                     <tbody class="text-center">

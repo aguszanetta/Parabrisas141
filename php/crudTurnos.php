@@ -24,6 +24,7 @@ $banderaTrabajos = (isset($_POST['banderaTrabajos'])) ? $_POST['banderaTrabajos'
 $idCristales = (isset($_POST['idCristales'])) ? $_POST['idCristales'] : '';
 $mes = (isset($_POST['mes'])) ? $_POST['mes'] : '';
 $cristalesAPedir = (isset($_POST['cristalesAPedir'])) ? $_POST['cristalesAPedir'] : '';
+$cristalesEliminar = (isset($_POST['cristalesEliminar'])) ? $_POST['cristalesEliminar'] : '';
 
 $opcion = (isset($_POST['opcion'])) ? $_POST['opcion'] : '';
 
@@ -49,7 +50,7 @@ switch($opcion){
             $valuesCristales = $valuesCristales . '(' .  implode(", ", $cristal) . ', ' . $turnoID . '),';
         }
         $valuesCristales = substr($valuesCristales , 0, -1);
-        $consulta="INSERT INTO turnodetalle (otro, importeSinIva, importeConIva, cantidad, cristalID, turnoID) VALUES $valuesCristales ";
+        $consulta="INSERT INTO turnodetalle (otro, importeSinIva, importeConIva, cantidad, cristalID, esAPedir, turnoID) VALUES $valuesCristales ";
         $resultado = $conexion->prepare($consulta);
         $resultado->execute();
         $data=$resultado->fetchAll(PDO::FETCH_ASSOC);
@@ -59,7 +60,7 @@ switch($opcion){
         if($cantidadAPedir){
             $consulta= "";
             foreach ($cristalesAPedir as $cristal){
-                $consulta=$consulta."UPDATE Stock SET aPedir = aPedir + $cristal[1] WHERE cristalID = $cristal[0];";
+                $consulta=$consulta."UPDATE stock SET aPedir = aPedir + $cristal[1] WHERE cristalID = $cristal[0];";
             }
             $resultado = $conexion->prepare($consulta);
             $resultado->execute();
@@ -95,7 +96,7 @@ switch($opcion){
             }
             $valuesCristales = substr($valuesCristales , 0, -1);
             $consulta = "DELETE FROM turnodetalle WHERE turnoID='$idTurno';
-            INSERT INTO turnodetalle (otro, importeSinIva, importeConIva, cantidad, cristalID, turnoID) VALUES $valuesCristales";		
+            INSERT INTO turnodetalle (otro, importeSinIva, importeConIva, cantidad, cristalID, esAPedir, turnoID) VALUES $valuesCristales";		
             $resultado = $conexion->prepare($consulta);
             $resultado->execute();
             $data=$resultado->fetchAll(PDO::FETCH_ASSOC);
@@ -121,8 +122,21 @@ switch($opcion){
         DELETE FROM archivo WHERE turnoID='$idTurno';
         DELETE FROM turno WHERE idTurno='$idTurno'";
         $resultado = $conexion->prepare($consulta);
-        $resultado->execute();        
-        $data=$resultado->fetchAll(PDO::FETCH_ASSOC);
+        $resultado->execute();
+        $data=$resultado->fetchAll(PDO::FETCH_ASSOC);  
+        
+        /* --- Eliminar aPedir --- */
+        $cantidadEliminar = is_array($cristalesEliminar) ? count($cristalesEliminar) : 0 ;
+        if($cantidadEliminar){
+            $consulta= "";
+            foreach ($cristalesEliminar as $cristal){
+                $consulta=$consulta."UPDATE stock SET aPedir = aPedir - $cristal[0] WHERE cristalID = $cristal[1];";
+            }
+            $resultado = $conexion->prepare($consulta);
+            $resultado->execute();
+            $data=$resultado->fetchAll(PDO::FETCH_ASSOC); 
+        }
+
         break;
     case 5:
         $consulta = "UPDATE turno SET estado='Finalizado' WHERE idTurno='$idTurno'";
