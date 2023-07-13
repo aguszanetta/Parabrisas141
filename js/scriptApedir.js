@@ -15,7 +15,7 @@ $(document).ready(function() {
             { "data": "posicion" },
             { "data": "lado" },
             { "data": "color" },
-            { "data": "cantidad" },
+            { "data": "aPedir" },
             { "defaultContent": "<div class='text-center'><div class='btn-group'><button class='btn btn-success btn-sm btnSumarPedido'><i class='material-icons'>add</i></button><button class='btn btn-danger btn-sm btnRestarPedido'><i class='material-icons'>remove</i></button><button class='btn btn-secondary btn-sm btnPedido'><i class='material-icons'>delete</i></button></div></div>", "sortable": false }
             */
             { "data": "idStock", "visible": false },
@@ -27,7 +27,7 @@ $(document).ready(function() {
             { "data": "posicion", "visible": false },
             { "data": "lado", "visible": false },
             { "data": "color", "visible": false },
-            { "data": "cantidad", "sortable": false },
+            { "data": "aPedir", "sortable": false },
             { "defaultContent": "<div class='text-center'><div class='btn-group'><button class='btn btn-primary btnEditarAPedir'><i class='fas fa-pen-to-square'></i></button><button class='btn btn-info text-white btnDetalleAPedir'><i class='fas fa-info-circle'></i></button></div></div>", "sortable": false }
         ],
         /*"order": [
@@ -98,7 +98,7 @@ $(document).ready(function() {
     });
 
     //ModalDetalle     
-    $(document).on("click", ".btnDetalleAPedir", function(){
+    $(document).on("click", ".btnDetalleAPedir-disabled", function(){
         fila = $(this).closest("tr");
         data = $('#tablatablaAPedir').DataTable().row(fila).data();
         descripcion = data['descripcion'];
@@ -115,7 +115,7 @@ $(document).ready(function() {
     });
 
     //Borrar
-    $(document).on("click", ".btnPedido", function() {
+    $(document).on("click", ".btnPedido-disabled", function() {
         fila = $(this);
         fila2 = $(this).closest("tr");
         data = $('#tablaAPedir').DataTable().row(fila2).data();

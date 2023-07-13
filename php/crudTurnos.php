@@ -10,6 +10,7 @@ $telefono = (isset($_POST['telefono'])) ? $_POST['telefono'] : '';
 $dominio = (isset($_POST['dominio'])) ? $_POST['dominio'] : '';
 $empresaID = (isset($_POST['empresaID'])) ? $_POST['empresaID'] : '';
 $trabajos = (isset($_POST['trabajo'])) ? $_POST['trabajo'] : '';
+$importeTrabajo = (isset($_POST['importeTrabajo'])) ? $_POST['importeTrabajo'] : '';
 $siniestro = (isset($_POST['siniestro'])) ? $_POST['siniestro'] : '';
 $observacion = (isset($_POST['observacion'])) ? $_POST['observacion'] : '';
 $esPago = (isset($_POST['esPago'])) ? $_POST['esPago'] : '';
@@ -38,22 +39,24 @@ switch($opcion){
     case 2:
         /* --- Insertar Turno --- */
         $consulta = "INSERT INTO turno 
-        (fechaHora, contacto, telefono, dominio, siniestro, observacion, esPago, tipoPago, numFactura, estado, modeloID, empresaID) 
-        VALUES('$fechaHora', '$contacto', '$telefono', '$dominio', '$siniestro', '$observacion', '$esPago', '$tipoPago', '$numFactura', 'Activo', '$modeloID', '$empresaID');";
+        (fechaHora, contacto, telefono, dominio, siniestro, observacion, esPago, tipoPago, numFactura, importeTrabajo, estado, modeloID, empresaID) 
+        VALUES('$fechaHora', '$contacto', '$telefono', '$dominio', '$siniestro', '$observacion', '$esPago', '$tipoPago', '$numFactura', '$importeTrabajo','Activo', '$modeloID', '$empresaID');";
         $resultado = $conexion->prepare($consulta);
         $resultado->execute();
         $turnoID=$conexion->lastInsertId();
-        
+
         /* --- Insertar Cristales --- */
-        $valuesCristales='';
-        foreach ($cristales as $cristal){
-            $valuesCristales = $valuesCristales . '(' .  implode(", ", $cristal) . ', ' . $turnoID . '),';
+        if($cristales){
+            $valuesCristales='';
+            foreach ($cristales as $cristal){
+                $valuesCristales = $valuesCristales . '(' .  implode(", ", $cristal) . ', ' . $turnoID . '),';
+            }
+            $valuesCristales = substr($valuesCristales , 0, -1);
+            $consulta="INSERT INTO turnodetalle (otro, importeSinIva, importeConIva, cantidad, cristalID, esAPedir, turnoID) VALUES $valuesCristales ";
+            $resultado = $conexion->prepare($consulta);
+            $resultado->execute();
+            $data=$resultado->fetchAll(PDO::FETCH_ASSOC);
         }
-        $valuesCristales = substr($valuesCristales , 0, -1);
-        $consulta="INSERT INTO turnodetalle (otro, importeSinIva, importeConIva, cantidad, cristalID, esAPedir, turnoID) VALUES $valuesCristales ";
-        $resultado = $conexion->prepare($consulta);
-        $resultado->execute();
-        $data=$resultado->fetchAll(PDO::FETCH_ASSOC);
 
         /* --- Insertar aPedir --- */
         $cantidadAPedir = is_array($cristalesAPedir) ? count($cristalesAPedir) : 0 ;
@@ -66,7 +69,7 @@ switch($opcion){
             $resultado->execute();
             $data=$resultado->fetchAll(PDO::FETCH_ASSOC); 
         }
-
+        
         /* --- Insertar Trabajos --- */
         $valuesTrabajos='';
         foreach ($trabajos as $trabajo){
@@ -81,9 +84,9 @@ switch($opcion){
         break;
     case 3:
         $consulta = "UPDATE turno SET contacto='$contacto', fechaHora='$fechaHora', telefono='$telefono', dominio='$dominio',
-        siniestro='$siniestro', observacion='$observacion', esPago='$esPago', tipoPago='$tipoPago', numFactura='$numFactura', modeloID='$modeloID',
+        siniestro='$siniestro', observacion='$observacion', esPago='$esPago', tipoPago='$tipoPago', numFactura='$numFactura', importeTrabajo='$importeTrabajo', modeloID='$modeloID',
         empresaID='$empresaID'
-        WHERE idTurno='$idTurno'";		
+        WHERE idTurno='$idTurno'";
         $resultado = $conexion->prepare($consulta);
         $resultado->execute();
         $data=$resultado->fetchAll(PDO::FETCH_ASSOC);

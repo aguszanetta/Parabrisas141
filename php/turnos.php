@@ -29,7 +29,7 @@
                         <div class="form-group">
                             <label for="fecha" class="form-label text-dark">Fecha</label>
                             <div class="input-group mb-3">
-                                <input id="fecha" name="fecha" type="date" class="form-control inputForm" disabled>
+                                <input id="fecha" name="fecha" type="date" class="form-control inputForm" disabled required>
                             </div>
                         </div>
                     </div>
@@ -37,7 +37,7 @@
                         <div class="form-group">
                             <label for="hora" class="form-label text-dark">Hora</label>
                             <div class="input-group mb-3">
-                                <input id="hora" name="hora" type="time" class="form-control inputForm">
+                                <input id="hora" name="hora" type="time" class="form-control inputForm" required>
                             </div>
                         </div>
                     </div>
@@ -45,7 +45,7 @@
                         <div class="form-group">
                             <label for="contacto" class="form-label text-dark">Contacto</label>
                             <div class="input-group mb-3">
-                                <input id="contacto" name="contacto" type="text" class="form-control inputForm">
+                                <input id="contacto" name="contacto" type="text" class="form-control inputForm" required>
                             </div>
                         </div>
                     </div>
@@ -71,7 +71,7 @@
                         <div class="form-group">
                             <label for="empresa" class="form-label text-dark">Compañía</label>
                             <div class="input-group mb-3">
-                                <select name="empresa" id="empresa" class="form-select inputForm">
+                                <select name="empresa" id="empresa" class="form-select inputForm" required>
                                     <option value="">Compañía</option>
                                     <option value="1">Allianz</option>
                                     <option value="2">Común</option>
@@ -93,7 +93,7 @@
                         <div class="form-group">
                             <label for="marca" class="form-label text-dark">Marca</label>
                             <div class="input-group mb-3">
-                                <select name="marca" id="marca" class="form-select inputForm">
+                                <select name="marca" id="marca" class="form-select inputForm" required>
                                     <option value="">Marca</option>
                                     <option value="1">ALFA ROMEO</option>
                                     <option value="2">AUDI</option>
@@ -134,7 +134,7 @@
                         <div class="form-group">
                             <label for="modelo" class="form-label text-dark">Modelo</label>
                             <div class="input-group mb-3">
-                                <select name="modelo" id="modelo" class="form-select inputForm">
+                                <select name="modelo" id="modelo" class="form-select inputForm" required>
                                     <option value="">Modelo</option>
                                 </select>
                             </div>
@@ -201,7 +201,7 @@
                         <div class="form-group">
                             <label for="trabajo" class="form-label text-dark">Trabajo</label>
                             <div class="input-group mb-3">
-                                <select class="form-control inputForm" id="trabajo" multiple="multiple">
+                                <select class="form-control inputForm" id="trabajo" multiple="multiple" required>
                                     <option value="1">Burlete</option>
                                     <option value="2">Cerrajeria</option>
                                     <option value="3">Despegar PSAS</option>
@@ -226,7 +226,15 @@
                             </div>
                         </div>
                     </div>
-                    <div class="col-md-6">
+                    <div class="col-md-2">
+                        <div class="form-group">
+                            <label for="importeTrabajo" class="form-label text-dark">Importe Trabajo</label>
+                            <div class="input-group mb-3">
+                                <input id="importeTrabajo" name="importeTrabajo" type="number" step="0.01" class="form-control inputForm">
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-4">
                         <div class="form-group">
                             <label for="" class="form-label text-dark">Observacion</label>
                             <textarea class="form-control inputForm" id="observacion" rows="1"></textarea>
@@ -308,7 +316,7 @@
     </div>  
         <div class="modal-body">
             <div class="form-group">
-                <select name="mes" id="mes" class="form-select inputForm">
+                <select name="mes" id="mes" class="form-select">
                     <option value="">Seleccione Mes</option>
                     <option value="1">Enero</option>
                     <option value="2">Febrero</option>

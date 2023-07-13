@@ -157,6 +157,7 @@ $(document).ready(function() {
           $("#dominio").val(datos[0][0].dominio);
           $("#empresa").val(datos[0][0].empresaID);
           $("#marca").val(datos[0][0].marcaID);
+          $("#importeTrabajo").val(datos[0][0].importeTrabajo);
           $("#observacion").val(datos[0][0].observacion);
           $("#numFactura").val(datos[0][0].numFactura);
           $("#siniestro").val(datos[0][0].siniestro);
@@ -394,11 +395,13 @@ $(document).ready(function() {
       var telefono = $("#telefono").val();
       var dominio = ($("#dominio").val()).toUpperCase();
       var modeloID =$("#modelo").val();
-      var cristales = JSON.parse($("#cristales").val());
+      var cristales = ($("#cristales").val()) ? JSON.parse($("#cristales").val()) : [];
       var empresa = $("#empresa option:selected").val();  
       var trabajo = $("#trabajo").val();
+      var importeTrabajo = $("#importeTrabajo").val();
       var observacion = $("#observacion").val();
-      var cristalesAPedir = JSON.parse($("#cristalesAPedir").val());
+      var cristalesAPedir = ($("#cristalesAPedir").val()) ? JSON.parse($("#cristalesAPedir").val()) : [];
+      console.log("cristales", cristales)
       if($("#esPago").is(":checked")){
         var esPago = "Si";
       }else{
@@ -428,6 +431,7 @@ $(document).ready(function() {
               empresaID: empresa,
               cristales: cristales,
               trabajo: trabajo,
+              importeTrabajo: importeTrabajo,
               observacion: observacion,
               esPago: esPago,
               tipoPago: tipoPago,
@@ -483,6 +487,7 @@ $(document).ready(function() {
                   empresaID: empresa,
                   cristales: cristales,
                   trabajo: trabajo,
+                  importeTrabajo: importeTrabajo,
                   observacion: observacion,
                   esPago: esPago,
                   tipoPago: tipoPago,
@@ -602,27 +607,32 @@ $(document).ready(function() {
 
     $(document).on("change", "#cristal", function() {
       idCristal = $("option:selected", this).val();
-      $.ajax({
-        type: "POST",
-        url: 'crudTurnos.php',
-        datatype:"json",
-        data: {
-            opcion: 14,
-            cristalID: idCristal
-        },
-        beforeSend: function() {
-            $('#loader').removeClass('hidden')
-        },
-        complete: function() {
-            $('#loader').addClass('hidden')
-        },
-        success: function(data) {
-          var datos = JSON.parse(data);
-          cantidadStock = datos[0].cantidad
-          $("#alertaCristal").text("Cantidad Disponible: " + datos[0].cantidad)
-          $("#alertaCristal").show()
-        }
-      })
+      
+      if(idCristal){
+        $.ajax({
+          type: "POST",
+          url: 'crudTurnos.php',
+          datatype:"json",
+          data: {
+              opcion: 14,
+              cristalID: idCristal
+          },
+          beforeSend: function() {
+              $('#loader').removeClass('hidden')
+          },
+          complete: function() {
+              $('#loader').addClass('hidden')
+          },
+          success: function(data) {
+            var datos = JSON.parse(data);
+            cantidadStock = datos[0].cantidad
+            $("#alertaCristal").text("Cantidad Disponible: " + datos[0].cantidad)
+            $("#alertaCristal").show()
+          }
+        })
+      } else {
+        $("#alertaCristal").hide()
+      }
     });
 
     $(document).on("change", "#empresa", function() {
