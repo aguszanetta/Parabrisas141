@@ -29,7 +29,33 @@
         </div>  
 </div>
 
-<!--Modal para Detalle Stock-->
+<!--Modal para Editar APedir-->
+<div class="modal fade" id="modalEditar" tabindex="-1" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered">
+    <div class="modal-content">
+      <div class="modal-header modalEditar">
+        <h5 class="modal-title">Editar</h5>
+        <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <form id="formEditarCantidad" class="form-sample" action="" method="POST">
+        <div class="modal-body">
+            <div class="row">
+                <label for="aPedir" class="form-label text-dark">Cantidad</label>
+                <div class="input-group mb-3">
+                    <input id="aPedir" name="aPedir" type="number" min="0" class="form-control inputForm" required>
+                </div>
+            </div>
+        </div>
+        <div class="modal-footer">
+            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+            <button type="submit" class="btn btn-primary">Guardar</button>
+        </div>
+      </form>  
+    </div>
+  </div>
+</div>
+
+<!--Modal para Detalle APedir-->
 <div class="modal fade" id="modalDetalle" tabindex="-1" aria-hidden="true">
   <div class="modal-dialog modal-dialog-centered">
     <div class="modal-content">

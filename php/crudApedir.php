@@ -6,7 +6,7 @@ $conexion = $objeto->Conectar();
 
 $idAPedir = (isset($_POST['idAPedir'])) ? $_POST['idAPedir'] : '';
 $codigo = (isset($_POST['codigo'])) ? $_POST['codigo'] : '';
-$cantidad = (isset($_POST['cantidad'])) ? $_POST['cantidad'] : '';
+$aPedir = (isset($_POST['aPedir'])) ? $_POST['aPedir'] : '';
 $opcion = (isset($_POST['opcion'])) ? $_POST['opcion'] : '';
 
 switch($opcion){
@@ -24,7 +24,7 @@ switch($opcion){
         $data=$resultado->fetchAll(PDO::FETCH_ASSOC);
         break;
     case 2:    
-        $consulta = "UPDATE stock SET cantidad='$cantidad' WHERE idStock='$idStock' ";	
+        $consulta = "UPDATE stock SET aPedir='$aPedir' WHERE idStock='$idStock' ";	
         $resultado = $conexion->prepare($consulta);
         $resultado->execute();    
         $data=$resultado->fetchAll(PDO::FETCH_ASSOC);

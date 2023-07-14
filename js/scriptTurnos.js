@@ -302,7 +302,7 @@ $(document).ready(function() {
 
     /*---------- FINALIZAR ----------*/
     $(document).on("click", "#btn-finalizarTurno", function(){
-      tipoForm="finalziar"
+      tipoForm="finalizar"
       Swal.fire({
         title: '¿Seguro?',
         text: '¿Estás seguro que quieres finalizar este turno?',
@@ -320,7 +320,8 @@ $(document).ready(function() {
                 type: "POST",
                 datatype: "json",
                 data: { opcion: 5, idTurno: evento.event.id },
-                success: function() {
+                success: function(data) {
+                  console.log("Data", data)
                     Swal.fire({
                         title: 'Exito',
                         text: 'El turno se finalizó correctamente',

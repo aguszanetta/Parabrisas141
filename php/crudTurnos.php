@@ -142,10 +142,23 @@ switch($opcion){
 
         break;
     case 5:
-        $consulta = "UPDATE turno SET estado='Finalizado' WHERE idTurno='$idTurno'";
+        $consulta = "UPDATE turno SET estado='Finalizado' WHERE idTurno='$idTurno';";
+        $resultado = $conexion->prepare($consulta);
+        $resultado->execute();
+
+        $consulta = "SELECT cantidad, cristalID FROM turnodetalle WHERE turnoID='$idTurno';";
         $resultado = $conexion->prepare($consulta);
         $resultado->execute();        
         $data=$resultado->fetchAll(PDO::FETCH_ASSOC);
+        if($data){
+            $consulta= "";
+            foreach ($data as $cristal){
+                $consulta=$consulta."UPDATE stock SET cantidad = GREATEST(cantidad - ". $cristal['cantidad'] . ", 0) WHERE cristalID = ". $cristal['cristalID']. "; ";
+            }
+            $resultado = $conexion->prepare($consulta);
+            $resultado->execute();
+            $data=$resultado->fetchAll(PDO::FETCH_ASSOC);
+        }
         break;
     case 6:
         /* --- Turno + Marca + Cristales --- */

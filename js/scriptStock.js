@@ -39,7 +39,7 @@ $(document).ready(function() {
             { "data": "posicion", "visible": false },
             { "data": "lado", "visible": false },
             { "data": "color", "visible": false },
-            { "data": "cantidad", "sortable": false },
+            { "data": "cantidad" },
             { "data": "precioFinal", "sortable": false },
             { "defaultContent": "<div class='text-center'><div class='btn-group'><button class='btn btn-primary btnEditarStock'><i class='fas fa-pen-to-square'></i></button><button class='btn btn-info text-white btnDetalleStock'><i class='fas fa-info-circle'></i></button></div></div>", "sortable": false }
         ],

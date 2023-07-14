@@ -7,17 +7,6 @@ $(document).ready(function() {
             "dataSrc": ""
         },
         "columns": [
-            /*{ "data": "codigo" },
-            { "data": "marca" },
-            { "data": "modelo", "sortable": false },
-            { "data": "descripcion" },
-            { "data": "cristal", "sortable": false },
-            { "data": "posicion" },
-            { "data": "lado" },
-            { "data": "color" },
-            { "data": "aPedir" },
-            { "defaultContent": "<div class='text-center'><div class='btn-group'><button class='btn btn-success btn-sm btnSumarPedido'><i class='material-icons'>add</i></button><button class='btn btn-danger btn-sm btnRestarPedido'><i class='material-icons'>remove</i></button><button class='btn btn-secondary btn-sm btnPedido'><i class='material-icons'>delete</i></button></div></div>", "sortable": false }
-            */
             { "data": "idStock", "visible": false },
             { "data": "codigo", "sortable": false },
             { "data": "marca", "sortable": false },
@@ -27,7 +16,7 @@ $(document).ready(function() {
             { "data": "posicion", "visible": false },
             { "data": "lado", "visible": false },
             { "data": "color", "visible": false },
-            { "data": "aPedir", "sortable": false },
+            { "data": "aPedir" },
             { "defaultContent": "<div class='text-center'><div class='btn-group'><button class='btn btn-primary btnEditarAPedir'><i class='fas fa-pen-to-square'></i></button><button class='btn btn-info text-white btnDetalleAPedir'><i class='fas fa-info-circle'></i></button></div></div>", "sortable": false }
         ],
         /*"order": [
@@ -97,10 +86,45 @@ $(document).ready(function() {
         ]
     });
 
-    //ModalDetalle     
-    $(document).on("click", ".btnDetalleAPedir-disabled", function(){
+    //Editar      
+    $(document).on("click", ".btnEditarAPedir", function() {
         fila = $(this).closest("tr");
-        data = $('#tablatablaAPedir').DataTable().row(fila).data();
+        data = $('#tablaAPedir').DataTable().row(fila).data();
+        idStock = data['idStock'];
+        aPedir = data['aPedir'];
+        $("#aPedir").val(aPedir);
+        $('#modalEditar').modal('show');
+        
+    });
+
+    $('#formEditarCantidad').submit(function(e){
+		e.preventDefault();
+		var aPedir = $("#aPedir").val();
+        
+        $.ajax({
+            url: "crudApedir.php",
+            type: "POST",
+            datatype: "json",
+            data: { idStock: idStock, aPedir: aPedir, opcion: 2 },
+            success: function(data) {
+                Swal.fire({
+                    title: 'Exito',
+                    text: 'La cantidad ha sido actualizada correctamente',
+                    icon: 'success',
+                    showConfirmButton: false,
+                    timer: 1500,
+                  }).then( function(){
+                    $('#modalEditar').modal('hide');
+                    tablaAPedir.ajax.reload()
+                })
+            }
+        });
+	});
+
+    //ModalDetalle     
+    $(document).on("click", ".btnDetalleAPedir", function(){
+        fila = $(this).closest("tr");
+        data = $('#tablaAPedir').DataTable().row(fila).data();
         descripcion = data['descripcion'];
         posicion = data['posicion'];
         lado = data['lado'];
@@ -114,8 +138,9 @@ $(document).ready(function() {
         $('#modalDetalle').modal('show');
     });
 
+
     //Borrar
-    $(document).on("click", ".btnPedido-disabled", function() {
+    $(document).on("click", ".btnPedido", function() {
         fila = $(this);
         fila2 = $(this).closest("tr");
         data = $('#tablaAPedir').DataTable().row(fila2).data();
