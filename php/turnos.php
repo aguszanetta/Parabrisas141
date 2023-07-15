@@ -393,6 +393,7 @@
 <script src="../js/template.js"></script>
 <script src="../js/hoverable-collapse.js"></script>
 <script type="text/javascript" src="../js/scriptTurnos.js"></script>
+<script type="text/javascript" src="../js/script.js"></script>
 
 <!-- SweetAlert2 -->
 <script src="../libraries/sweetalert2/sweetalert2.all.min.js"></script>
@@ -411,8 +412,8 @@
 <!-- Full Calendar -->
 <script src="../libraries/fullcalendar-6.1.5/dist/index.global.min.js"></script>
 
-<!-- MomentJs 
-<script src="../libraries/moment/moment.js"></script>-->
+<!-- MomentJs -->
+<script src="../libraries/moment/moment.js"></script>
 
 <!--BootstrapMultiselect
 <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-multiselect/0.9.13/js/bootstrap-multiselect.js"></script>-->
@@ -422,6 +423,9 @@
 
 <!-- LightBox 2 -->
 <script src="../libraries/lightbox2-2.11.3/dist/js/lightbox.js"></script>
+
+<!-- jsPDF -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
 
 </body>
 </html>

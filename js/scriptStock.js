@@ -137,15 +137,16 @@ $(document).ready(function() {
         data = $('#tablaStock').DataTable().row(fila).data();
         idStock = data['idStock'];
         cantidad = data['cantidad'];
+        $("#idStock").attr('value', idStock);
         $("#cantidad").val(cantidad);
-        
         $('#modalEditar').modal('show');
         
     });
 
     $('#formEditarCantidad').submit(function(e){
 		e.preventDefault();
-		var cantidad = $("#cantidad").val();
+		cantidad = $("#cantidad").val();
+        idStock = $("#idStock").val();
         
         $.ajax({
             url: "crudStock.php",
@@ -153,6 +154,7 @@ $(document).ready(function() {
             datatype: "json",
             data: { idStock: idStock, cantidad: cantidad, opcion: 2 },
             success: function(data) {
+                console.log("data", data)
                 Swal.fire({
                     title: 'Exito',
                     text: 'La cantidad ha sido actualizada correctamente',

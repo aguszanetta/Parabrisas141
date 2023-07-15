@@ -1,4 +1,6 @@
 $(document).ready(function() {
+    //import { jsPDF } from "jspdf";
+    window.jsPDF = window.jspdf.jsPDF; 
     var tipoForm ='';
     var evento = '';
     var hoy = new Date();
@@ -21,6 +23,12 @@ $(document).ready(function() {
               await cajaMes(mesActual);
               $("#modalCaja").modal('show')
             }
+          },
+          btnExportarTurnos: {
+            icon: 'exportarTurnos',
+            click: async function() {
+              exportarPDF(calendar);
+            }
           }
         },
         views: {
@@ -36,7 +44,7 @@ $(document).ready(function() {
             listWeek: 'Lista'
         },
         headerToolbar: {
-            left: 'prev,next today btnCaja',
+            left: 'prev,next today btnCaja btnExportarTurnos',
             center: 'title',
             right: 'dayGridMonth,timeGridWeek,timeGridDay,listWeek'
         },
@@ -92,6 +100,7 @@ $(document).ready(function() {
     });
     calendar.render();
     $(".fc-icon-caja").html('<i class="fa-solid fa-cash-register"></i>');
+    $(".fc-icon-exportarTurnos").html('<i class="fa-solid fa-file-pdf"></i>');
 
     /*---------- RESET MODAL CUANDO CIERRA ----------*/
     $("#modalTurno").on("hidden.bs.modal", function(){
@@ -558,7 +567,7 @@ $(document).ready(function() {
       }
     });*/
 
-    $(document).on("change", "#marca", function() {
+    /*$(document).on("change", "#marca", function() {
       marcaID = $("#marca option:selected").val();
       $("#modelo").html("<option value=>Modelo</option>");
       $("#cristal").html("<option value=>Cristal</option>");
@@ -576,11 +585,7 @@ $(document).ready(function() {
                   }
               }
           });
-      } 
-      /*else{
-          $("#modelo").html("<option value=>Modelo</option>");
-          $("#cristal").html("<option value=>Cristal</option>");
-      }*/
+      }
     });
 
     $(document).on("change", "#modelo", function() {
@@ -600,11 +605,8 @@ $(document).ready(function() {
                   }
               }
           });
-      } 
-      /*else{
-          $("#cristal").html("<option value=>Cristal</option>");
-      }*/
-    });
+      }
+    });*/
 
     $(document).on("change", "#cristal", function() {
       idCristal = $("option:selected", this).val();
@@ -1082,4 +1084,32 @@ async function cajaMes(mes){
           }
         }
   })
+}
+
+ function exportarPDF(calendar){
+  const doc = new jsPDF();
+  let currentDate = calendar.getDate();
+  let eventos = calendar.getEvents()
+  var firstDay = new Date(currentDate.setDate(currentDate.getDate() - currentDate.getDay()));
+  var lastDay = new Date(currentDate.setDate(currentDate.getDate() - currentDate.getDay() + 6));
+  firstDay = firstDay.setHours(0,0,0,0) //horas, minutos, segundos, milisegundos
+  lastDay = lastDay.setHours(23,59,59,99) ////horas, minutos, segundos, milisegundos
+  listEvents = eventos.filter(e => e._instance.range.start >= firstDay && e._instance.range.start <= lastDay);
+  console.log("listEvents", listEvents);
+  doc.setFontSize(22);
+  doc.text("Parabrisas 141 Turnos", doc.internal.pageSize.getWidth() / 2, 20, { align: 'center'});
+  doc.setFontSize(20);
+  doc.text(moment(firstDay).format("DD")+ " - "+moment(lastDay).format("DD MMM YYYY"), doc.internal.pageSize.getWidth() / 2, 30, { align: 'center'});
+  
+  headerLunes=[{id: "1", name: "Lunes",width: 65,align: "center",padding: 0}]
+  dataLunes=[{Lunes: "15:15"}, {Lunes: '16:00'}]
+  
+  doc.table(5, 50, dataLunes, headerLunes,{ autoSize: true });
+  doc.save("a4.pdf");
+  
+  arrayEvents = [];
+  listEvents.forEach(e => {
+    arrayEvents.push([moment(e.start).format("DD/MM - HH:SS"), e.title])
+  });
+  console.log("ArrayEvents", arrayEvents)
 }

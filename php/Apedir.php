@@ -29,15 +29,106 @@
         </div>  
 </div>
 
+<!--Modal para Agregar Cristal APedir-->
+<div class="modal fade" id="modalAgregarCristal" tabindex="-1" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered modal-lg">
+    <div class="modal-content">
+      <div class="modal-header modalAlta">
+        <h5 class="modal-title">Agregar Cristal</h5>
+        <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <form id="formAgregarCristal" class="form-sample" action="" method="POST">
+        <div class="modal-body">
+            <div class="row">
+                <div class="col-md-6">
+                    <div class="form-group">
+                        <label for="marca" class="form-label text-dark">Marca</label>
+                        <div class="input-group mb-3">
+                            <select name="marca" id="marca" class="form-select inputForm" required>
+                                <option value="">Marca</option>
+                                <option value="1">ALFA ROMEO</option>
+                                <option value="2">AUDI</option>
+                                <option value="3">BMW</option>
+                                <option value="4">CHERY</option>
+                                <option value="5">CHEVROLET</option>
+                                <option value="6">CITROEN</option>
+                                <option value="7">DAEWOO</option>
+                                <option value="8">DAIHATSU</option>
+                                <option value="9">DODGE/CHRYSLER</option>
+                                <option value="10">FIAT</option>
+                                <option value="11">FORD</option>
+                                <option value="12">HONDA</option>
+                                <option value="13">HYUNDAI</option>
+                                <option value="14">KIA-ASIA</option>
+                                <option value="15">MAZDA</option>
+                                <option value="16">MERCEDES BENZ</option>
+                                <option value="17">MITSUBISHI</option>
+                                <option value="18">NISSAN</option>
+                                <option value="19">OPEL</option>
+                                <option value="20">PEUGEOT</option>
+                                <option value="21">RENAULT</option>
+                                <option value="22">ROVER</option>
+                                <option value="23">SCANIA</option>
+                                <option value="24">SEAT</option>
+                                <option value="25">SMART</option>
+                                <option value="26">SSANG YONG</option>
+                                <option value="27">SUBARU</option>
+                                <option value="28">SUZUKI</option>
+                                <option value="29">TOYOTA</option>
+                                <option value="30">VOLKSWAGEN</option>
+                                <option value="31">VOLVO</option>
+                            </select>
+                        </div>
+                    </div>
+                </div>
+                    <div class="col-md-6">
+                        <div class="form-group">
+                            <label for="modelo" class="form-label text-dark">Modelo</label>
+                            <div class="input-group mb-3">
+                                <select name="modelo" id="modelo" class="form-select inputForm" required>
+                                    <option value="">Modelo</option>
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            <div class="row mb-3">
+                <div class="col-md-6">
+                    <div class="form-group">
+                        <label for="cristal" class="form-label text-dark">Cristal</label>
+                        <div class="mb-3">
+                            <select name="cristal" id="cristal" class="form-select inputForm">
+                                <option value="">Cristal</option>
+                            </select>
+                            <p id="alertaAPedir" class="text-danger text-center dispNone"></p>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-6">
+                    <label for="cantidad" class="form-label text-dark">Cantidad</label>
+                    <input id="cantidad" name="cantidad" type="number" min="0" class="form-control inputForm">
+                </div>
+            </div>
+        </div>
+        <div class="modal-footer">
+            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+            <button type="submit" class="btn btn-primary">Guardar</button>
+        </div>
+      </form>  
+    </div>
+  </div>
+</div>
+
 <!--Modal para Editar APedir-->
 <div class="modal fade" id="modalEditar" tabindex="-1" aria-hidden="true">
   <div class="modal-dialog modal-dialog-centered">
     <div class="modal-content">
       <div class="modal-header modalEditar">
         <h5 class="modal-title">Editar</h5>
-        <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+        <button type="button" class="btn text-white-50 ms-2 btn-header" data-bs-dismiss="modal" aria-label="Close"><i class="fa-solid fa-xmark fa-xl"></i></button>
       </div>
-      <form id="formEditarCantidad" class="form-sample" action="" method="POST">
+      <form id="formEditarAPedir" class="form-sample" action="" method="POST">
+        <input id="idStock" name="idStock" type="number" value=""  hidden>
         <div class="modal-body">
             <div class="row">
                 <label for="aPedir" class="form-label text-dark">Cantidad</label>
@@ -61,7 +152,7 @@
     <div class="modal-content">
       <div class="modal-header modalDetalle">
         <h5 class="modal-title" id="titleDetalle">Modal title</h5>
-        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        <button type="button" class="btn text-white-50 ms-2 btn-header" data-bs-dismiss="modal" aria-label="Close"><i class="fa-solid fa-xmark fa-xl"></i></button>
       </div>
       <div class="modal-body">
         <div class="table-responsive">
@@ -144,6 +235,7 @@
 <script src="../js/template.js"></script>
 <script src="../js/hoverable-collapse.js"></script>
 <script type="text/javascript" src="../js/scriptApedir.js"></script>
+<script type="text/javascript" src="../js/script.js"></script>
 
 <!-- SweetAlert2 -->
 <script src="../libraries/sweetalert2/sweetalert2.all.min.js"></script>

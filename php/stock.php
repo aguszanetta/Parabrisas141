@@ -51,6 +51,7 @@
         <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
       </div>
       <form id="formEditarCantidad" class="form-sample" action="" method="POST">
+        <input id="idStock" name="idStock" type="number" value=""  hidden>
         <div class="modal-body">
             <div class="row">
                 <label for="cantidad" class="form-label text-dark">Cantidad</label>

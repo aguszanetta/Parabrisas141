@@ -42,6 +42,15 @@ $(document).ready(function() {
         responsive: "true",
         dom: 'Bfrtilp',
         buttons: [{
+                titleAttr: 'Agregar Cristal a Pedir',
+                text: '<i class="fas fa-plus"></i> ',
+                className: 'btn btn-orange btn-icon br7px',
+                action: function(e, dt, node, config) {
+                    $("#formAgregarCristal").trigger("reset");
+                    $('#modalAgregarCristal').modal('show');
+                }
+            },
+            {
                 extend: 'excelHtml5',
                 exportOptions: {
                     columns: [1, 2, 3, 4, 5, 6, 7, 8, 9]
@@ -66,7 +75,7 @@ $(document).ready(function() {
                     doc.styles.tableHeader.fillColor = '#ffffff',
                         doc.styles.tableHeader.color = '#000000',
                         doc.styles.tableBodyOdd.fillColor = '#ffffff',
-                        doc.content[1].margin = [0, 0, 0, 0], //left, top, right, bottom
+                        doc.content[1].margin = [60, 0, 0, 0], //left, top, right, bottom
                         doc.content[1].layout = {
                             hLineWidth: function(i, node) {
                                 return (i === 0 || i === node.table.body.length) ? 2 : 1;
@@ -86,20 +95,47 @@ $(document).ready(function() {
         ]
     });
 
+    $('#formAgregarCristal').submit(function(e){
+		e.preventDefault();
+        cristalID = $("#cristal option:selected").val();
+        aPedir = $("#cantidad").val();
+        $.ajax({
+            url: "crudApedir.php",
+            type: "POST",
+            datatype: "json",
+            data: { cristalID: cristalID, aPedir: aPedir, opcion: 3 },
+            success: function(data) {
+                Swal.fire({
+                    title: 'Exito',
+                    text: 'Se ha agregado el cristal correctamente',
+                    icon: 'success',
+                    showConfirmButton: false,
+                    timer: 1500,
+                  }).then( function(){
+                    $('#modalAgregarCristal').modal('hide');
+                    tablaAPedir.columns().search("");
+                    tablaAPedir.ajax.reload();
+                })
+            }
+        });
+	});
+
     //Editar      
     $(document).on("click", ".btnEditarAPedir", function() {
         fila = $(this).closest("tr");
         data = $('#tablaAPedir').DataTable().row(fila).data();
         idStock = data['idStock'];
         aPedir = data['aPedir'];
+        $("#idStock").attr('value', idStock);
         $("#aPedir").val(aPedir);
         $('#modalEditar').modal('show');
         
     });
 
-    $('#formEditarCantidad').submit(function(e){
+    $('#formEditarAPedir').submit(function(e){
 		e.preventDefault();
-		var aPedir = $("#aPedir").val();
+		aPedir = $("#aPedir").val();
+        idStock = $("#idStock").val();
         
         $.ajax({
             url: "crudApedir.php",
@@ -107,6 +143,7 @@ $(document).ready(function() {
             datatype: "json",
             data: { idStock: idStock, aPedir: aPedir, opcion: 2 },
             success: function(data) {
+                console.log("data", data)
                 Swal.fire({
                     title: 'Exito',
                     text: 'La cantidad ha sido actualizada correctamente',
@@ -173,5 +210,17 @@ $(document).ready(function() {
             }
         })
     });
+
+    $(document).on("change", "#cristal", function() {
+        cristal = $("#cristal option:selected").text();
+        codigo =  cristal.split(' — ')[0];
+        existeCristal = tablaAPedir.columns(1).search(codigo).rows({search:'applied'}).data()[0];
+        if(existeCristal){
+            $("#alertaAPedir").html("Ya existe el cristal en la tabla (" + existeCristal.aPedir + ")")
+            $("#alertaAPedir").show()
+        } else {
+            $("#alertaAPedir").hide()
+        }
+      });
 
 });

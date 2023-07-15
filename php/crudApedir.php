@@ -4,9 +4,10 @@ $objeto = new Conexion();
 $conexion = $objeto->Conectar();
 
 
-$idAPedir = (isset($_POST['idAPedir'])) ? $_POST['idAPedir'] : '';
+$idStock = (isset($_POST['idStock'])) ? $_POST['idStock'] : '';
 $codigo = (isset($_POST['codigo'])) ? $_POST['codigo'] : '';
 $aPedir = (isset($_POST['aPedir'])) ? $_POST['aPedir'] : '';
+$cristalID = (isset($_POST['cristalID'])) ? $_POST['cristalID'] : '';
 $opcion = (isset($_POST['opcion'])) ? $_POST['opcion'] : '';
 
 switch($opcion){
@@ -25,6 +26,12 @@ switch($opcion){
         break;
     case 2:    
         $consulta = "UPDATE stock SET aPedir='$aPedir' WHERE idStock='$idStock' ";	
+        $resultado = $conexion->prepare($consulta);
+        $resultado->execute();    
+        $data=$resultado->fetchAll(PDO::FETCH_ASSOC);
+        break;
+    case 3:    
+        $consulta = "UPDATE stock SET aPedir='$aPedir' WHERE cristalID='$cristalID'";	
         $resultado = $conexion->prepare($consulta);
         $resultado->execute();    
         $data=$resultado->fetchAll(PDO::FETCH_ASSOC);
