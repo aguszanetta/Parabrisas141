@@ -220,9 +220,12 @@ switch($opcion){
         $data=array_merge([$data], [$data2], [$data3], [$data4] , [$data5]);
         break;
     case 7:
-        $consulta = "SELECT SUM(td.importeConIva) AS total FROM turno t 
+        /*$consulta = "SELECT SUM(td.importeConIva) AS total FROM turno t 
         INNER JOIN turnodetalle td ON t.idTurno = td.turnoID 
-        WHERE t.tipoPago = 'Efectivo' AND t.esPago = 'Si' AND t.estado = 'Finalizado' AND MONTH(t.fechaHora) = $mes";
+        WHERE t.tipoPago = 'Efectivo' AND t.esPago = 'Si' AND t.estado = 'Finalizado' AND MONTH(t.fechaHora) = $mes";*/
+        $consulta = "SELECT (SUM(td.importeConIva) + SUM(t.importeTrabajo)) AS total FROM turno t 
+        LEFT JOIN turnodetalle td ON t.idTurno = td.turnoID 
+        WHERE t.tipoPago = 'Efectivo' AND t.esPago = 'Si' AND t.estado = 'Finalizado' AND MONTH(t.fechaHora) = $mes;";
         $resultado = $conexion->prepare($consulta);
         $resultado->execute();        
         $data=$resultado->fetchAll(PDO::FETCH_ASSOC);

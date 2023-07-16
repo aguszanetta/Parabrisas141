@@ -1,6 +1,10 @@
+
 $(document).ready(function() {
+    window.jsPDF = window.jspdf.jsPDF;
+    //import jsPDF from './';
     //import { jsPDF } from "jspdf";
-    window.jsPDF = window.jspdf.jsPDF; 
+    //import autoTable from 'jspdf-autotable'
+    //window.jspdf.autotable = window.jspdf.autotable.jspdf.autotable; 
     var tipoForm ='';
     var evento = '';
     var hoy = new Date();
@@ -49,7 +53,7 @@ $(document).ready(function() {
             right: 'dayGridMonth,timeGridWeek,timeGridDay,listWeek'
         },
         height: 750,
-        timeZone: 'America/Argentina/Buenos_Aires',
+        timeZone: 'local',
         noEventsContent: 'No hay turnos',
         //events: turnos,
         events: function(fetchInfo, successCallback, failureCallback) {
@@ -1086,30 +1090,173 @@ async function cajaMes(mes){
   })
 }
 
- function exportarPDF(calendar){
-  const doc = new jsPDF();
+function exportarPDF(calendar){
+  moment.locale('es')
+  doc = new jsPDF();
   let currentDate = calendar.getDate();
-  let eventos = calendar.getEvents()
+  let eventos = calendar.getEvents();
   var firstDay = new Date(currentDate.setDate(currentDate.getDate() - currentDate.getDay()));
   var lastDay = new Date(currentDate.setDate(currentDate.getDate() - currentDate.getDay() + 6));
   firstDay = firstDay.setHours(0,0,0,0) //horas, minutos, segundos, milisegundos
-  lastDay = lastDay.setHours(23,59,59,99) ////horas, minutos, segundos, milisegundos
-  listEvents = eventos.filter(e => e._instance.range.start >= firstDay && e._instance.range.start <= lastDay);
-  console.log("listEvents", listEvents);
+  lastDay = lastDay.setHours(23,59,59,99) //horas, minutos, segundos, milisegundos
+  listEvents = eventos.filter(e => e.start >= firstDay && e.start <= lastDay);
   doc.setFontSize(22);
-  doc.text("Parabrisas 141 Turnos", doc.internal.pageSize.getWidth() / 2, 20, { align: 'center'});
+  doc.text("Turnos Parabrisas 141", doc.internal.pageSize.getWidth() / 2, 20, { align: 'center'});
   doc.setFontSize(20);
   doc.text(moment(firstDay).format("DD")+ " - "+moment(lastDay).format("DD MMM YYYY"), doc.internal.pageSize.getWidth() / 2, 30, { align: 'center'});
-  
-  headerLunes=[{id: "1", name: "Lunes",width: 65,align: "center",padding: 0}]
-  dataLunes=[{Lunes: "15:15"}, {Lunes: '16:00'}]
-  
-  doc.table(5, 50, dataLunes, headerLunes,{ autoSize: true });
-  doc.save("a4.pdf");
-  
-  arrayEvents = [];
+ 
+  arrayDomingo = []
+  arrayLunes = [] 
+  arrayMartes = []
+  arrayMiercoles = []
+  arrayJueves = []
+  arrayViernes = []
+  arraySabado = []
+
   listEvents.forEach(e => {
-    arrayEvents.push([moment(e.start).format("DD/MM - HH:SS"), e.title])
+    if(moment(e.start).format('dddd') == "domingo"){
+      arrayDomingo.push([moment(e.start).format("HH:mm"), e.title])
+      contentDomingo = moment(e.start).format("DD [de] MMMM")
+
+    }else if (moment(e.start).format('dddd') == "lunes"){
+      arrayLunes.push([moment(e.start).format("HH:mm"), e.title])
+      contentLunes = moment(e.start).format("DD [de] MMMM")
+
+    }else if (moment(e.start).format('dddd') == "martes"){
+      arrayMartes.push([moment(e.start).format("HH:mm"), e.title])
+      contentMartes = moment(e.start).format("DD [de] MMMM")
+
+    }else if (moment(e.start).format('dddd') == "miércoles"){
+      arrayMiercoles.push([moment(e.start).format("HH:mm"), e.title])
+      contentMiercoles = moment(e.start).format("DD [de] MMMM")
+
+    }else if (moment(e.start).format('dddd') == "jueves"){
+      arrayJueves.push([moment(e.start).format("HH:mm"), e.title])
+      contentJueves = moment(e.start).format("DD [de] MMMM")
+
+    }else if (moment(e.start).format('dddd') == "viernes"){
+      arrayViernes.push([moment(e.start).format("HH:mm"), e.title])
+      contentViernes = moment(e.start).format("DD [de] MMMM")
+
+    }else if (moment(e.start).format('dddd') == "sábado"){
+      arraySabado.push([moment(e.start).format("HH:mm"), e.title])
+      contentSabado = moment(e.start).format("DD [de] MMMM")
+      
+    }
   });
-  console.log("ArrayEvents", arrayEvents)
+
+  if(arrayDomingo.length > 0){
+    doc.autoTable({
+      startY: 40,
+      head: [
+        [{content: 'Domingo - '+ contentDomingo, colSpan: 2, styles: {halign: 'left', fillColor: [213, 105, 59]}}],
+        ['Hora', 'Contacto',]
+      ],
+      headStyles :{halign: 'center', fillColor : [253, 139, 90]},
+      styles: {
+        halign: 'center'
+      },
+      body: arrayDomingo,
+      theme: 'grid',
+    });
+  }
+
+  if(arrayLunes.length > 0){
+    doc.autoTable({
+        startY: doc.autoTable.previous.finalY + 5 || 40,
+        head: [
+          [{content: 'Lunes - '+ contentLunes, colSpan: 2, styles: {halign: 'left', fillColor: [213, 105, 59]}}],
+          ['Hora', 'Contacto',]
+        ],
+        headStyles :{halign: 'center', fillColor : [253, 139, 90]},
+        styles: {
+          halign: 'center'
+        },
+        body: arrayLunes,
+        theme: 'grid',
+    });
+  }
+  
+  if(arrayMartes.length > 0){
+    doc.autoTable({
+        startY: doc.autoTable.previous.finalY + 5 || 40,
+        head: [
+          [{content: 'Martes - '+ contentMartes, colSpan: 2, styles: {halign: 'left', fillColor: [213, 105, 59]}}],
+          ['Hora', 'Contacto',]
+        ],
+        headStyles :{halign: 'center', fillColor : [253, 139, 90]},
+        styles: {
+          halign: 'center'
+        },
+        body: arrayMartes,
+        theme: 'grid',
+    });
+  }
+
+  if(arrayMiercoles.length > 0){
+    doc.autoTable({
+        startY: doc.autoTable.previous.finalY + 5 || 40,
+        head: [
+          [{content: 'Miércoles - '+ contentMiercoles, colSpan: 2, styles: {halign: 'left', fillColor: [213, 105, 59]}}],
+          ['Hora', 'Contacto',]
+        ],
+        headStyles :{halign: 'center', fillColor : [253, 139, 90]},
+        styles: {
+          halign: 'center'
+        },
+        body: arrayMiercoles,
+        theme: 'grid',
+    });
+  }
+  
+  if(arrayJueves.length > 0){
+    doc.autoTable({
+        startY: doc.autoTable.previous.finalY + 5 || 40,
+        head: [
+          [{content: 'Jueves - '+ contentJueves, colSpan: 2, styles: {halign: 'left', fillColor: [213, 105, 59]}}],
+          ['Hora', 'Contacto',]
+        ],
+        headStyles :{halign: 'center', fillColor : [253, 139, 90]},
+        styles: {
+          halign: 'center'
+        },
+        body: arrayJueves,
+        theme: 'grid',
+    });
+  }
+
+  if(arrayViernes.length > 0){
+    doc.autoTable({
+        startY: doc.autoTable.previous.finalY + 5 || 40,
+        head: [
+          [{content: 'Viernes - '+ contentViernes, colSpan: 2, styles: {halign: 'left', fillColor: [213, 105, 59]}}],
+          ['Hora', 'Contacto',]
+        ],
+        headStyles :{halign: 'center', fillColor : [253, 139, 90]},
+        styles: {
+          halign: 'center'
+        },
+        body: arrayViernes,
+        theme: 'grid',
+    });
+  }
+
+  if(arraySabado.length > 0){
+    doc.autoTable({
+        startY: doc.autoTable.previous.finalY + 5 || 40,
+        head: [
+          [{content: 'Sábado - '+ contentSabado, colSpan: 2, styles: {halign: 'left', fillColor: [213, 105, 59]}}],
+          ['Hora', 'Contacto',]
+        ],
+        headStyles :{halign: 'center', fillColor : [253, 139, 90]},
+        styles: {
+          halign: 'center'
+        },
+        body: arraySabado,
+        theme: 'grid',
+    });
+  }
+
+  doc.save('Turnos Parabrisas 141 ('+ moment(currentDate).format('DD-MM-YY') +').pdf')
+  doc.autoTable.previous.finalY = 35;
 }

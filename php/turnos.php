@@ -388,6 +388,10 @@
 <!-- Jquery -->
 <script src="../libraries/jquery/jquery-3.6.4.min.js"></script>
 
+<!-- jsPDF y AutoTable -->
+<script src="../libraries/jsPDF-AutoTable/jspdf.umd.min.js"></script>
+<script src="../libraries/jsPDF-AutoTable/jspdf.plugin.autotable.min.js"></script>
+
 <!-- Custom Script -->
 <script src="../js/scriptPanel.js"></script>
 <script src="../js/template.js"></script>
@@ -413,19 +417,13 @@
 <script src="../libraries/fullcalendar-6.1.5/dist/index.global.min.js"></script>
 
 <!-- MomentJs -->
-<script src="../libraries/moment/moment.js"></script>
-
-<!--BootstrapMultiselect
-<script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-multiselect/0.9.13/js/bootstrap-multiselect.js"></script>-->
+<script src="../libraries/moment/moment-with-locales.js"></script>
 
 <!-- Select 2 -->
 <script src="../libraries/select2/dist/js/select2.min.js"></script>
 
 <!-- LightBox 2 -->
 <script src="../libraries/lightbox2-2.11.3/dist/js/lightbox.js"></script>
-
-<!-- jsPDF -->
-<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
 
 </body>
 </html>
