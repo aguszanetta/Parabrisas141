@@ -127,6 +127,7 @@
     display: none !important;
 }
 
+#tablaTurnos,
 #tablaLP,
 #tablaStock,
 #tablaAPedir,
@@ -135,6 +136,7 @@
     width: 100% !important;
 }
 
+#tablaTurnos_filter,
 #tablaLP_filter,
 #tablaStock_filter,
 #tablaAPedir_filter,
@@ -142,6 +144,7 @@
     margin-bottom: 15px;
 }
 
+div#tablaTurnos_filter label input,
 div#tablaLP_filter label input,
 div#tablaStock_filter label input,
 div#tablaAPedir_filter label input,
@@ -372,4 +375,12 @@ div#wrapperArchivo .fa-cloud-arrow-up{
 .fc-icon-caja {
     display: flex;
     align-items: center;
+}
+
+.dtsb-button {
+    background-color: #808080;
+}
+
+.ph10px {
+    padding-inline: 10px;
 }

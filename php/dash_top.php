@@ -37,6 +37,10 @@
     <!--BootstrapMultiselect 
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-multiselect/0.9.13/css/bootstrap-multiselect.css">-->
 
+    <!-- Search Builder Bootstrap-5 -->
+    <link rel="stylesheet" type="text/css" href="../libraries/DataTables/SearchBuilder-1.4.2/css/searchBuilder.bootstrap5.min.css">
+    <link rel="stylesheet" type="text/css" href="../libraries/DataTables/DateTime-1.4.0/css/dataTables.dateTime.min.css">
+
     <!-- Select 2 -->
     <link rel="stylesheet" type="text/css" href="../libraries/select2/dist/css/select2.min.css"/>
     <link rel="stylesheet" href="../libraries/select2/dist/css/select2-bootstrap-5-theme.min.css" />
@@ -140,14 +144,13 @@
                 </a>
                 <div id="collapseLp" class="collapse m-01rem">
                     <ul class="nav flex-column">
-                        <li class="nav-item"> <a class="nav-link subitem" href="lp_particulares.php">• Particulares</a></li>
                         <li class="nav-item"> <a class="nav-link subitem" href="lp_laCaja.php">• La Caja</a></li>
                         <li class="nav-item"> <a class="nav-link subitem" href="lp_glasscom.php">• Glasscom</a>
                         <li class="nav-item"> <a class="nav-link subitem" href="lp_fedPat.php">• Fed Pat</a>
                         <li class="nav-item"> <a class="nav-link subitem" href="lp_comun.php">• Común</a>
                         <li class="nav-item"> <a class="nav-link subitem" href="lp_asnm.php">• A-S-N-M</a>
                         <li class="nav-item"> <a class="nav-link subitem" href="lp_lss.php">• La Segunda - Sancor</a>
-                        <li class="nav-item"> <a class="nav-link subitem" href="lp_sanCristobal.php">• San Cristobal</a>
+                        <li class="nav-item"> <a class="nav-link subitem" href="lp_sanCristobalMercantilAndina.php">• San Cristobal - Mercantil Andina</a>
                     </ul>
                 </div>
             </li>

@@ -289,38 +289,6 @@ var opcion=0;
              "sProcessing":"Procesando...",
         }   
     });
-//______________________Particulares______________________//
-    dtParticulares = $('#tablaLP-particulares').DataTable( {
-        "ajax":{            
-            "url": "../php/readListaPrecios.php", 
-            "method": 'POST', 
-            "data":{opcion:8},
-            "dataSrc":""
-        },
-         "columns":[
-            {"data": "codigo"},
-            {"data": "descripcion"},
-            {"data": "preciolista"},
-            {"data": "preciosiva"},
-            {"data": "ultimoprecio"}
-        ],
-        "language": {
-            "lengthMenu": "Mostrar _MENU_ registros",
-            "zeroRecords": "No se encontraron resultados",
-            "info": "Mostrando registros del _START_ al _END_ de un total de _TOTAL_ registros",
-            "infoEmpty": "Mostrando registros del 0 al 0 de un total de 0 registros",
-            "infoFiltered": "(filtrado de un total de _MAX_ registros)",
-            "sSearch": "Buscar:",
-            "sLoadingRecords": "Cargando...",
-            "oPaginate": {
-                "sFirst": "Primero",
-                "sLast":"Último",
-                "sNext":"Siguiente",
-                "sPrevious": "Anterior"
-             },
-             "sProcessing":"Procesando...",
-        }     
-    });
 
 /*----------------------------Modales Detalle Para Lista de Precios----------------------------*/   
 $(document).on("click", ".btnDetalleLPLaCaja", function(){

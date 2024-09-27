@@ -3,44 +3,7 @@
 <!---- Contenido Principal ---->
 <div class="container-fluid">
 	<h1>Turnos</h1>
-
-    <div class="row mb-2">
-        <div class="col-lg-3">
-            <button id="btnCaja" type="button" class="btn btn-secondary btn-icon ph10px" data-toggle="modal">
-                <i class="fas fa-piggy-bank"></i>
-            </button> 
-        </div>       
-    </div> 
-    
-    <div class="row">
-            <div class="col-lg-12">
-            <div class="table-responsive">     
-                <table id="tablaTurnos" class="table table-striped table-bordered table-condensed table-hover">
-                    <thead class="text-center">
-                        <tr>
-                            <th>idTurno</th>
-                            <th>Fecha</th>
-                            <th>Turno</th>
-                            <th>Hora</th>
-                            <th>Contacto</th>
-                            <th>Telefono</th>
-                            <th>Dominio</th>
-                            <th>Vehiculo</th>
-                            <th>Trabajos</th>
-                            <th>Compañia</th>
-                            <!--<th>Grabado</th>-->
-                            <th>Siniestro</th>
-                            <th>N° Factura</th>
-                            <th>Pago</th>
-                            <th>Acciones</th>
-                        </tr>
-                    </thead>
-                    <tbody>                           
-                    </tbody>        
-                </table>                
-            </div>
-            </div>
-        </div>  
+    <div id='calendar' class="mb-3"></div>
     
 <!--Modal para Turno-->
 <div class="modal fade" id="modalTurno" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
@@ -64,17 +27,17 @@
                 <div class="row">
                     <div class="col-md-3">
                         <div class="form-group">
-                            <label for="fechaHora" class="form-label text-dark">Fecha y Hora</label>
+                            <label for="fecha" class="form-label text-dark">Fecha</label>
                             <div class="input-group mb-3">
-                                <input id="fechaHora" name="fechaHora" type="datetime-local" class="form-control inputForm" disabled required>
+                                <input id="fecha" name="fecha" type="date" class="form-control inputForm" disabled required>
                             </div>
                         </div>
                     </div>
                     <div class="col-md-3">
                         <div class="form-group">
-                            <label for="franjaHoraria" class="form-label text-dark">Franja Horaria</label>
+                            <label for="hora" class="form-label text-dark">Hora</label>
                             <div class="input-group mb-3">
-                            <select name="franjaHoraria" id="franjaHoraria" class="form-select inputForm" required>
+                            <select name="hora" id="hora" class="form-select inputForm" required>
                                     <option value="0">Seleccione</option>
                                     <option value="1">Mañana</option>
                                     <option value="2">Tarde</option>
@@ -306,31 +269,13 @@
                     </div>
                     <div class="col-md-3">
                         <div class="form-group">
-                            <label for="fechaPago" class="form-label text-dark">Fecha de Pago</label>
-                            <div class="input-group mb-3">
-                                <input id="fechaPago" name="fechaPago" type="date" class="form-control inputForm">
-                            </div>
-                        </div>
-                    </div>
-                    <div class="col-md-3">
-                        <div class="form-group">
-                            <label for="fechaEntrega" class="form-label text-dark">Fecha de Entrega</label>
-                            <div class="input-group mb-3">
-                                <input id="fechaEntrega" name="fechaEntrega" type="date" class="form-control inputForm">
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                <div class="row">
-                    <div class="col-md-6">
-                        <div class="form-group">
                             <label for="factura" class="form-label text-dark">N° Factura</label>
                             <div class="input-group mb-3">
                                 <input id="numFactura" name="numFactura" type="text" class="form-control inputForm">
                             </div>
                         </div>
                     </div>
-                    <div class="col-md-6">
+                    <div class="col-md-3">
                         <div class="form-group">
                             <label for="siniestro" class="form-label text-dark">Siniestro</label>
                             <div class="input-group mb-3">
@@ -339,7 +284,18 @@
                         </div>
                     </div>
                 </div>
+                <!--<div class="row">
+                    <div class="col-md-12">
+                        <div class="form-group">
+                            <label for="imagen" class="form-label text-dark">Imagen</label>
+                            <div class="input-group mb-3">
+                                <input id="imagen" name="imagen" type="text" class="form-control inputForm">
+                            </div>
+                        </div>
+                    </div>
+                </div>-->
                 <div id="contentArchivos">
+                    
                 </div>
                 <input id="archivo" name="archivo" class="file-input" type="file" accept=".pdf, .jpg, .jpeg, .png, .tif" multiple="multiple" hidden="">
             </div>
@@ -461,18 +417,8 @@
 <script type="text/javascript" src="../libraries/DataTables/DataTables-1.13.4/js/jquery.dataTables.min.js"></script>
 <script type="text/javascript" src="../libraries/DataTables/DataTables-1.13.4/js/dataTables.bootstrap5.min.js"></script>
 
-<!-- Botones Datatables JS -->
-<script src="../libraries/DataTables/Buttons-2.3.6/js/dataTables.buttons.min.js"></script>
-<script src="../libraries/DataTables/Buttons-2.3.6/js/buttons.html5.min.js"></script> 
-<script src="../libraries/DataTables/Buttons-2.3.6/js/buttons.print.min.js"></script>
-<script src="../libraries/DataTables/JSZip-2.5.0/jszip.min.js"></script>    
-<script src="../libraries/DataTables/pdfmake-0.1.36/pdfmake.min.js"></script>    
-<script src="../libraries/DataTables/pdfmake-0.1.36/vfs_fonts.js"></script>
-
-<!-- Search Builder Datatables JS -->
-<script src="../libraries/DataTables/SearchBuilder-1.4.2/js/dataTables.searchBuilder.min.js"></script>
-<script src="../libraries/DataTables/SearchBuilder-1.4.2/js/searchBuilder.bootstrap5.min.js"></script>
-<script src="../libraries/DataTables/DateTime-1.4.0/js/dataTables.dateTime.min.js"></script>
+<!-- Full Calendar -->
+<script src="../libraries/fullcalendar-6.1.5/dist/index.global.min.js"></script>
 
 <!-- MomentJs -->
 <script src="../libraries/moment/moment-with-locales.js"></script>

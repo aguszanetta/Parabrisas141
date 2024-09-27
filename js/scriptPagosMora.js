@@ -58,9 +58,76 @@ $(document).ready(function() {
                 "sPrevious": "Anterior"
             },
             "sProcessing": "Procesando...",
+            "searchBuilder": {
+                add: 'Agregar Condición',
+                condition: 'Comparación',
+                clearAll: 'Limpiar',
+                //delete: 'Eliminar',
+                deleteTitle: 'Eliminar Condición',
+                data: 'Columna',
+                //left: 'Izquierda',
+                leftTitle: 'Eliminar Subcondición',
+                logicAnd: 'Y',
+                logicOr: 'O',
+                //right: 'Derecha',
+                rightTitle: 'Agregar Subcondición',
+                title: {
+                    0: '',
+                    _: ''
+                },
+                value: 'Opción',
+                valueJoiner: 'entre',
+                "conditions": {
+                    "date": {
+                        "after": "Despues",
+                        "before": "Antes",
+                        "between": "Entre",
+                        "empty": "Vacío",
+                        "equals": "Igual a",
+                        "notBetween": "No entre",
+                        "notEmpty": "No Vacio",
+                        "not": "Diferente de"
+                    },
+                    "number": {
+                        "between": "Entre",
+                        "empty": "Vacio",
+                        "equals": "Igual a",
+                        "gt": "Mayor a",
+                        "gte": "Mayor o igual a",
+                        "lt": "Menor que",
+                        "lte": "Menor o igual que",
+                        "notBetween": "No entre",
+                        "notEmpty": "No vacío",
+                        "not": "Diferente de"
+                    },
+                    "string": {
+                        "contains": "Contiene",
+                        "empty": "Vacío",
+                        "endsWith": "Termina en",
+                        "equals": "Igual a",
+                        "notEmpty": "No Vacio",
+                        "startsWith": "Empieza con",
+                        "not": "Diferente de",
+                        "notContains": "No Contiene",
+                        "notStartsWith": "No empieza con",
+                        "notEndsWith": "No termina con"
+                    },
+                    "array": {
+                        "not": "Diferente de",
+                        "equals": "Igual",
+                        "empty": "Vacío",
+                        "contains": "Contiene",
+                        "notEmpty": "No Vacío",
+                        "without": "Sin"
+                    },
+                },
+            },
         },
         //responsive: "true",
-        dom: 'Bfrtilp',
+        searchBuilder: {
+            columns: [4]
+        },
+        dom: 'QBfrtilp',
         buttons: [{
                 extend: 'excelHtml5',
                 exportOptions: {
@@ -103,8 +170,24 @@ $(document).ready(function() {
                         };
                 },
             },
+            {
+                titleAttr: 'Filtrar',
+                text: '<i class="fas fa-filter iconWhite"></i> ',
+                className: 'btn btn-icon btn-orange br7px filterSB',
+                action: function(e, dt, node, config) {
+                    esVisible = $("#tablaPagosMora_wrapper>.dtsb-searchBuilder").is(":visible");
+                    if(esVisible){
+                        $("#tablaPagosMora_wrapper>.dtsb-searchBuilder").hide()
+                    } else {
+                        $("#tablaPagosMora_wrapper>.dtsb-searchBuilder").show()
+                    }
+                }
+              },
         ]
     });
+
+    tablaPagosMora.searchBuilder.container().prependTo(tablaPagosMora.table().container());
+    $("#tablaPagosMora_wrapper>.dtsb-searchBuilder").hide();
 
     /*---------- FINALIZAR ----------*/
     $(document).on("click", ".btnFinalizarPago", function(){

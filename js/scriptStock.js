@@ -31,17 +31,46 @@ $(document).ready(function() {
         },
         "columns": [
             { "data": "idStock", "visible": false },
-            { "data": "codigo", "sortable": false },
-            { "data": "marca", "sortable": false },
-            { "data": "modelo", "sortable": false },
-            { "data": "tipo", "sortable": false },
-            { "data": "descripcion", "visible": false },
+            { "data": "codigo", "sortable": false, "width": "10%" },
+            { "data": "marca", "sortable": false, "width": "15%" },
+            { "data": "modelo", "sortable": false, "width": "15%" },
+            { "data": "tipo", "sortable": false, "width": "10%" },
+            { 
+                "data": { "data": "idStock" },
+                "sortable": false,
+                "width": "20%",
+                "render": function(data){
+                    arrayDescripcionCompleta = []
+                    arrayDescripcionCompleta.push(data.descripcion, data.posicion, data.lado, data.color)
+                    arrayDescripcionFiltrada = arrayDescripcionCompleta.filter(e => e != "")
+                    descripcionTotal = ""
+                    if(arrayDescripcionFiltrada.length > 0){
+                        descripcionTotal = arrayDescripcionFiltrada[0]
+                        for (i=1; i < arrayDescripcionFiltrada.length; i++) {
+                            descripcionTotal += "</br>" + arrayDescripcionFiltrada[i]
+                        }
+                        return descripcionTotal
+                    }else{
+                        return "<i>No se encontró descripción</i>"
+                    }
+                    /*if(data.descripcion && data.posicion && data.lado && data.color){
+                        return data.descripcion + "</br>" + data.posicion + "</br>" + data.lado + "</br>" + data.color
+                    } else if (data.descripcion && data.posicion && data.lado){
+                        return data.descripcion + "</br>" + data.posicion + "</br>" + data.lado
+                    } else if (data.descripcion && data.posicion){
+                        return data.descripcion + "</br>" + data.posicion
+                    } else {
+                        return data.descripcion
+                    }*/
+                }
+
+            },
             { "data": "posicion", "visible": false },
             { "data": "lado", "visible": false },
             { "data": "color", "visible": false },
-            { "data": "cantidad" },
+            { "data": "cantidad", "width": "8%" },
             { "data": "precioFinal", "sortable": false },
-            { "defaultContent": "<div class='text-center'><div class='btn-group'><button class='btn btn-primary btnEditarStock'><i class='fas fa-pen-to-square'></i></button><button class='btn btn-info text-white btnDetalleStock'><i class='fas fa-info-circle'></i></button></div></div>", "sortable": false }
+            { "defaultContent": "<div class='text-center'><button class='btn btn-primary btnEditarStock'><i class='fas fa-pen-to-square'></i></button></div>", "sortable": false, "width": "7%" }
         ],
         "pageLength": 50,
         "language": {
@@ -168,23 +197,6 @@ $(document).ready(function() {
             }
         });
 	});
-
-    //ModalDetalle     
-    $(document).on("click", ".btnDetalleStock", function(){
-        fila = $(this).closest("tr");
-        data = $('#tablaStock').DataTable().row(fila).data();
-        descripcion = data['descripcion'];
-        posicion = data['posicion'];
-        lado = data['lado'];
-        color = data['color'];
-        $("#info00Stock").html(descripcion);
-        $("#info01Stock").html(posicion);
-        $("#info02Stock").html(lado);
-        $("#info03Stock").html(color);        
-        //$("#headerDetalle").css({"background-color":"#17a2b8","color":"white"});
-        $("#titleDetalle").text("Detalle");
-        $('#modalDetalle').modal('show');
-    });
 
     $(document).on("change", "#marcaStock", function() {
         marcaID = $("#marcaStock option:selected").val();

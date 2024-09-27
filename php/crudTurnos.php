@@ -5,6 +5,7 @@ $conexion = $objeto->Conectar();
 
 $idTurno = (isset($_POST['idTurno'])) ? $_POST['idTurno'] : '';
 $fechaHora = (isset($_POST['fechaHora'])) ? $_POST['fechaHora'] : '';
+$franjaHoraria = (isset($_POST['franjaHoraria'])) ? $_POST['franjaHoraria'] : '';
 $contacto = (isset($_POST['contacto'])) ? $_POST['contacto'] : '';
 $telefono = (isset($_POST['telefono'])) ? $_POST['telefono'] : '';
 $dominio = (isset($_POST['dominio'])) ? $_POST['dominio'] : '';
@@ -15,7 +16,9 @@ $siniestro = (isset($_POST['siniestro'])) ? $_POST['siniestro'] : '';
 $observacion = (isset($_POST['observacion'])) ? $_POST['observacion'] : '';
 $esPago = (isset($_POST['esPago'])) ? $_POST['esPago'] : '';
 $tipoPago = (isset($_POST['tipoPago'])) ? $_POST['tipoPago'] : '';
+$fechaPago = (isset($_POST['fechaPago'])) ? $_POST['fechaPago'] : '';
 $numFactura = (isset($_POST['numFactura'])) ? $_POST['numFactura'] : '';
+$fechaEntrega = (isset($_POST['fechaEntrega'])) ? $_POST['fechaEntrega'] : '';
 $modeloID = (isset($_POST['modeloID'])) ? $_POST['modeloID'] : '';
 $marcaID = (isset($_POST['marcaID'])) ? $_POST['marcaID'] : '';
 $cristalID = (isset($_POST['cristalID'])) ? $_POST['cristalID'] : '';
@@ -26,12 +29,22 @@ $idCristales = (isset($_POST['idCristales'])) ? $_POST['idCristales'] : '';
 $mes = (isset($_POST['mes'])) ? $_POST['mes'] : '';
 $cristalesAPedir = (isset($_POST['cristalesAPedir'])) ? $_POST['cristalesAPedir'] : '';
 $cristalesEliminar = (isset($_POST['cristalesEliminar'])) ? $_POST['cristalesEliminar'] : '';
-
+$arrayIdTurnos = (isset($_POST['arrayIdTurnos'])) ? $_POST['arrayIdTurnos'] : '';
 $opcion = (isset($_POST['opcion'])) ? $_POST['opcion'] : '';
 
 switch($opcion){
     case 1:
-        $consulta = "SELECT idTurno, fechaHora, contacto, estado FROM turno";			
+        $consulta = "SELECT t.idTurno, DATE(t.fechaHora) AS fecha, t.franjaHoraria, DATE_FORMAT(t.fechaHora, '%H:%i') AS hora, t.contacto, 
+            t.telefono, t.dominio, CONCAT(ma.nombre, ' - ', mo.nombre) AS vehiculo, GROUP_CONCAT(tr.nombre) AS trabajos, 
+            e.nombre AS empresa, t.esPago, t.siniestro, t.numFactura, t.estado 
+            FROM turno t 
+            INNER JOIN modelo mo ON mo.idModelo = t.modeloID 
+            INNER JOIN marca ma ON ma.idMarca = mo.marcaID 
+            INNER JOIN trabajoturno trt ON trt.turnoID = t.idTurno 
+            INNER JOIN trabajo tr ON trt.trabajoID = tr.idTrabajo 
+            INNER JOIN empresa e ON e.idEmpresa = t.empresaID 
+            GROUP BY t.idTurno 
+            ORDER BY t.fechaHora DESC;";			
         $resultado = $conexion->prepare($consulta);
         $resultado->execute(); 
         $data=$resultado->fetchAll(PDO::FETCH_ASSOC);       
@@ -39,8 +52,8 @@ switch($opcion){
     case 2:
         /* --- Insertar Turno --- */
         $consulta = "INSERT INTO turno 
-        (fechaHora, contacto, telefono, dominio, siniestro, observacion, esPago, tipoPago, numFactura, importeTrabajo, estado, modeloID, empresaID) 
-        VALUES('$fechaHora', '$contacto', '$telefono', '$dominio', '$siniestro', '$observacion', '$esPago', '$tipoPago', '$numFactura', '$importeTrabajo','Activo', '$modeloID', '$empresaID');";
+        (fechaHora, franjaHoraria, contacto, telefono, dominio, siniestro, observacion, esPago, tipoPago, fechaPago, numFactura, importeTrabajo, fechaEntrega, estado, modeloID, empresaID) 
+        VALUES('$fechaHora', '$franjaHoraria', '$contacto', '$telefono', '$dominio', '$siniestro', '$observacion', '$esPago', '$tipoPago', '$fechaPago', '$numFactura', '$importeTrabajo', '$fechaEntrega', 'Activo', '$modeloID', '$empresaID');";
         $resultado = $conexion->prepare($consulta);
         $resultado->execute();
         $turnoID=$conexion->lastInsertId();
@@ -83,8 +96,8 @@ switch($opcion){
         $data=$turnoID;
         break;
     case 3:
-        $consulta = "UPDATE turno SET contacto='$contacto', fechaHora='$fechaHora', telefono='$telefono', dominio='$dominio',
-        siniestro='$siniestro', observacion='$observacion', esPago='$esPago', tipoPago='$tipoPago', numFactura='$numFactura', importeTrabajo='$importeTrabajo', modeloID='$modeloID',
+        $consulta = "UPDATE turno SET contacto='$contacto', fechaHora='$fechaHora', franjaHoraria='$franjaHoraria', telefono='$telefono', dominio='$dominio',
+        siniestro='$siniestro', observacion='$observacion', esPago='$esPago', tipoPago='$tipoPago', fechaPago='$fechaPago', numFactura='$numFactura', importeTrabajo='$importeTrabajo', fechaEntrega='$fechaEntrega', modeloID='$modeloID',
         empresaID='$empresaID'
         WHERE idTurno='$idTurno'";
         $resultado = $conexion->prepare($consulta);
@@ -222,7 +235,7 @@ switch($opcion){
     case 7:
         /*$consulta = "SELECT SUM(td.importeConIva) AS total FROM turno t 
         INNER JOIN turnodetalle td ON t.idTurno = td.turnoID 
-        WHERE t.tipoPago = 'Efectivo' AND t.esPago = 'Si' AND t.estado = 'Finalizado' AND MONTH(t.fechaHora) = $mes";*/
+        WHERE t.tipoPago = 'Efectivo' AND t.esPago = 'Si' AND t.estado = 'Finalizado' AND MONTH(t.fecha) = $mes";*/
         $consulta = "SELECT (SUM(td.importeConIva) + SUM(t.importeTrabajo)) AS total FROM turno t 
         LEFT JOIN turnodetalle td ON t.idTurno = td.turnoID 
         WHERE t.tipoPago = 'Efectivo' AND t.esPago = 'Si' AND t.estado = 'Finalizado' AND MONTH(t.fechaHora) = $mes;";
@@ -283,6 +296,40 @@ switch($opcion){
         $resultado = $conexion->prepare($consulta);
         $resultado->execute();
         $data=$resultado->fetchAll(PDO::FETCH_ASSOC);
+        break;
+    case 15:
+        $consulta = "SELECT t.idTurno, t.fechaHora, t.franjaHoraria, t.contacto, t.telefono, t.dominio, e.nombre AS empresa, 
+        GROUP_CONCAT(tr.nombre SEPARATOR '\n') AS trabajos
+        FROM turno t
+        INNER JOIN empresa e ON e.idEmpresa = t.empresaID
+        INNER JOIN trabajoturno tt ON t.idTurno = tt.turnoID
+        INNER JOIN trabajo tr ON tr.idTrabajo = tt.trabajoID
+        WHERE idTurno IN ($arrayIdTurnos) AND t.estado != 'Finalizado'
+        GROUP BY t.idTurno
+        ORDER BY t.fechaHora";
+        $resultado = $conexion->prepare($consulta);
+        $resultado->execute();
+        $data=$resultado->fetchAll(PDO::FETCH_ASSOC);
+        if(!$data){
+            $data=[];
+        }
+
+        $consulta = "SELECT t.idTurno, GROUP_CONCAT(c.codigo SEPARATOR '\n') AS codigos,
+        GROUP_CONCAT(c.descripcion SEPARATOR '\n') AS descripciones, GROUP_CONCAT(c.lado SEPARATOR '\n') AS posiciones,
+        GROUP_CONCAT(c.lado SEPARATOR '\n') AS lados, GROUP_CONCAT(c.color SEPARATOR '\n') AS colores
+        FROM turno t
+        LEFT JOIN turnodetalle td ON t.idTurno = td.turnoID
+        LEFT JOIN cristal c ON c.idCristal = td.cristalID
+        WHERE idTurno IN ($arrayIdTurnos) AND t.estado != 'Finalizado'
+        GROUP BY t.idTurno
+        ORDER BY t.fechaHora";
+        $resultado2 = $conexion->prepare($consulta);
+        $resultado2->execute();
+        $data2=$resultado2->fetchAll(PDO::FETCH_ASSOC);
+        if(!$data2){
+            $data2=[];
+        }
+        $data=array_merge([$data], [$data2]);
         break;
 }
 

@@ -14,15 +14,13 @@ $(document).ready(function() {
         case "lss":    
             nombreEmpresa = "La Segunda - Sancor"
             break;
-        case "sanCristobal":    
-            nombreEmpresa = "San Cristobal"
+        case "scma":    
+            nombreEmpresa = "San Cristobal - Mercantil Andina"
             break;
         case "comun":    
             nombreEmpresa = "Común"
             break;
-        /*case "particulares":    
-        nombreEmpresa = "Particulares"
-        break;
+        /*
         case "glasscom":    
         nombreEmpresa = "Glasscom"
         break;*/

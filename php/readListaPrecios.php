@@ -82,9 +82,9 @@ switch($opcion){
 		$resultado->execute();        
 		$data=$resultado->fetchAll(PDO::FETCH_ASSOC);
 		break;
-	case "sanCristobal":
+	case "scma":
 		/*$consulta = "SELECT * FROM laSegundaSancor";*/
-		/* --- San Cristobal ---  */
+		/* --- San Cristobal - Mercantil Andina ---  */
 		$consulta = "SELECT m.nombre AS marca, mo.nombre AS modelo, c.*, p.* 
 		FROM cristal c
 		INNER JOIN modelo mo ON mo.idModelo = c.modeloID
@@ -106,20 +106,6 @@ switch($opcion){
 		INNER JOIN precio p ON c.idCristal = p.cristalID
 		INNER JOIN empresaprecio ep ON p.idPrecio = ep.precioID
 		WHERE ep.empresaID = 4 AND c.estado = 'Activo'";
-		$resultado = $conexion->prepare($consulta);
-		$resultado->execute();        
-		$data=$resultado->fetchAll(PDO::FETCH_ASSOC);
-		break;
-	case "particulares":
-		/*$consulta = "SELECT * FROM particulares";*/
-		/* --- Particulares ---  */
-		$consulta = "SELECT m.nombre AS marca, mo.nombre AS modelo, c.*, p.* 
-		FROM cristal c
-		INNER JOIN modelo mo ON mo.idModelo = c.modeloID
-		INNER JOIN marca m ON m.idMarca = mo.marcaID
-		INNER JOIN precio p ON c.idCristal = p.cristalID
-		INNER JOIN empresaprecio ep ON p.idPrecio = ep.precioID
-		WHERE ep.empresaID = 9 AND c.estado = 'Activo'";
 		$resultado = $conexion->prepare($consulta);
 		$resultado->execute();        
 		$data=$resultado->fetchAll(PDO::FETCH_ASSOC);

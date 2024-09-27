@@ -13,7 +13,7 @@
                             <th>Fecha</th>
                             <th>Contacto</th>
                             <th>Vehículo</th>
-                            <th>Empresa</th>
+                            <th>Compañia</th>
                             <th>Días Restante</th>
                             <th>Días Mora</th>
                             <th>Estado</th>
@@ -77,7 +77,7 @@
             <footer class="sticky-footer bg-white">
                 <div class="container my-auto">
                     <div class="copyright text-center my-auto">
-                        <span>Copyright &copy; MAV Software - 2023</span>
+                        <span>Copyright &copy; MAV Software - 2024</span>
                     </div>
                 </div>
             </footer>
@@ -141,6 +141,11 @@
 <script src="../libraries/DataTables/JSZip-2.5.0/jszip.min.js"></script>    
 <script src="../libraries/DataTables/pdfmake-0.1.36/pdfmake.min.js"></script>    
 <script src="../libraries/DataTables/pdfmake-0.1.36/vfs_fonts.js"></script>
+
+<!-- Search Builder Datatables JS -->
+<script src="../libraries/DataTables/SearchBuilder-1.4.2/js/dataTables.searchBuilder.min.js"></script>
+<script src="../libraries/DataTables/SearchBuilder-1.4.2/js/searchBuilder.bootstrap5.min.js"></script>
+<script src="../libraries/DataTables/DateTime-1.4.0/js/dataTables.dateTime.min.js"></script>
 
 <!--MomentJS -->
 <script src="../libraries/moment/moment.js"></script>

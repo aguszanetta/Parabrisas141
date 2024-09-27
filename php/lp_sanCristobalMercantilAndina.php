@@ -2,7 +2,7 @@
 
 <!---- Contenido Principal ---->
 <div class="container-fluid">
-    <h1>Lista de Precios San Cristobal</h1>
+    <h1>Lista de Precios San Cristobal - Mercantil Andina</h1>
     
     <!--<div class="row">
       <div class="col-md-3">
@@ -26,7 +26,7 @@
     </div>-->
 	<div class="row">
             <div class="table-responsive">        
-                <table id="tablaLP" data-empresa="sanCristobal" class="table table-striped table-bordered table-condensed table-hover">
+                <table id="tablaLP" data-empresa="scma" class="table table-striped table-bordered table-condensed table-hover">
                     <thead class="text-center">
                         <tr>
                             <th>idPrecio</th>
@@ -122,7 +122,7 @@
             <footer class="sticky-footer bg-white">
                 <div class="container my-auto">
                     <div class="copyright text-center my-auto">
-                        <span>Copyright &copy; MAV Software - 2023</span>
+                        <span>Copyright &copy; MAV Software - 2024</span>
                     </div>
                 </div>
             </footer>

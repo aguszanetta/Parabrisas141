@@ -6,106 +6,373 @@ $(document).ready(function() {
     //import autoTable from 'jspdf-autotable'
     //window.jspdf.autotable = window.jspdf.autotable.jspdf.autotable; 
     var tipoForm ='';
-    var evento = '';
-    var hoy = new Date();
+    var idTurno = '';
+    const fechaHoy = new Date();
+
     arrayCristales = [];
     arrayCristal = [];
     //arrayStock = [];
     cristalesAPedir = [];
     var cantidadStock = 0;
-    var calendarEl = document.getElementById('calendar');
-    var calendar = new FullCalendar.Calendar(calendarEl, {
-        initialView: 'dayGridMonth',
-        locale: 'es',
-        allDaySlot: false,
-        customButtons: {
-          btnCaja: {
-            icon: 'caja',
-            click: async function() {
-              mesActual = hoy.getMonth()+1;
-              $("#mes").val(mesActual)
-              await cajaMes(mesActual);
-              $("#modalCaja").modal('show')
-            }
-          },
-          btnExportarTurnos: {
-            icon: 'exportarTurnos',
-            click: async function() {
-              exportarPDF(calendar);
-            }
-          }
-        },
-        views: {
-          dayGridMonth: {
-            dayMaxEventRows: 3
-          }
-        },
-        buttonText: {
-            today: 'Hoy',
-            month: 'Mes',
-            week: 'Semana',
-            day: 'Día',
-            listWeek: 'Lista'
-        },
-        headerToolbar: {
-            left: 'prev,next today btnCaja btnExportarTurnos',
-            center: 'title',
-            right: 'dayGridMonth,timeGridWeek,timeGridDay,listWeek'
-        },
-        height: 750,
-        timeZone: 'local',
-        noEventsContent: 'No hay turnos',
-        //events: turnos,
-        events: function(fetchInfo, successCallback, failureCallback) {
-            $.ajax({
-              url: 'crudTurnos.php',
-              type: 'POST',
-              dataType: 'json',
-              data: {
-                opcion: 1
-              },
-              beforeSend: function() {
+
+    //TABLA TURNOS
+    tablaTurnos = $('#tablaTurnos').DataTable({
+        "ajax": {
+            "url": "crudTurnos.php",
+            "method": 'POST',
+            "data": { opcion: 1 },
+            "dataSrc": "",
+            beforeSend: function() {
                 $('#loader').removeClass('hidden')
-              },
-              complete: function() {
-                  $('#loader').addClass('hidden')
-              },
-              success: function(doc) {
-                var events = [];
-                $(doc).each(function(i) {
-                  
-                  if(doc[i].estado == 'Finalizado'){
-                    tipoRender = 'block';
-                    colorEstado = '#d5693b';
-                  }else{
-                    tipoRender = 'auto';
-                    colorEstado = 'primary';
-                  }
-                  
-                  events.push({
-                      id: doc[i].idTurno,
-                      title: doc[i].contacto,
-                      start: doc[i].fechaHora,
-                      //end: doc[i].fechaHora,
-                      /*tel: '2215754',
-                      trabajo: ['Trabajo1','Trabajo 2'],
-                      idArchivo: doc[i].idArchivo,
-                      archivoNombre: doc[i].archivoNombre,
-                      archivoHash: doc[i].archivoHash,
-                      archivoExt: doc[i].archivoExt,*/
-                      color: colorEstado,
-                      display: tipoRender
-                    })            
-                });
-                successCallback(events);
+            },
+            complete: function() {
+                $('#loader').addClass('hidden')
+            },
+        },
+        "columns": [
+            { "data": "idTurno", "visible": false },
+            {   
+                "data": "fecha",
+                "type": "moment- DD-MM-YYYY",
+                "width": "10%",
+                render: function(data) {
+                  return moment(data, 'YYYY-MM-DD').format('DD-MM-YYYY');
+                }
+            },
+            { "data": "franjaHoraria", "sortable": false },
+            { "data": "hora", "sortable": false },
+            { "data": "contacto", "sortable": false },
+            { "data": "telefono", "sortable": false },
+            { "data": "dominio", "sortable": false },
+            { "data": "vehiculo", "sortable": false },
+            { "data": "trabajos", 
+              "sortable": false, 
+              "render": function(data){
+                trabajos = data.split(',')
+                todos = ''
+                for (i = 0; i < trabajos.length; i++) {
+                  todos = todos + "<li class='list-group-item p-0 bg-transparent'>" + trabajos[i] + " </li>"
+                }
+                return "<ul class='list-group list-group-flush text-center'>" + todos + "</ul>"
               }
-            });
-          }
+            },
+            { "data": "empresa", "sortable": false },
+            //{ "data": "grabado", "sortable": false },
+            { "data": "siniestro", "visible": true , "sortable": false },
+            { "data": "numFactura", "visible": true , "sortable": false },
+            { "data": "esPago", "sortable": false },
+            //{ "data": "estado", "sortable": false },
+            { "defaultContent": "<div class='text-center'><button class='btn btn-info text-white btn-EditarTurno'><i class='fa-solid fa-info-circle'></i></button></div>", "sortable": false }
+        ],
+        "pageLength": 50,
+        "language": {
+            "lengthMenu": "Mostrar _MENU_ registros",
+            "zeroRecords": "No se encontraron resultados",
+            "info": "Mostrando registros del _START_ al _END_ de un total de _TOTAL_ registros",
+            "infoEmpty": "Mostrando registros del 0 al 0 de un total de 0 registros",
+            "infoFiltered": "(filtrado de un total de _MAX_ registros)",
+            "sSearch": "Buscar:",
+            "sLoadingRecords": "Cargando...",
+            "oPaginate": {
+                "sFirst": "Primero",
+                "sLast": "Último",
+                "sNext": "Siguiente",
+                "sPrevious": "Anterior"
+            },
+            "sProcessing": "Procesando...",
+            "searchBuilder": {
+                add: 'Agregar Condición',
+                condition: 'Comparación',
+                clearAll: 'Limpiar',
+                //delete: 'Eliminar',
+                deleteTitle: 'Eliminar Condición',
+                data: 'Columna',
+                //left: 'Izquierda',
+                leftTitle: 'Eliminar Subcondición',
+                logicAnd: 'Y',
+                logicOr: 'O',
+                //right: 'Derecha',
+                rightTitle: 'Agregar Subcondición',
+                title: {
+                    0: '',
+                    _: ''
+                },
+                value: 'Opción',
+                valueJoiner: 'entre',
+                "conditions": {
+                    "date": {
+                        "after": "Despues",
+                        "before": "Antes",
+                        "between": "Entre",
+                        "empty": "Vacío",
+                        "equals": "Igual a",
+                        "notBetween": "No entre",
+                        "notEmpty": "No Vacio",
+                        "not": "Diferente de"
+                    },
+                    "number": {
+                        "between": "Entre",
+                        "empty": "Vacio",
+                        "equals": "Igual a",
+                        "gt": "Mayor a",
+                        "gte": "Mayor o igual a",
+                        "lt": "Menor que",
+                        "lte": "Menor o igual que",
+                        "notBetween": "No entre",
+                        "notEmpty": "No vacío",
+                        "not": "Diferente de"
+                    },
+                    "string": {
+                        "contains": "Contiene",
+                        "empty": "Vacío",
+                        "endsWith": "Termina en",
+                        "equals": "Igual a",
+                        "notEmpty": "No Vacio",
+                        "startsWith": "Empieza con",
+                        "not": "Diferente de",
+                        "notContains": "No Contiene",
+                        "notStartsWith": "No empieza con",
+                        "notEndsWith": "No termina con"
+                    },
+                    "array": {
+                        "not": "Diferente de",
+                        "equals": "Igual",
+                        "empty": "Vacío",
+                        "contains": "Contiene",
+                        "notEmpty": "No Vacío",
+                        "without": "Sin"
+                    },
+                },
+            },
+        },
+        //responsive: "true",
+        order: {
+            data: 'fecha',
+            dir: 'desc'
+        },
+        searchBuilder: {
+          columns: [1, 6, 9, 11, 12]
+        },
+        dom: 'QBfrtilp',
+        buttons: [
+            {
+              titleAttr: 'Agregar Turno',
+              text: '<i class="fas fa-plus"></i> ',
+              className: 'btn btn-orange btn-icon br7px',
+              attr: {
+                id: 'btn-AltaTurno'
+              }
+            },
+            { 
+              extend: 'excelHtml5',
+              action: function(e, dt, button, config) {
+                // Mostrar spinner al hacer click
+                $('#loader').removeClass('hidden')
+
+                // Llamada al método de exportar y desactivar spinner al finalizar
+                $.fn.dataTable.ext.buttons.excelHtml5.action.call(this, e, dt, button, config);
+
+                setTimeout(function() {
+                    // Ocultar spinner después de la exportación
+                    $('#loader').addClass('hidden')
+                }, 2000); // Puedes ajustar el tiempo si es necesario
+              },
+              customize: function(xlsx) {
+                var sheet = xlsx.xl.worksheets['sheet1.xml'];
+                $('row c[r^="H"]', sheet).attr('s', '55');
+                $('row c[r="H2"]', sheet).attr('s', '2');
+              },
+              exportOptions: {
+                  columns: [1, 2, 3, 4, 5, 6, 7, 8, 9, 10],
+                  format: {
+                    body: function(data, row, column, node) {
+                        tempDiv = document.createElement('div');
+                        tempDiv.innerHTML = data;
+                        if (column === 7) {
+                          trabajosLi = tempDiv.getElementsByTagName("li")
+                          liArray = [];
+                          for (i = 0; i < trabajosLi.length; i++) {
+                              if (trabajosLi[i].innerText.length) { liArray.push((trabajosLi[i].innerText)); }
+                          }
+                          return liArray.join("\n")
+                        } else {
+                          return tempDiv.innerText
+                        }
+                    }
+                }
+              },
+              title: 'Turnos Parabrisas 141',
+              text: '<i class="fas fa-file-excel"></i> ',
+              titleAttr: 'Exportar a Excel',
+              className: 'btn btn-success'
+            },
+            {
+                extend: 'pdfHtml5',
+                exportOptions: {
+                    columns: [1, 2, 3, 4, 5, 6, 7, 8, 9, 10],
+                    format: {
+                        body: function(data, row, column, node) {
+                            tempDiv = document.createElement('div');
+                            tempDiv.innerHTML = data;
+                            if (column === 7) {
+                              trabajosLi = tempDiv.getElementsByTagName("li")
+                              liArray = [];
+                              for (i = 0; i < trabajosLi.length; i++) {
+                                  if (trabajosLi[i].innerText.length) { liArray.push((trabajosLi[i].innerText)); }
+                              }
+                              return liArray.join("\n")
+                            } else {
+                              return tempDiv.innerText
+                            }
+                        }
+                    }
+                },
+                title: 'Turnos Parabrisas 141',
+                text: '<i class="fas fa-file-pdf"></i> ',
+                titleAttr: 'Exportar a PDF',
+                className: 'btn btn-danger',
+                orientation: 'landscape',
+                PageSize: 'LEGAL',
+                action: function(e, dt, button, config) {
+                  // Mostrar spinner al hacer click
+                  $('#loader').removeClass('hidden')
+  
+                  // Llamada al método de exportar y desactivar spinner al finalizar
+                  $.fn.dataTable.ext.buttons.pdfHtml5.action.call(this, e, dt, button, config);
+  
+                  setTimeout(function() {
+                      // Ocultar spinner después de la exportación
+                      $('#loader').addClass('hidden')
+                  }, 2000); // Puedes ajustar el tiempo si es necesario
+                },
+                customize: function(doc) {
+                    doc.styles.tableHeader.fillColor = '#ffffff',
+                        doc.styles.tableHeader.color = '#000000',
+                        doc.styles.tableBodyOdd.fillColor = '#ffffff',
+                        doc.content[1].margin = [25, 0, 0, 0], //left, top, right, bottom
+                        doc.content[1].layout = {
+                            hLineWidth: function(i, node) {
+                                return (i === 0 || i === node.table.body.length) ? 2 : 1;
+                            },
+                            vLineWidth: function(i, node) {
+                                return (i === 0 || i === node.table.widths.length) ? 2 : 1;
+                            },
+                            hLineColor: function(i, node) {
+                                return (i === 0 || i === node.table.body.length) ? 'black' : 'gray';
+                            },
+                            vLineColor: function(i, node) {
+                                return (i === 0 || i === node.table.widths.length) ? 'black' : 'gray';
+                            }
+                        };
+                },
+            },
+            /*--- Filtros Fecha ---*/
+            {
+              titleAttr: 'Filtrar Dia',
+              text: 'Dia',
+              className: 'btn btn-primary btn-icon br7px filterFecha',
+              attr: {
+                id: 'filtroDia'
+              },
+              action: function(e, dt, node, config){
+                $.fn.dataTable.ext.search.pop()
+                tablaTurnos.columns(1).search(moment(fechaHoy).format('DD-MM-YYYY')).draw();
+              }
+            },
+            {
+              titleAttr: 'Filtrar Semana',
+              text: 'Sem',
+              className: 'btn btn-primary btn-icon br7px filterFecha',
+              attr: {
+                id: 'filtroSemana'
+              },
+              action: function(e, dt, node, config) {
+                tablaTurnos.columns(1).search('').draw();
+                searchWeek();
+              }
+            },
+            {
+              titleAttr: 'Filtrar Mes',
+              text: 'Mes',
+              className: 'btn btn-primary btn-icon br7px filterFecha',
+              attr: {
+                id: 'filtroMes'
+              },
+              action: function(e, dt, node, config) {
+                $.fn.dataTable.ext.search.pop()
+                tablaTurnos.columns(1).search(moment(fechaHoy).format('MM-YYYY')).draw();
+              }
+            },
+            {
+              titleAttr: 'Filtrar',
+              text: '<i class="fas fa-filter iconWhite"></i> ',
+              className: 'btn btn-icon btn-primary br7px filterSB',
+              action: function(e, dt, node, config) {
+                  esVisible = $("#tablaTurnos_wrapper>.dtsb-searchBuilder").is(":visible");
+                  if(esVisible){
+                      $("#tablaTurnos_wrapper>.dtsb-searchBuilder").hide()
+                  } else {
+                      $("#tablaTurnos_wrapper>.dtsb-searchBuilder").show()
+                  }
+              }
+            },
+            {
+              titleAttr: 'Recargar Tabla',
+              text: '<i class="fas fa-refresh iconWhite"></i>',
+              className: 'btn btn-warning btn-icon br7px',
+              action: function(e, dt, node, config) {
+                $.fn.dataTable.ext.search.pop()
+                $(".filterFecha").removeClass('btn-orange')
+                tablaTurnos.columns(1).search('').draw();
+              }
+            },
+        ]
     });
-    calendar.render();
+
+    tablaTurnos.searchBuilder.container().prependTo(tablaTurnos.table().container());
+    $("#tablaTurnos_wrapper>.dtsb-searchBuilder").hide();
+
     $(".fc-icon-caja").html('<i class="fa-solid fa-cash-register"></i>');
     $(".fc-icon-exportarTurnos").html('<i class="fa-solid fa-file-pdf"></i>');
 
+    function searchWeek() {
+      $.fn.dataTable.ext.search.push(
+        function(settings, data, dataIndex) {
+            
+            let fechaDesde = moment().weekday(1).format('YYYY-MM-DD'); ;
+            let fechaHasta = moment().weekday(6).format('YYYY-MM-DD'); ;
+            var createdAt = moment( data[1], 'DD-MM-YYYY').format('YYYY-MM-DD'); 
+    
+            if (  
+            (fechaDesde == "" && fechaHasta == "") ||
+            (fechaDesde == "" && createdAt <= fechaHasta) ||
+            (fechaDesde <= createdAt && fechaHasta == "") ||
+            (fechaDesde <= createdAt && createdAt <= fechaHasta)
+            ) {
+                return true;
+            }
+                return false;
+        }
+      );
+      tablaTurnos.draw()
+    }
+
+  
+    $(document).on("click", ".filterFecha", function(){
+      $(".filterFecha").removeClass('btn-orange')
+      $(this).addClass('btn-orange')
+    })
+
+    $(document).on("click", ".filterSB", function(){
+      if($(this).hasClass('btn-primary')){
+        $(this).removeClass('btn-primary')
+        $(this).addClass('btn-orange')
+      }else {
+        $(this).removeClass('btn-orange')
+        $(this).addClass('btn-primary')
+      }
+    })
+  
     /*---------- RESET MODAL CUANDO CIERRA ----------*/
     $("#modalTurno").on("hidden.bs.modal", function(){
       $("#formTurno").trigger("reset");
@@ -114,20 +381,30 @@ $(document).ready(function() {
       $("#cristales").attr('value', '');
       $("#banderaCristales").attr('value', '');
       $("#banderaTrabajos").attr('value', '');
+      $("#modelo").html("<option value=''>Modelo</option>");
+      $("#cristal").html("<option value=''>Cristal</option>");
       //$("#rowArchivos").children().not("#wrapperArchivo").remove();
       $("#contentArchivos").empty();
       $("#alertaCristal").hide();
+      idTurno = ''
     });
-
+  
     /*---------- CAJA ----------*/
+    $(document).on("click", "#btnCaja", async function(){
+      mesActual = fechaHoy.getMonth()+1;
+      $("#mes").val(mesActual)
+      await cajaMes(mesActual);
+      $("#modalCaja").modal('show')
+    })
+
     $(document).on("change","#mes", function(){
       cajaMes($("option:selected", this).val())
     })
+
     /*---------- ALTA ----------*/
-    calendar.on('dateClick', function(info) {
+    $(document).on('click', "#btn-AltaTurno", function(info) {
         tipoForm="alta";
         $(".inputForm").prop("disabled", false);
-        $("#fecha").prop("disabled", true);
         $('#trabajo').val(null).trigger('change');
         $("#btn-editarTurno").css('visibility', 'hidden');
         $("#btn-finalizarTurno").css('visibility', 'hidden');
@@ -135,24 +412,25 @@ $(document).ready(function() {
         $(".btn-editar").show();
         $("#btn-ok").hide();
         $(".select2-search.select2-search--inline").remove();
-        $("#fecha").val(info.dateStr);
-        $("#hora").val(hoy.toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'}));
+        $("#franjaHoraria").val(0)
         $("#modalTurnoHeader").css("background-color", "#d5693b");
         $("#modalTurnoTitle").text("Alta Turnos");
         $("#modalTurno").modal('show');
     });
-
+  
     /*---------- DETALLE ----------*/
-    calendar.on('eventClick', function(event, info) {
+    $(document).on('click',".btn-EditarTurno", function(event, info) {
       tipoForm="detalle"
-      evento = event
+      fila = $(this).closest("tr");
+      data = $('#tablaTurnos').DataTable().row(fila).data();
+      idTurno = data['idTurno']
       $.ajax({
         type: "POST",
         url: 'crudTurnos.php',
         datatype:"json",
         data: {
             opcion: 6,
-            idTurno: evento.event.id
+            idTurno: idTurno
         },
         beforeSend: function() {
             $('#loader').removeClass('hidden')
@@ -162,25 +440,32 @@ $(document).ready(function() {
         },
         success: function(data) {
           datos = JSON.parse(data)
-          fechaHora = evento.event.startStr.split('T');
-          $("#contacto").val(evento.event.title);
-          $("#fecha").val(fechaHora[0]);
-          $("#hora").val(fechaHora[1]);
+          fecha = datos[0][0].fechaHora
+          contacto = datos[0][0].contacto
+          $("#contacto").val(contacto);
+          $("#fechaHora").val(fecha);
+          if(datos[0][0].hora == "Mañana"){
+            $("#franjaHoraria").val(1);
+          }else{
+            $("#franjaHoraria").val(2);
+          }
           $("#telefono").val(datos[0][0].telefono);
           $("#dominio").val(datos[0][0].dominio);
           $("#empresa").val(datos[0][0].empresaID);
           $("#marca").val(datos[0][0].marcaID);
           $("#importeTrabajo").val(datos[0][0].importeTrabajo);
           $("#observacion").val(datos[0][0].observacion);
+          $("#fechaPago").val(datos[0][0].fechaPago);
+          $("#fechaEntrega").val(datos[0][0].fechaEntrega);
           $("#numFactura").val(datos[0][0].numFactura);
           $("#siniestro").val(datos[0][0].siniestro);
-
+  
           //CARGAR DESPLEGABLE MODELO
           for (let i = 0; i < datos[4].length; i++) {
             $("#modelo").append($('<option>', {value: datos[4][i].idModelo, text: datos[4][i].nombre}));
           }
           $("#modelo").val(datos[0][0].idModelo);
-
+  
           //CARGAR DESPLEGABLE CRISTAL
           idCristal = datos[0][0].idCristales.split(',')
           codigos = datos[0][0].codigos.split(',')
@@ -188,7 +473,7 @@ $(document).ready(function() {
           for (let i = 0; i < codigos.length; i++) {
             $("#cristal").append($('<option>', {value: idCristal[i], text: codigos[i] + " — " + descripciones[i]}));
           }
-
+  
           //CARGAR TABLA CRISTALES
           arrayCristales = []
           for (let i = 0; i < datos[2].length; i++) {
@@ -207,7 +492,7 @@ $(document).ready(function() {
           ]).draw(false);
           }
           $("#cristales").attr('value', JSON.stringify(arrayCristales))
-
+  
           //TRABAJO
           arrayTrabajos = []
           for (let i = 0; i < datos[1].length; i++) {
@@ -215,14 +500,14 @@ $(document).ready(function() {
           }
           $("#trabajo").val(arrayTrabajos)
           $('#trabajo').trigger('change');
-
+  
           //PAGO - TIPO DE PAGO
           if(datos[0][0].esPago == "Si"){
             $("#esPago").prop("checked", true)
           } else {
             $("#esPago").prop("checked", false)
           }
-
+  
           switch (datos[0][0].tipoPago) {
             case "Efectivo":
               $("#tipoPago").val(1)
@@ -249,7 +534,7 @@ $(document).ready(function() {
               archivosHash.push(datos[3][i].path)
               archivosExt.push(datos[3][i].ext)
             }
-
+  
             for(j=0; j<archivosHash.length; j++){
                 if(archivosExt[j] == 'pdf'){
                   $("#rowArchivos").append('<div id="'+archivosHash[j]+'" class="col-sm-2"> \
@@ -273,7 +558,7 @@ $(document).ready(function() {
           }else{
             $("#rowArchivos").append("<i>No hay archivos anexados...</i>")
           }
-
+  
           if (datos[0][0].estado == "Finalizado"){
             $("#btn-finalizarTurno").hide()
           }else{
@@ -281,7 +566,7 @@ $(document).ready(function() {
           }
         }
       });
-
+  
       $(".inputForm").prop("disabled", true);
       $("#btn-editarTurno").css('visibility', 'visible');
       $("#btn-finalizarTurno").css('visibility', 'visible');
@@ -293,7 +578,7 @@ $(document).ready(function() {
       $("#modalTurnoTitle").text("Detalle Turno");
       $("#modalTurno").modal('show');
     });
-
+  
     /*---------- EDITAR ----------*/
     $(document).on("click", "#btn-editarTurno", function(){
       tipoForm="editar"
@@ -312,10 +597,11 @@ $(document).ready(function() {
       $("#modalTurnoTitle").text("Editar Turno");
       $("#modalTurnoHeader").css("background-color", "#0b5ed7");
     });
-
+  
     /*---------- FINALIZAR ----------*/
     $(document).on("click", "#btn-finalizarTurno", function(){
       tipoForm="finalizar"
+      //idTurno = IdTurno DATATBALE
       Swal.fire({
         title: '¿Seguro?',
         text: '¿Estás seguro que quieres finalizar este turno?',
@@ -332,9 +618,8 @@ $(document).ready(function() {
                 url: "crudTurnos.php",
                 type: "POST",
                 datatype: "json",
-                data: { opcion: 5, idTurno: evento.event.id },
-                success: function(data) {
-                  console.log("Data", data)
+                data: { opcion: 5, idTurno: idTurno},
+                success: function() {
                     Swal.fire({
                         title: 'Exito',
                         text: 'El turno se finalizó correctamente',
@@ -343,26 +628,20 @@ $(document).ready(function() {
                         timer: 1500,
                       }).then( function(){
                         $('#modalTurno').modal('hide');
-                        turno = calendar.getEventById(evento.event.id);
-                        turno.setProp('display', 'block');
-                        turno.setProp('color', '#d5693b');
-                        turno.setProp('textColor', 'white')
+                        $("#tablaTurnos").DataTable().ajax.reload(null, true);
                     })
                 }
             });
           }
         })
     });
-
+  
     /*---------- ELIMINAR ----------*/
     $(document).on("click", "#btn-eliminarTurno", function(){
-
-      var cristalesEliminar = (arrayCristales.filter(c => c[5] == "'Sí'")).map(e => [e[3], e[4]])
-      //var cristalesEliminar = arrayCristales.map(c => {return (c[5] == "'Sí'") ? [c[3], c[4]] : null})
-      ////var cristalesEliminar = arrayCristales.map(c => {if(c[5] == "'Sí'") return [c[3], c[4]];})
-      console.log("Cristales a eliminar", cristalesEliminar)
-
-      Swal.fire({
+        var cristalesEliminar = (arrayCristales.filter(c => c[5] == "'Sí'")).map(e => [e[3], e[4]])
+        //idTurno = idTurno Datatable
+  
+        Swal.fire({
         title: '¿Seguro?',
         text: '¿Estás seguro que quieres eliminar este turno?',
         icon: 'warning',
@@ -372,16 +651,16 @@ $(document).ready(function() {
         cancelButtonText: 'Cancelar',
         confirmButtonColor: '#3085d6',
         cancelButtonColor: '#d33',
-      }).then((result) => {
-          if (result.isConfirmed) {
+        }).then((result) => {
+            if (result.isConfirmed) {
             $.ajax({
                 url: "crudTurnos.php",
                 type: "POST",
                 datatype: "json",
                 data: { 
-                  opcion: 4, 
-                  idTurno: evento.event.id, 
-                  cristalesEliminar: cristalesEliminar 
+                    opcion: 4, 
+                    idTurno: idTurno, 
+                    cristalesEliminar: cristalesEliminar 
                 },
                 success: function() {
                     Swal.fire({
@@ -390,22 +669,22 @@ $(document).ready(function() {
                         icon: 'success',
                         showConfirmButton: false,
                         timer: 1500,
-                      }).then( function(){
+                        }).then( function(){
                         $('#modalTurno').modal('hide');
-                        evento.event.remove()
+                        $("#tablaTurnos").DataTable().ajax.reload(null, true);
                     })
                 }
             });
-          }
+            }
         })
     })
-
+  
     /*---------- FORMULARIO ----------*/
     $('#formTurno').submit(function(e){
       e.preventDefault();
       var contacto = $("#contacto").val();
-      var fecha = $("#fecha").val();
-      var hora = $("#hora").val();
+      var fechaHora = $("#fechaHora").val();
+      var franjaHoraria = $("#franjaHoraria option:selected").text();
       var telefono = $("#telefono").val();
       var dominio = ($("#dominio").val()).toUpperCase();
       var modeloID =$("#modelo").val();
@@ -415,7 +694,6 @@ $(document).ready(function() {
       var importeTrabajo = $("#importeTrabajo").val();
       var observacion = $("#observacion").val();
       var cristalesAPedir = ($("#cristalesAPedir").val()) ? JSON.parse($("#cristalesAPedir").val()) : [];
-      console.log("cristales", cristales)
       if($("#esPago").is(":checked")){
         var esPago = "Si";
       }else{
@@ -428,9 +706,11 @@ $(document).ready(function() {
         var tipoPago = $("#tipoPago option:selected").text();
       }
       
+      var fechaPago = $("#fechaPago").val();
+      var fechaEntrega = $("#fechaEntrega").val();
       var numFactura = $("#numFactura").val();
       var siniestro = $("#siniestro").val();
-
+      
       if(tipoForm == 'alta'){
         $.ajax({
             url: "crudTurnos.php",
@@ -438,7 +718,8 @@ $(document).ready(function() {
             datatype: "json",
             data: {
               opcion: 2,
-              fechaHora: fecha+'T'+hora,
+              fechaHora: fechaHora,
+              franjaHoraria: franjaHoraria,
               contacto: contacto,
               telefono: telefono,
               dominio: dominio,
@@ -449,13 +730,14 @@ $(document).ready(function() {
               observacion: observacion,
               esPago: esPago,
               tipoPago: tipoPago,
+              fechaPago: fechaPago,
+              fechaEntrega: fechaEntrega,
               siniestro: siniestro,
               numFactura: numFactura,
               modeloID: modeloID,
               cristalesAPedir: cristalesAPedir
             },
             success: function(data) {
-                console.log("data", data)
                 Swal.fire({
                     title: 'Exito',
                     text: 'El turno se cargó correctamente',
@@ -464,15 +746,12 @@ $(document).ready(function() {
                     timer: 1500,
                   }).then( function(){
                     $('#modalTurno').modal('hide');
-                    calendar.addEvent({
-                      id: data,
-                      title: contacto,
-                      start: fecha+'T'+hora,
-                    });
+                    $("#tablaTurnos").DataTable().ajax.reload(null, true);
                 })
             }
         });
       } else if(tipoForm == 'editar'){
+        //idTurno = IDTurno Datatable
         Swal.fire({
           title: '¿Seguro?',
           text: '¿Estás seguro que quieres editar este turno?',
@@ -493,8 +772,9 @@ $(document).ready(function() {
                 datatype: "json",
                 data: { 
                   opcion: 3, 
-                  idTurno: evento.event.id,
-                  fechaHora: fecha+'T'+hora,
+                  idTurno: idTurno,
+                  fechaHora: fechaHora,
+                  franjaHoraria: franjaHoraria,
                   contacto: contacto,
                   telefono: telefono,
                   dominio: dominio,
@@ -505,6 +785,8 @@ $(document).ready(function() {
                   observacion: observacion,
                   esPago: esPago,
                   tipoPago: tipoPago,
+                  fechaPago: fechaPago,
+                  fechaEntrega: fechaEntrega,
                   siniestro: siniestro,
                   numFactura: numFactura,
                   modeloID: modeloID,
@@ -520,9 +802,7 @@ $(document).ready(function() {
                       timer: 1500,
                     }).then( function(){
                       $('#modalTurno').modal('hide');
-                      turno = calendar.getEventById(evento.event.id)
-                      turno.setProp('title', contacto)
-                      turno.setStart(fecha+'T'+hora)
+                      $("#tablaTurnos").DataTable().ajax.reload(null, true);
                   })
                 }
             });
@@ -530,19 +810,19 @@ $(document).ready(function() {
           })
       }
     });
-
+  
     $("#trabajo").select2({
         theme: "bootstrap-5",
         language: "es",
         closeOnSelect: false,
     });
-
+  
     /*$('#trabajo').on('select2:opening select2:closing select2:change', function( event ) {
       var $searchfield = $(this).parent().find('.select2-search');
       $searchfield.remove()
     });*/
-
-
+  
+  
     /*-------CARGAR DESPLEGABLES COMP - MARCA - MODELO - CRISTAL-------*/
     
     /*$.ajax({
@@ -557,7 +837,7 @@ $(document).ready(function() {
           } 
       }
     });
-
+  
     $.ajax({
       type: "POST",
       url: 'crudTurnos.php',
@@ -570,7 +850,7 @@ $(document).ready(function() {
           } 
       }
     });*/
-
+  
     /*$(document).on("change", "#marca", function() {
       marcaID = $("#marca option:selected").val();
       $("#modelo").html("<option value=>Modelo</option>");
@@ -591,7 +871,7 @@ $(document).ready(function() {
           });
       }
     });
-
+  
     $(document).on("change", "#modelo", function() {
       modeloID = $("#modelo option:selected").val();
       $("#cristal").html("<option value=>Cristal</option>");
@@ -611,7 +891,7 @@ $(document).ready(function() {
           });
       }
     });*/
-
+  
     $(document).on("change", "#cristal", function() {
       idCristal = $("option:selected", this).val();
       
@@ -641,7 +921,7 @@ $(document).ready(function() {
         $("#alertaCristal").hide()
       }
     });
-
+  
     $(document).on("change", "#empresa", function() {
       if($("#cristales").val()){
         Swal.fire({
@@ -711,10 +991,10 @@ $(document).ready(function() {
         }) 
       }
     });
-
-
+  
+  
     /*---- TABLA CRISTALES ----*/
-
+  
     tablaCristales = $('#tablaCristales').DataTable({
       select: true,
       "ordering": false,
@@ -737,16 +1017,16 @@ $(document).ready(function() {
           { "visible": false }
         ]
     });
-
+  
     tablaCristales.on('select', function(e, dt, type, indexes) {
       idCristal = tablaCristales.rows(indexes).data().toArray()[0][6];
       $("#cristalEliminar").attr("value", idCristal)
     });
-
+  
     tablaCristales.on('deselect', function(e, dt, type, indexes) {
         $("#cristalEliminar").attr("value", "")
     });
-
+  
     $(document).on("click", "#otro", function() {
       if (this.checked) {
         $("#colImporte").show();
@@ -755,7 +1035,7 @@ $(document).ready(function() {
         $("#importe").val('')
       }
     });
-
+  
     $(document).on("click", "#agregarCristal", async function() {
       idCristal = $("#cristal option:selected").val();
       idEmpresa = $("#empresa option:selected").val();
@@ -781,7 +1061,7 @@ $(document).ready(function() {
               }else{
                 esAPedir = 'No'
               }
-
+  
               if (otro) {
                   importeTotalSinIva = ($("#importe").val() * cantidad).toFixed(2);
                   importeTotalConIva = (($("#importe").val() * 1.21) * cantidad).toFixed(2);
@@ -850,9 +1130,9 @@ $(document).ready(function() {
               icon: 'warning'
           })
       }
-
+  
     });
-
+  
     $(document).on("click", "#eliminarCristal", function() {
       if ($('.selected')[0]) {
           codigo = tablaCristales.row('.selected').data()[0];
@@ -895,23 +1175,24 @@ $(document).ready(function() {
           })
       }
     });
-
+  
     $('#trabajo').on('change', function() {
       if(tipoForm == 'editar'){
         $("#banderaTrabajos").attr('value', "cambio")
       }
     })
-
+  
     /*---------- ARCHIVOS ----------*/
     //const dt = new DataTransfer();
     $(document).on("click", "#wrapperArchivo", function(e){
       $("#archivo").click();
     })
-
+  
     $(document).on("change", "#archivo", function(){
-      agregarArchivo(this.files, evento.event.id)
+        //idTurno = idTurno Datatable
+        agregarArchivo(this.files, idTurno)
     })
-
+  
     $(document).on("click", ".eliminarArchivo", function(){
         nombreHash =$(this).parents()[0].id
         Swal.fire({
@@ -957,27 +1238,28 @@ $(document).ready(function() {
             }
           })
     })
-
+  
     $(document).on("drop", "#wrapperArchivo", function(e){
         e.preventDefault();
+        //idTurno = idTurno DATATABLE
         $("#wrapperArchivo").removeAttr('style');
-        agregarArchivo(e.originalEvent.dataTransfer.files, evento.event.id)
+        agregarArchivo(e.originalEvent.dataTransfer.files, idTurno)
     })
-
+  
     $(document).on("dragover", "#wrapperArchivo", function(e){
         e.preventDefault();
         $("#wrapperArchivo").css("background", "#00000024")
     })
-
+  
     $(document).on("dragleave", "#wrapperArchivo", function(e){
         e.preventDefault();
         $("#wrapperArchivo").removeAttr('style');
     })
-
-});
-
-
-async function cargarImporte(idCristal, idEmpresa, cantidad) {
+  
+  });
+  
+  
+  async function cargarImporte(idCristal, idEmpresa, cantidad) {
   return new Promise(function(resolve, reject) {
       $.ajax({
           type: "POST",
@@ -1002,9 +1284,9 @@ async function cargarImporte(idCristal, idEmpresa, cantidad) {
           }
       })
   });
-}
-
-async function agregarArchivo(files, idTurno){
+  }
+  
+  async function agregarArchivo(files, idTurno){
   archivos = [];
   for (i = 0; i < files.length; i++) {
       archivos.push(files[i].name);
@@ -1061,9 +1343,9 @@ async function agregarArchivo(files, idTurno){
           }
       },
   });
-}
-
-async function cajaMes(mes){
+  }
+  
+  async function cajaMes(mes){
   $.ajax({
         type: "POST",
         url: "crudTurnos.php",
@@ -1088,175 +1370,4 @@ async function cajaMes(mes){
           }
         }
   })
-}
-
-function exportarPDF(calendar){
-  moment.locale('es')
-  doc = new jsPDF();
-  let currentDate = calendar.getDate();
-  let eventos = calendar.getEvents();
-  var firstDay = new Date(currentDate.setDate(currentDate.getDate() - currentDate.getDay()));
-  var lastDay = new Date(currentDate.setDate(currentDate.getDate() - currentDate.getDay() + 6));
-  firstDay = firstDay.setHours(0,0,0,0) //horas, minutos, segundos, milisegundos
-  lastDay = lastDay.setHours(23,59,59,99) //horas, minutos, segundos, milisegundos
-  listEvents = eventos.filter(e => e.start >= firstDay && e.start <= lastDay);
-  doc.setFontSize(22);
-  doc.text("Turnos Parabrisas 141", doc.internal.pageSize.getWidth() / 2, 20, { align: 'center'});
-  doc.setFontSize(20);
-  doc.text(moment(firstDay).format("DD")+ " - "+moment(lastDay).format("DD MMM YYYY"), doc.internal.pageSize.getWidth() / 2, 30, { align: 'center'});
- 
-  arrayDomingo = []
-  arrayLunes = [] 
-  arrayMartes = []
-  arrayMiercoles = []
-  arrayJueves = []
-  arrayViernes = []
-  arraySabado = []
-
-  listEvents.forEach(e => {
-    if(moment(e.start).format('dddd') == "domingo"){
-      arrayDomingo.push([moment(e.start).format("HH:mm"), e.title])
-      contentDomingo = moment(e.start).format("DD [de] MMMM")
-
-    }else if (moment(e.start).format('dddd') == "lunes"){
-      arrayLunes.push([moment(e.start).format("HH:mm"), e.title])
-      contentLunes = moment(e.start).format("DD [de] MMMM")
-
-    }else if (moment(e.start).format('dddd') == "martes"){
-      arrayMartes.push([moment(e.start).format("HH:mm"), e.title])
-      contentMartes = moment(e.start).format("DD [de] MMMM")
-
-    }else if (moment(e.start).format('dddd') == "miércoles"){
-      arrayMiercoles.push([moment(e.start).format("HH:mm"), e.title])
-      contentMiercoles = moment(e.start).format("DD [de] MMMM")
-
-    }else if (moment(e.start).format('dddd') == "jueves"){
-      arrayJueves.push([moment(e.start).format("HH:mm"), e.title])
-      contentJueves = moment(e.start).format("DD [de] MMMM")
-
-    }else if (moment(e.start).format('dddd') == "viernes"){
-      arrayViernes.push([moment(e.start).format("HH:mm"), e.title])
-      contentViernes = moment(e.start).format("DD [de] MMMM")
-
-    }else if (moment(e.start).format('dddd') == "sábado"){
-      arraySabado.push([moment(e.start).format("HH:mm"), e.title])
-      contentSabado = moment(e.start).format("DD [de] MMMM")
-      
-    }
-  });
-
-  if(arrayDomingo.length > 0){
-    doc.autoTable({
-      startY: 40,
-      head: [
-        [{content: 'Domingo - '+ contentDomingo, colSpan: 2, styles: {halign: 'left', fillColor: [213, 105, 59]}}],
-        ['Hora', 'Contacto',]
-      ],
-      headStyles :{halign: 'center', fillColor : [253, 139, 90]},
-      styles: {
-        halign: 'center'
-      },
-      body: arrayDomingo,
-      theme: 'grid',
-    });
   }
-
-  if(arrayLunes.length > 0){
-    doc.autoTable({
-        startY: doc.autoTable.previous.finalY + 5 || 40,
-        head: [
-          [{content: 'Lunes - '+ contentLunes, colSpan: 2, styles: {halign: 'left', fillColor: [213, 105, 59]}}],
-          ['Hora', 'Contacto',]
-        ],
-        headStyles :{halign: 'center', fillColor : [253, 139, 90]},
-        styles: {
-          halign: 'center'
-        },
-        body: arrayLunes,
-        theme: 'grid',
-    });
-  }
-  
-  if(arrayMartes.length > 0){
-    doc.autoTable({
-        startY: doc.autoTable.previous.finalY + 5 || 40,
-        head: [
-          [{content: 'Martes - '+ contentMartes, colSpan: 2, styles: {halign: 'left', fillColor: [213, 105, 59]}}],
-          ['Hora', 'Contacto',]
-        ],
-        headStyles :{halign: 'center', fillColor : [253, 139, 90]},
-        styles: {
-          halign: 'center'
-        },
-        body: arrayMartes,
-        theme: 'grid',
-    });
-  }
-
-  if(arrayMiercoles.length > 0){
-    doc.autoTable({
-        startY: doc.autoTable.previous.finalY + 5 || 40,
-        head: [
-          [{content: 'Miércoles - '+ contentMiercoles, colSpan: 2, styles: {halign: 'left', fillColor: [213, 105, 59]}}],
-          ['Hora', 'Contacto',]
-        ],
-        headStyles :{halign: 'center', fillColor : [253, 139, 90]},
-        styles: {
-          halign: 'center'
-        },
-        body: arrayMiercoles,
-        theme: 'grid',
-    });
-  }
-  
-  if(arrayJueves.length > 0){
-    doc.autoTable({
-        startY: doc.autoTable.previous.finalY + 5 || 40,
-        head: [
-          [{content: 'Jueves - '+ contentJueves, colSpan: 2, styles: {halign: 'left', fillColor: [213, 105, 59]}}],
-          ['Hora', 'Contacto',]
-        ],
-        headStyles :{halign: 'center', fillColor : [253, 139, 90]},
-        styles: {
-          halign: 'center'
-        },
-        body: arrayJueves,
-        theme: 'grid',
-    });
-  }
-
-  if(arrayViernes.length > 0){
-    doc.autoTable({
-        startY: doc.autoTable.previous.finalY + 5 || 40,
-        head: [
-          [{content: 'Viernes - '+ contentViernes, colSpan: 2, styles: {halign: 'left', fillColor: [213, 105, 59]}}],
-          ['Hora', 'Contacto',]
-        ],
-        headStyles :{halign: 'center', fillColor : [253, 139, 90]},
-        styles: {
-          halign: 'center'
-        },
-        body: arrayViernes,
-        theme: 'grid',
-    });
-  }
-
-  if(arraySabado.length > 0){
-    doc.autoTable({
-        startY: doc.autoTable.previous.finalY + 5 || 40,
-        head: [
-          [{content: 'Sábado - '+ contentSabado, colSpan: 2, styles: {halign: 'left', fillColor: [213, 105, 59]}}],
-          ['Hora', 'Contacto',]
-        ],
-        headStyles :{halign: 'center', fillColor : [253, 139, 90]},
-        styles: {
-          halign: 'center'
-        },
-        body: arraySabado,
-        theme: 'grid',
-    });
-  }
-
-  doc.save('Turnos Parabrisas 141 ('+ moment(currentDate).format('DD-MM-YY') +').pdf')
-  doc.autoTable.previous.finalY = 35;
-}
