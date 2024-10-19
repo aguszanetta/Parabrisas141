@@ -36,7 +36,7 @@ switch($opcion){
     case 1:
         $consulta = "SELECT t.idTurno, DATE(t.fechaHora) AS fecha, t.franjaHoraria, DATE_FORMAT(t.fechaHora, '%H:%i') AS hora, t.contacto, 
             t.telefono, t.dominio, CONCAT(ma.nombre, ' - ', mo.nombre) AS vehiculo, GROUP_CONCAT(tr.nombre) AS trabajos, 
-            e.nombre AS empresa, t.esPago, t.siniestro, t.numFactura, t.estado 
+            e.nombre AS empresa, t.esPago, t.siniestro, t.numFactura, t.estado
             FROM turno t 
             INNER JOIN modelo mo ON mo.idModelo = t.modeloID 
             INNER JOIN marca ma ON ma.idMarca = mo.marcaID 
@@ -44,10 +44,31 @@ switch($opcion){
             INNER JOIN trabajo tr ON trt.trabajoID = tr.idTrabajo 
             INNER JOIN empresa e ON e.idEmpresa = t.empresaID 
             GROUP BY t.idTurno 
-            ORDER BY t.fechaHora DESC;";			
+            ORDER BY t.fechaHora DESC;";
         $resultado = $conexion->prepare($consulta);
-        $resultado->execute(); 
-        $data=$resultado->fetchAll(PDO::FETCH_ASSOC);       
+        $resultado->execute();
+        $turno=$resultado->fetchAll(PDO::FETCH_ASSOC); 
+        $consulta = "SELECT t.idTurno, GROUP_CONCAT(td.esAPedir) AS esAPedir
+            FROM turno t 
+            INNER JOIN turnodetalle td ON t.idTurno = td.turnoID
+            GROUP BY t.idTurno 
+            ORDER BY t.fechaHora DESC;";
+        $resultado = $conexion->prepare($consulta);
+        $resultado->execute();
+        $aPedir=$resultado->fetchAll(PDO::FETCH_ASSOC);
+        
+        /* --- Matchear Turno con APedir --- */
+        foreach ($turno as &$t) {
+            foreach ($aPedir as $a) {
+                if ($t['idTurno'] === $a['idTurno']) {
+                    $t['esAPedir'] = $a['esAPedir'];
+                    break; // Opcional, si asumes que no habrá duplicados
+                }else {
+                    $t['esAPedir'] = '';
+                }
+            }
+        }
+        $data=$turno;      
         break;    
     case 2:
         /* --- Insertar Turno --- */
@@ -116,7 +137,20 @@ switch($opcion){
             $resultado = $conexion->prepare($consulta);
             $resultado->execute();
             $data=$resultado->fetchAll(PDO::FETCH_ASSOC);
+            
         };
+
+        /* --- Insertar / Actualizar aPedir --- */
+        $cantidadAPedir = is_array($cristalesAPedir) ? count($cristalesAPedir) : 0 ;
+        if($cantidadAPedir){
+            $consulta= "";
+            foreach ($cristalesAPedir as $cristal){
+                $consulta=$consulta."UPDATE stock SET aPedir = aPedir + $cristal[1] WHERE cristalID = $cristal[0];";
+            }
+            $resultado = $conexion->prepare($consulta);
+            $resultado->execute();
+            $data=$resultado->fetchAll(PDO::FETCH_ASSOC); 
+        }
 
         if($banderaTrabajos){
             /* --- Actulizar Trabajos --- */
@@ -175,11 +209,12 @@ switch($opcion){
         break;
     case 6:
         /* --- Turno + Marca + Cristales --- */
-        $consulta="SELECT m.marcaID, m.idModelo, m.nombre, t.*, GROUP_CONCAT(c.idCristal) AS idCristales, GROUP_CONCAT(c.codigo) AS codigos, GROUP_CONCAT(c.descripcion) AS descripciones
+        $consulta="SELECT DISTINCT m.marcaID, m.idModelo, m.nombre, t.*, GROUP_CONCAT(c.idCristal) AS idCristales, GROUP_CONCAT(c.codigo) AS codigos, GROUP_CONCAT(c.descripcion) AS descripciones, GROUP_CONCAT(td.esApedir) AS aPedir
         FROM turno t
+        INNER JOIN turnodetalle td ON t.idTurno = td.turnoID
         INNER JOIN modelo m ON m.idModelo = t.modeloID
         INNER JOIN cristal c ON m.idModelo = c.modeloID
-        WHERE t.idTurno = $idTurno;";
+        WHERE t.idTurno = $idTurno";
         $resultado = $conexion->prepare($consulta);
         $resultado->execute();
         $data=$resultado->fetchAll(PDO::FETCH_ASSOC);

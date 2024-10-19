@@ -25,7 +25,7 @@ $(document).ready(function() {
             beforeSend: function() {
                 $('#loader').removeClass('hidden')
             },
-            complete: function() {
+            complete: function(data) {
                 $('#loader').addClass('hidden')
             },
         },
@@ -61,6 +61,17 @@ $(document).ready(function() {
             { "data": "siniestro", "visible": true , "sortable": false },
             { "data": "numFactura", "visible": true , "sortable": false },
             { "data": "esPago", "sortable": false },
+            { "data": "esAPedir", 
+              "sortable": false,
+              "render": function(data){
+                aPedir = data.split(',')
+                todos = ''
+                for (i = 0; i < aPedir.length; i++) {
+                  todos = todos + "<li class='list-group-item p-0 bg-transparent'>" + aPedir[i] + " </li>"
+                }
+                return "<ul class='list-group list-group-flush text-center'>" + todos + "</ul>"
+              }
+            },
             //{ "data": "estado", "sortable": false },
             { "defaultContent": "<div class='text-center'><button class='btn btn-info text-white btn-EditarTurno'><i class='fa-solid fa-info-circle'></i></button></div>", "sortable": false }
         ],
@@ -766,6 +777,7 @@ $(document).ready(function() {
             if (result.isConfirmed) {
               banderaCristales = $("#banderaCristales").val();
               banderaTrabajos = $("#banderaTrabajos").val();
+              cristalesAPedir = ($("#cristalesAPedir").val()) ? JSON.parse($("#cristalesAPedir").val()) : [];
               $.ajax({
                 url: "crudTurnos.php",
                 type: "POST",
@@ -791,7 +803,8 @@ $(document).ready(function() {
                   numFactura: numFactura,
                   modeloID: modeloID,
                   banderaCristales: banderaCristales,
-                  banderaTrabajos: banderaTrabajos
+                  banderaTrabajos: banderaTrabajos,
+                  cristalesAPedir: cristalesAPedir
                 },
                 success: function(data) {
                   Swal.fire({
@@ -1014,7 +1027,7 @@ $(document).ready(function() {
           null,
           null,
           { "visible": false },
-          { "visible": false }
+          null
         ]
     });
   

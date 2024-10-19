@@ -1,4 +1,6 @@
 $(document).ready(function() {
+    fecha = moment(new Date()).format("DD/MM/YYYY");
+    fechaFalsa123 = "19/10/2024";
     tablaAPedir = $('#tablaAPedir').DataTable({
         "ajax": {
             "url": "crudAPedir.php",
@@ -65,7 +67,7 @@ $(document).ready(function() {
                 exportOptions: {
                     columns: [1, 2, 3, 4, 5, 6, 7, 8, 9]
                 },
-                title: 'Cristales a Pedir - Parabrisas 141',
+                title: 'Cristales a Pedir - Parabrisas 141 - '+ fecha,
                 text: '<i class="fas fa-file-pdf"></i> ',
                 titleAttr: 'Exportar a PDF',
                 className: 'btn btn-danger',

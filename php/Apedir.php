@@ -259,5 +259,8 @@
 <script src="../libraries/DataTables/pdfmake-0.1.36/pdfmake.min.js"></script>    
 <script src="../libraries/DataTables/pdfmake-0.1.36/vfs_fonts.js"></script>
 
+<!-- MomentJs -->
+<script src="../libraries/moment/moment-with-locales.js"></script>
+
 </body>
 </html>

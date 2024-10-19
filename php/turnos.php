@@ -32,6 +32,7 @@
                             <th>Siniestro</th>
                             <th>N° Factura</th>
                             <th>Pago</th>
+                            <th>Cristales A Pedir</th>
                             <th>Acciones</th>
                         </tr>
                     </thead>
@@ -227,7 +228,7 @@
                                         <th>Importe S/IVA</th>
                                         <th>Importe C/IVA</th>
                                         <th>IdCristal</th>
-                                        <th>esAPedir</th>
+                                        <th>A Pedir</th>
                                         </tr>
                                     </thead>
                                     <tbody class="text-center">
