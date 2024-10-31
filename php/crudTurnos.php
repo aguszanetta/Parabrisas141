@@ -125,7 +125,7 @@ switch($opcion){
         $resultado->execute();
         $estadoTurno=$resultado->fetchAll(PDO::FETCH_ASSOC);
         
-        if ($estadoTurno == "Finalizado"){
+        if ($estadoTurno[0]["estado"] == "Finalizado"){
             $consulta = "UPDATE turno SET siniestro='$siniestro', observacion='$observacion', esPago='$esPago', tipoPago='$tipoPago', 
             fechaPago='$fechaPago', numFactura='$numFactura', importeTrabajo='$importeTrabajo', fechaEntrega='$fechaEntrega', empleadoID='$empleadoID'
             WHERE idTurno='$idTurno'";
@@ -133,7 +133,7 @@ switch($opcion){
             $resultado = $conexion->prepare($consulta);
             $resultado->execute();
             $data=$resultado->fetchAll(PDO::FETCH_ASSOC);
-        } elseif ($estadoTurno == "Activo") {
+        } elseif ($estadoTurno[0]["estado"] == "Activo") {
             $consulta = "UPDATE turno SET contacto='$contacto', fechaHora='$fechaHora', franjaHoraria='$franjaHoraria', telefono='$telefono', dominio='$dominio',
             siniestro='$siniestro', observacion='$observacion', esPago='$esPago', tipoPago='$tipoPago', fechaPago='$fechaPago', numFactura='$numFactura', importeTrabajo='$importeTrabajo', fechaEntrega='$fechaEntrega', modeloID='$modeloID',
             empresaID='$empresaID', empleadoID='$empleadoID'

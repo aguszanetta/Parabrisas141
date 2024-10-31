@@ -625,7 +625,7 @@ $(document).ready(function() {
     $(document).on("click", "#btn-editarTurno", function(){
       tipoForm="editar"
       estado = $("#formTurno").attr("data-estado")
-      
+
       if(estado == "Finalizado"){
         $("#trabajo, #importeTrabajo, #observacion, #esPago, #tipoPago, #fechaPago, #fechaEntrega, #numFactura, #siniestro, #empleado").prop("disabled", false);
       } else {
