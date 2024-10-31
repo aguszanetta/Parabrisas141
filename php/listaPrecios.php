@@ -2,7 +2,15 @@
 
 <!---- Contenido Principal ---->
 <div class="container-fluid">
-    <h1>Lista de Precios Federación Patronal</h1>
+    <h1 id="listaPrecio">Lista de Precios</h1>
+
+    <div class="row mb-3">
+      <div class="col-md-3">
+        <select class="form-select" name="empresa" id="empresa">
+          <option value="">Seleccione Empresa</option>
+        </select>
+      </div>
+    </div>
     
     <!--<div class="row">
       <div class="col-md-3">
@@ -26,7 +34,7 @@
     </div>-->
 	<div class="row">
             <div class="table-responsive">        
-                <table id="tablaLP" data-empresa="fedPat" class="table table-striped table-bordered table-condensed table-hover">
+                <table id="tablaLP" class="table table-striped table-bordered table-condensed table-hover">
                     <thead class="text-center">
                         <tr>
                             <th>idPrecio</th>
@@ -59,7 +67,7 @@
                             <th>Instalación S/IVA</th>
                             <th>Total S/IVA</th>
                             <th>Total C/IVA</th>
-                            <th>Detalle</th>
+                            <!--<th>Detalle</th>-->
                         </tr>
                     </thead>
                     <tbody>                           
@@ -135,10 +143,10 @@
     </div>
     <!-- End of Page Wrapper -->
 
-    <!-- Scroll to Top Button-->
+    <!-- Scroll to Top Button
     <a class="scroll-to-top rounded" href="#page-top">
         <i class="fas fa-angle-up"></i>
-    </a>
+    </a>-->
 
     <!-- Logout Modal-->
     <div class="modal fade" id="logoutModal" tabindex="-1" aria-hidden="true">

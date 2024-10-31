@@ -19,6 +19,7 @@ $tipoPago = (isset($_POST['tipoPago'])) ? $_POST['tipoPago'] : '';
 $fechaPago = (isset($_POST['fechaPago'])) ? $_POST['fechaPago'] : '';
 $numFactura = (isset($_POST['numFactura'])) ? $_POST['numFactura'] : '';
 $fechaEntrega = (isset($_POST['fechaEntrega'])) ? $_POST['fechaEntrega'] : '';
+$empleadoID = (isset($_POST['empleadoID'])) ? $_POST['empleadoID'] : '';
 $modeloID = (isset($_POST['modeloID'])) ? $_POST['modeloID'] : '';
 $marcaID = (isset($_POST['marcaID'])) ? $_POST['marcaID'] : '';
 $cristalID = (isset($_POST['cristalID'])) ? $_POST['cristalID'] : '';
@@ -36,13 +37,15 @@ switch($opcion){
     case 1:
         $consulta = "SELECT t.idTurno, DATE(t.fechaHora) AS fecha, t.franjaHoraria, DATE_FORMAT(t.fechaHora, '%H:%i') AS hora, t.contacto, 
             t.telefono, t.dominio, CONCAT(ma.nombre, ' - ', mo.nombre) AS vehiculo, GROUP_CONCAT(tr.nombre) AS trabajos, 
-            e.nombre AS empresa, t.esPago, t.siniestro, t.numFactura, t.estado
+            e.nombre AS empresa, t.esPago, t.siniestro, t.numFactura, t.estado, em.nombre AS empleado
             FROM turno t 
             INNER JOIN modelo mo ON mo.idModelo = t.modeloID 
             INNER JOIN marca ma ON ma.idMarca = mo.marcaID 
             INNER JOIN trabajoturno trt ON trt.turnoID = t.idTurno 
             INNER JOIN trabajo tr ON trt.trabajoID = tr.idTrabajo 
             INNER JOIN empresa e ON e.idEmpresa = t.empresaID 
+            INNER JOIN empleado em ON em.idEmpleado = t.empleadoID
+            WHERE t.estado = 'Activo' OR t.estado = 'Finalizado'
             GROUP BY t.idTurno 
             ORDER BY t.fechaHora DESC;";
         $resultado = $conexion->prepare($consulta);
@@ -73,8 +76,8 @@ switch($opcion){
     case 2:
         /* --- Insertar Turno --- */
         $consulta = "INSERT INTO turno 
-        (fechaHora, franjaHoraria, contacto, telefono, dominio, siniestro, observacion, esPago, tipoPago, fechaPago, numFactura, importeTrabajo, fechaEntrega, estado, modeloID, empresaID) 
-        VALUES('$fechaHora', '$franjaHoraria', '$contacto', '$telefono', '$dominio', '$siniestro', '$observacion', '$esPago', '$tipoPago', '$fechaPago', '$numFactura', '$importeTrabajo', '$fechaEntrega', 'Activo', '$modeloID', '$empresaID');";
+        (fechaHora, franjaHoraria, contacto, telefono, dominio, siniestro, observacion, esPago, tipoPago, fechaPago, numFactura, importeTrabajo, fechaEntrega, estado, modeloID, empresaID, empleadoID) 
+        VALUES('$fechaHora', '$franjaHoraria', '$contacto', '$telefono', '$dominio', '$siniestro', '$observacion', '$esPago', '$tipoPago', '$fechaPago', '$numFactura', '$importeTrabajo', '$fechaEntrega', 'Activo', '$modeloID', '$empresaID', '$empleadoID');";
         $resultado = $conexion->prepare($consulta);
         $resultado->execute();
         $turnoID=$conexion->lastInsertId();
@@ -117,39 +120,55 @@ switch($opcion){
         $data=$turnoID;
         break;
     case 3:
-        $consulta = "UPDATE turno SET contacto='$contacto', fechaHora='$fechaHora', franjaHoraria='$franjaHoraria', telefono='$telefono', dominio='$dominio',
-        siniestro='$siniestro', observacion='$observacion', esPago='$esPago', tipoPago='$tipoPago', fechaPago='$fechaPago', numFactura='$numFactura', importeTrabajo='$importeTrabajo', fechaEntrega='$fechaEntrega', modeloID='$modeloID',
-        empresaID='$empresaID'
-        WHERE idTurno='$idTurno'";
+        $consulta = "SELECT estado FROM turno WHERE idTurno ='$idTurno'";
         $resultado = $conexion->prepare($consulta);
         $resultado->execute();
-        $data=$resultado->fetchAll(PDO::FETCH_ASSOC);
+        $estadoTurno=$resultado->fetchAll(PDO::FETCH_ASSOC);
         
-        if($banderaCristales){
-            /* --- Actulizar Cristales --- */
-            $valuesCristales='';
-            foreach ($cristales as $cristal){
-                $valuesCristales = $valuesCristales . '(' .  implode(", ", $cristal) . ', ' . $idTurno . '),';
-            }
-            $valuesCristales = substr($valuesCristales , 0, -1);
-            $consulta = "DELETE FROM turnodetalle WHERE turnoID='$idTurno';
-            INSERT INTO turnodetalle (otro, importeSinIva, importeConIva, cantidad, cristalID, esAPedir, turnoID) VALUES $valuesCristales";		
+        if ($estadoTurno == "Finalizado"){
+            $consulta = "UPDATE turno SET siniestro='$siniestro', observacion='$observacion', esPago='$esPago', tipoPago='$tipoPago', 
+            fechaPago='$fechaPago', numFactura='$numFactura', importeTrabajo='$importeTrabajo', fechaEntrega='$fechaEntrega', empleadoID='$empleadoID'
+            WHERE idTurno='$idTurno'";
+            
+            $resultado = $conexion->prepare($consulta);
+            $resultado->execute();
+            $data=$resultado->fetchAll(PDO::FETCH_ASSOC);
+        } elseif ($estadoTurno == "Activo") {
+            $consulta = "UPDATE turno SET contacto='$contacto', fechaHora='$fechaHora', franjaHoraria='$franjaHoraria', telefono='$telefono', dominio='$dominio',
+            siniestro='$siniestro', observacion='$observacion', esPago='$esPago', tipoPago='$tipoPago', fechaPago='$fechaPago', numFactura='$numFactura', importeTrabajo='$importeTrabajo', fechaEntrega='$fechaEntrega', modeloID='$modeloID',
+            empresaID='$empresaID', empleadoID='$empleadoID'
+            WHERE idTurno='$idTurno'";
+
             $resultado = $conexion->prepare($consulta);
             $resultado->execute();
             $data=$resultado->fetchAll(PDO::FETCH_ASSOC);
             
-        };
+            if($banderaCristales){
+                /* --- Actulizar Cristales --- */
+                $valuesCristales='';
+                foreach ($cristales as $cristal){
+                    $valuesCristales = $valuesCristales . '(' .  implode(", ", $cristal) . ', ' . $idTurno . '),';
+                }
+                $valuesCristales = substr($valuesCristales , 0, -1);
+                $consulta = "DELETE FROM turnodetalle WHERE turnoID='$idTurno';
+                INSERT INTO turnodetalle (otro, importeSinIva, importeConIva, cantidad, cristalID, esAPedir, turnoID) VALUES $valuesCristales";		
+                $resultado = $conexion->prepare($consulta);
+                $resultado->execute();
+                $data=$resultado->fetchAll(PDO::FETCH_ASSOC);
+                
+            };
 
-        /* --- Insertar / Actualizar aPedir --- */
-        $cantidadAPedir = is_array($cristalesAPedir) ? count($cristalesAPedir) : 0 ;
-        if($cantidadAPedir){
-            $consulta= "";
-            foreach ($cristalesAPedir as $cristal){
-                $consulta=$consulta."UPDATE stock SET aPedir = aPedir + $cristal[1] WHERE cristalID = $cristal[0];";
+            /* --- Insertar / Actualizar aPedir --- */
+            $cantidadAPedir = is_array($cristalesAPedir) ? count($cristalesAPedir) : 0 ;
+            if($cantidadAPedir){
+                $consulta= "";
+                foreach ($cristalesAPedir as $cristal){
+                    $consulta=$consulta."UPDATE stock SET aPedir = aPedir + $cristal[1] WHERE cristalID = $cristal[0];";
+                }
+                $resultado = $conexion->prepare($consulta);
+                $resultado->execute();
+                $data=$resultado->fetchAll(PDO::FETCH_ASSOC); 
             }
-            $resultado = $conexion->prepare($consulta);
-            $resultado->execute();
-            $data=$resultado->fetchAll(PDO::FETCH_ASSOC); 
         }
 
         if($banderaTrabajos){
@@ -167,10 +186,7 @@ switch($opcion){
         };
         break;
     case 4:
-        $consulta = "DELETE FROM turnodetalle WHERE turnoID='$idTurno';
-        DELETE FROM trabajoturno WHERE turnoID='$idTurno';
-        DELETE FROM archivo WHERE turnoID='$idTurno';
-        DELETE FROM turno WHERE idTurno='$idTurno'";
+        $consulta = "UPDATE turno SET estado = 'Eliminado' WHERE idTurno='$idTurno'";
         $resultado = $conexion->prepare($consulta);
         $resultado->execute();
         $data=$resultado->fetchAll(PDO::FETCH_ASSOC);  
@@ -292,16 +308,18 @@ switch($opcion){
         break;
     case 10: 
         $consulta = "SELECT p.totalSinIva, p.totalConIva FROM precio p 
-        INNER JOIN empresaprecio ep ON ep.precioID = p.idPrecio
-        WHERE (p.cristalID = '$cristalID') AND (ep.empresaID = '$empresaID');";
+        INNER JOIN listaPrecio lp ON lp.idListaPrecio = p.listaPrecioID
+        INNER JOIN empresa e ON lp.idListaPrecio = e.listaPrecioID
+        WHERE (p.cristalID = '$cristalID') AND (e.idEmpresa = '$empresaID');";
         $resultado = $conexion->prepare($consulta);
         $resultado->execute();
         $data=$resultado->fetchAll(PDO::FETCH_ASSOC);
         break;
     case 11:
         $consulta = "SELECT p.totalSinIva, p.totalConIva, p.cristalID FROM precio p 
-        INNER JOIN empresaprecio ep ON ep.precioID = p.idPrecio
-        WHERE p.cristalID IN ($idCristales) AND (ep.empresaID = '$empresaID');";
+        INNER JOIN listaPrecio lp ON lp.idListaPrecio = p.listaPrecioID
+        INNER JOIN empresa e ON lp.idListaPrecio = e.listaPrecioID
+        WHERE p.cristalID IN ($idCristales) AND (e.idEmpresa = '$empresaID');";
         $resultado = $conexion->prepare($consulta);
         $resultado->execute();
         $data=$resultado->fetchAll(PDO::FETCH_ASSOC);
@@ -365,6 +383,30 @@ switch($opcion){
             $data2=[];
         }
         $data=array_merge([$data], [$data2]);
+        break;
+    case 16:
+        $consulta = "SELECT * FROM marca ORDER BY nombre;";
+        $resultado = $conexion->prepare($consulta);
+        $resultado->execute();        
+        $data=$resultado->fetchAll(PDO::FETCH_ASSOC);
+        break;
+    case 17:
+        $consulta = "SELECT * FROM empresa;";
+        $resultado = $conexion->prepare($consulta);
+        $resultado->execute();        
+        $data=$resultado->fetchAll(PDO::FETCH_ASSOC);
+        break;
+    case 18:
+        $consulta = "SELECT * FROM listaPrecio";
+        $resultado = $conexion->prepare($consulta);
+        $resultado->execute();        
+        $data=$resultado->fetchAll(PDO::FETCH_ASSOC);
+        break;
+    case 19:
+        $consulta = "SELECT * FROM empleado";
+        $resultado = $conexion->prepare($consulta);
+        $resultado->execute();        
+        $data=$resultado->fetchAll(PDO::FETCH_ASSOC);
         break;
 }
 

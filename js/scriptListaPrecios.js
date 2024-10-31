@@ -1,7 +1,20 @@
 $(document).ready(function() {
-    empresa = $("#tablaLP").data('empresa')
-    nombreEmpresa= "";
-    switch (empresa) {
+    empresa= "";
+
+    $.ajax({
+        type: "POST",
+        url: 'readListaPrecios.php',
+        datatype:"json",    
+        data:  { opcion: "empresas" },
+        success: function(data) {
+            var datos = JSON.parse(data);
+            for (let i = 0; i < datos.length; i++) {
+                $("#empresa").append("<option value=" + datos[i].idEmpresa + ">" + datos[i].empresa + "</option>");
+            }
+        }
+    });
+
+    /*switch (empresa) {
         case "asnm":    
             nombreEmpresa = "Allianz - Sura - Nación - Mapfre"
             break;
@@ -20,14 +33,50 @@ $(document).ready(function() {
         case "comun":    
             nombreEmpresa = "Común"
             break;
-        /*
-        case "glasscom":    
-        nombreEmpresa = "Glasscom"
-        break;*/
-    }
+    }*/
+
+    $(document).on("change", "#empresa", function() {
+        idEmpresa = $("#empresa option:selected").val();
+        empresa = $("#empresa option:selected").text();
+        $("#listaPrecio").text("Lista de Precios - " + empresa);
+        $("#marca").html("<option value=>Marca</option>");
+        $("#modelo").html("<option value=>Modelo</option>");
+        $("#cristal").html("<option value=>Cristal</option>");
+        tablaLP.columns(2).search('').draw()
+
+        if(idEmpresa){
+            $.ajax({
+                type: "POST",
+                url: 'readListaPrecios.php',
+                datatype:"json",    
+                data:  { idEmpresa: idEmpresa, opcion: "listaDePrecio" },
+                beforeSend: function() {
+                    $('#loader').removeClass('hidden')
+                },
+                complete: function() {
+                    $('#loader').addClass('hidden')
+                },
+                success: function(data) {
+                    let datos = JSON.parse(data);
+                    let tablaLP = $('#tablaLP').DataTable();
+                    tablaLP.clear().rows.add(datos).draw();
+                    let marcas = datos
+                    .map(item => ({ idMarca: item.idMarca, marca: item.marca })) // Mapeo para obtener solo idMarca y marca
+                    .filter((value, index, self) =>
+                        index === self.findIndex((t) => t.idMarca === value.idMarca && t.marca === value.marca)
+                    );
+                    for (let i = 0; i < marcas.length; i++) {
+                        $("#marca").append("<option value=" + marcas[i].idMarca + ">" + marcas[i].marca + "</option>");
+                    } 
+                }
+            })
+        }
+    });
+
+
     /*----------------------------Carga de Tablas----------------------------*/
     tablaLP = $('#tablaLP').DataTable( {
-        "ajax":{            
+        /*"ajax":{            
             "url": "../php/readListaPrecios.php", 
             "method": 'POST', 
             "data":{opcion: empresa},
@@ -38,8 +87,8 @@ $(document).ready(function() {
             complete: function() {
                 $('#loader').addClass('hidden')
             }
-        },
-        initComplete: function(){
+        },*/
+        /*initComplete: function(){
             this.api()
             .columns()
             .every(function () {
@@ -49,28 +98,28 @@ $(document).ready(function() {
                         .data()
                         .unique()
                         .sort()
-                        .each(function (d, j) {
-                            id = parseInt(j)+1
+                        .each(function (d, j, data) {
+                            id = j+1
                             $("#marca").append('<option value="' + id + '">' + d + '</option>');
                         });
                 }
             });
-        },
+        },*/
             "columns":[
             {"data": "idPrecio", "visible": false},
             {"data": "codigo", "sortable": false},
             {"data": "marca", "sortable": false},
             {"data": "modelo", "sortable": false},
             {"data": "tipo", "sortable": false},
-            {"data": "descripcion", "visible": false},
-            {"data": "posicion", "visible": false},
-            {"data": "lado", "visible": false},
-            {"data": "color", "visible": false},
-            {"data": "precioSinIva", "visible": false},
-            {"data": "instalacionSinIva", "visible": false},
+            {"data": "descripcion", "sortable": false},
+            {"data": "posicion", "sortable": false},
+            {"data": "lado", "sortable": false},
+            {"data": "color", "sortable": false},
+            {"data": "precioSinIva", "sortable": false},
+            {"data": "instalacionSinIva", "sortable": false},
             {"data": "totalSinIva", "sortable": false},
             {"data": "totalConIva", "sortable": false},
-            {"defaultContent": "<div class='text-center'><div class='btn-group'><button type='button' class='btn btn-info text-white btnDetalleLP'><i class='fas fa-info-circle'></i></button></div></div>", "sortable": false}
+            //{"defaultContent": "<div class='text-center'><div class='btn-group'><button type='button' class='btn btn-info text-white btnDetalleLP'><i class='fas fa-info-circle'></i></button></div></div>", "sortable": false}
         ],
         "language": {
             "lengthMenu": "Mostrar _MENU_ registros",
@@ -107,7 +156,9 @@ $(document).ready(function() {
                         }
                     }}
             },
-            title: 'Lista de Precios - '+ nombreEmpresa +'',
+            title: function () {
+                return $("#listaPrecio").text();
+            },
             text: '<i class="fas fa-file-excel"></i> ',
             titleAttr: 'Exportar a Excel',
             className: 'btn btn-success',
@@ -128,7 +179,9 @@ $(document).ready(function() {
                         }
                     }}
             },
-            title: 'Lista de Precios - '+ nombreEmpresa +'',
+            title: function () {
+                return $("#listaPrecio").text();
+            },
             text: '<i class="fas fa-file-pdf"></i> ',
             titleAttr: 'Exportar a PDF',
             className: 'btn btn-danger',
@@ -221,6 +274,8 @@ $(document).ready(function() {
     $(document).on("change", "#marca", function() {
         marcaID = $("#marca option:selected").val();
         marcaNombre = $("#marca option:selected").text();
+        idEmpresa = $("#empresa option:selected").val();
+
         $("#modelo").html("<option value=>Modelo</option>");
         $("#cristal").html("<option value=>Cristal</option>");
         tablaLP.column(3).search('').draw();
@@ -231,7 +286,7 @@ $(document).ready(function() {
                 type: "POST",
                 url: 'readListaPrecios.php',
                 datatype:"json",    
-                data:  { marcaID: marcaID, opcion: "modelos" },
+                data:  { marcaID: marcaID, idEmpresa: idEmpresa, opcion: "modelos" },
                 /*beforeSend: function() {
                     $('#loader').removeClass('hidden')
                 },
@@ -254,6 +309,7 @@ $(document).ready(function() {
     $(document).on("change", "#modelo", function() {
         modeloID = $("#modelo option:selected").val();
         modeloNombre = $("#modelo option:selected").text();
+        idEmpresa = $("#empresa option:selected").val();
         
         $("#cristal").html("<option value=>Cristal</option>");
         tablaLP.column(4).search('').draw();
@@ -263,7 +319,7 @@ $(document).ready(function() {
                 type: "POST",
                 url: 'readListaPrecios.php',
                 datatype:"json",    
-                data:  { modeloID: modeloID, opcion: "cristales" },
+                data:  { modeloID: modeloID, idEmpresa: idEmpresa, opcion: "cristales" },
                 /*beforeSend: function() {
                     $('#loader').removeClass('hidden')
                 },

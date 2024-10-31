@@ -69,7 +69,7 @@ $(document).ready(function() {
             { "data": "lado", "visible": false },
             { "data": "color", "visible": false },
             { "data": "cantidad", "width": "8%" },
-            { "data": "precioFinal", "sortable": false },
+            //{ "data": "precioFinal", "sortable": false, "visible": false },
             { "defaultContent": "<div class='text-center'><button class='btn btn-primary btnEditarStock'><i class='fas fa-pen-to-square'></i></button></div>", "sortable": false, "width": "7%" }
         ],
         "pageLength": 50,
@@ -88,9 +88,76 @@ $(document).ready(function() {
                 "sPrevious": "Anterior"
             },
             "sProcessing": "Procesando...",
+            "searchBuilder": {
+            add: 'Agregar Condición',
+            condition: 'Comparación',
+            clearAll: 'Limpiar',
+            //delete: 'Eliminar',
+            deleteTitle: 'Eliminar Condición',
+            data: 'Columna',
+            //left: 'Izquierda',
+            leftTitle: 'Eliminar Subcondición',
+            logicAnd: 'Y',
+            logicOr: 'O',
+            //right: 'Derecha',
+            rightTitle: 'Agregar Subcondición',
+            title: {
+                0: '',
+                _: ''
+            },
+            value: 'Opción',
+            valueJoiner: 'entre',
+            "conditions": {
+                "date": {
+                    "after": "Despues",
+                    "before": "Antes",
+                    "between": "Entre",
+                    "empty": "Vacío",
+                    "equals": "Igual a",
+                    "notBetween": "No entre",
+                    "notEmpty": "No Vacio",
+                    "not": "Diferente de"
+                },
+                "number": {
+                    "between": "Entre",
+                    "empty": "Vacio",
+                    "equals": "Igual a",
+                    "gt": "Mayor a",
+                    "gte": "Mayor o igual a",
+                    "lt": "Menor que",
+                    "lte": "Menor o igual que",
+                    "notBetween": "No entre",
+                    "notEmpty": "No vacío",
+                    "not": "Diferente de"
+                },
+                "string": {
+                    "contains": "Contiene",
+                    "empty": "Vacío",
+                    "endsWith": "Termina en",
+                    "equals": "Igual a",
+                    "notEmpty": "No Vacio",
+                    "startsWith": "Empieza con",
+                    "not": "Diferente de",
+                    "notContains": "No Contiene",
+                    "notStartsWith": "No empieza con",
+                    "notEndsWith": "No termina con"
+                },
+                "array": {
+                    "not": "Diferente de",
+                    "equals": "Igual",
+                    "empty": "Vacío",
+                    "contains": "Contiene",
+                    "notEmpty": "No Vacío",
+                    "without": "Sin"
+                },
+            },
+        },
+        },
+        searchBuilder: {
+            columns: [9]
         },
         //responsive: "true",
-        dom: 'Bfrtilp',
+        dom: 'QBfrtilp',
         buttons: [{
                 extend: 'excelHtml5',
                 exportOptions: {
@@ -157,8 +224,34 @@ $(document).ready(function() {
                         };
                 },
             },
+            {
+                titleAttr: 'Filtrar',
+                text: '<i class="fas fa-filter iconWhite"></i> ',
+                className: 'btn btn-icon btn-primary br7px filterSB',
+                action: function(e, dt, node, config) {
+                    esVisible = $("#tablaStock_wrapper>.dtsb-searchBuilder").is(":visible");
+                    if(esVisible){
+                        $("#tablaStock_wrapper>.dtsb-searchBuilder").hide()
+                    } else {
+                        $("#tablaStock_wrapper>.dtsb-searchBuilder").show()
+                    }
+                }
+              },
         ]
     });
+
+    tablaStock.searchBuilder.container().prependTo(tablaStock.table().container());
+    $("#tablaStock_wrapper>.dtsb-searchBuilder").hide();
+
+    $(document).on("click", ".filterSB", function(){
+        if($(this).hasClass('btn-primary')){
+          $(this).removeClass('btn-primary')
+          $(this).addClass('btn-orange')
+        }else {
+          $(this).removeClass('btn-orange')
+          $(this).addClass('btn-primary')
+        }
+    })
 
     //Editar      
     $(document).on("click", ".btnEditarStock", function() {
@@ -183,7 +276,6 @@ $(document).ready(function() {
             datatype: "json",
             data: { idStock: idStock, cantidad: cantidad, opcion: 2 },
             success: function(data) {
-                console.log("data", data)
                 Swal.fire({
                     title: 'Exito',
                     text: 'La cantidad ha sido actualizada correctamente',
@@ -221,7 +313,6 @@ $(document).ready(function() {
                 },*/
                 success: function(data) {
                     var datos = JSON.parse(data);
-                    console.log("data", datos)
                     for (let i = 0; i < datos.length; i++) {
                         $("#modeloStock").append("<option value=" + datos[i].idModelo + ">" + datos[i].modelo + "</option>");
                     } 

@@ -27,12 +27,16 @@
                             <th>Dominio</th>
                             <th>Vehiculo</th>
                             <th>Trabajos</th>
+                            <th>Graba</th>
+                            <th>Polariza</th>
                             <th>Compañia</th>
-                            <!--<th>Grabado</th>-->
                             <th>Siniestro</th>
                             <th>N° Factura</th>
-                            <th>Pago</th>
+                            <th>Pagó</th>
+                            <th>Tipo Pago</th>
                             <th>Cristales A Pedir</th>
+                            <th>Realizado Por</th>
+                            <th>Estado</th>
                             <th>Acciones</th>
                         </tr>
                     </thead>
@@ -54,7 +58,7 @@
         <!--<button type="button" class="btn-close btn-close-white ms-2 btn-header" data-bs-dismiss="modal" aria-label="Close"></button>-->
         <button type="button" class="btn text-white-50 ms-2 btn-header" data-bs-dismiss="modal" aria-label="Close"><i class="fa-solid fa-xmark fa-xl"></i></button>  
     </div>
-      <form id="formTurno" class="form-sample" action="" method="POST">
+      <form id="formTurno" data-estado="" class="form-sample" action="" method="POST">
         <input id="cristales" name="cristales" type="text" value="" hidden>
         <input id="cristalEliminar" name="cristalEliminar" value="" hidden>
         <input id="banderaCristales" name="banderaCristales" value="" hidden>
@@ -115,18 +119,6 @@
                             <div class="input-group mb-3">
                                 <select name="empresa" id="empresa" class="form-select inputForm" required>
                                     <option value="">Compañía</option>
-                                    <option value="1">Allianz</option>
-                                    <option value="2">Común</option>
-                                    <option value="3">Fed Pat</option>
-                                    <option value="4">Glasscom</option>
-                                    <option value="5">La Caja</option>
-                                    <option value="6">La Segunda</option>
-                                    <option value="7">Mapfre</option>
-                                    <option value="8">Nación</option>
-                                    <option value="10">San Cristobal</option>
-                                    <option value="11">Sancor</option>
-                                    <option value="12">Sure</option>
-                                    <option value="13">Mercantil Andina</option>
                                 </select>
                             </div>
                         </div>
@@ -137,37 +129,6 @@
                             <div class="input-group mb-3">
                                 <select name="marca" id="marca" class="form-select inputForm" required>
                                     <option value="">Marca</option>
-                                    <option value="1">ALFA ROMEO</option>
-                                    <option value="2">AUDI</option>
-                                    <option value="3">BMW</option>
-                                    <option value="4">CHERY</option>
-                                    <option value="5">CHEVROLET</option>
-                                    <option value="6">CITROEN</option>
-                                    <option value="7">DAEWOO</option>
-                                    <option value="8">DAIHATSU</option>
-                                    <option value="9">DODGE/CHRYSLER</option>
-                                    <option value="10">FIAT</option>
-                                    <option value="11">FORD</option>
-                                    <option value="12">HONDA</option>
-                                    <option value="13">HYUNDAI</option>
-                                    <option value="14">KIA-ASIA</option>
-                                    <option value="15">MAZDA</option>
-                                    <option value="16">MERCEDES BENZ</option>
-                                    <option value="17">MITSUBISHI</option>
-                                    <option value="18">NISSAN</option>
-                                    <option value="19">OPEL</option>
-                                    <option value="20">PEUGEOT</option>
-                                    <option value="21">RENAULT</option>
-                                    <option value="22">ROVER</option>
-                                    <option value="23">SCANIA</option>
-                                    <option value="24">SEAT</option>
-                                    <option value="25">SMART</option>
-                                    <option value="26">SSANG YONG</option>
-                                    <option value="27">SUBARU</option>
-                                    <option value="28">SUZUKI</option>
-                                    <option value="29">TOYOTA</option>
-                                    <option value="30">VOLKSWAGEN</option>
-                                    <option value="31">VOLVO</option>
                                 </select>
                             </div>
                         </div>
@@ -202,7 +163,7 @@
                     <div class="col-md-3 pb-3 d-flex align-items-center">
                         <div class="form-check col-md-4">
                             <input class="form-check-input inputForm" type="checkbox" value="" id="otro">
-                            <label class="form-check-label text-dark" for="flexCheckDefault">Otro</label>
+                            <label class="form-check-label text-dark" for="otro">Otro</label>
                         </div>
                         <div id="colImporte" class="col-md-8">
                             <label for="importe" class="form-label text-dark">Importe</label>
@@ -244,26 +205,14 @@
                             <label for="trabajo" class="form-label text-dark">Trabajo</label>
                             <div class="input-group mb-3">
                                 <select class="form-control inputForm" id="trabajo" multiple="multiple" required>
-                                    <option value="1">Burlete</option>
-                                    <option value="2">Cerrajeria</option>
-                                    <option value="3">Despegar PSAS</option>
-                                    <option value="4">Diferencia de Cliente</option>
-                                    <option value="5">Escobilla</option>
+                                    <option value="2">Cerradura</option>
                                     <option value="6">Grabado</option>
                                     <option value="7">Lunetas</option>
-                                    <option value="8">Mano de Obra</option>
-                                    <option value="9">Maq lev vidrio</option>
                                     <option value="10">Parabrisas</option>
-                                    <option value="11">Pegado en domicilio</option>
-                                    <option value="12">Pegado espejo</option>
-                                    <option value="13">Pegamento Salchicha</option>
                                     <option value="14">Polarizado</option>
                                     <option value="15">Puertas</option>
-                                    <option value="16">Sacabollo</option>
-                                    <option value="17">Seña</option>
-                                    <option value="18">Telepase</option>
                                     <option value="19">Ventilete / Custodias</option>
-                                    <option value="20">Vidrios a medida</option>
+                                    <option value="21">Otros</option>
                                 </select>
                             </div>
                         </div>
@@ -301,6 +250,10 @@
                                     <option value="1">Efectivo</option>
                                     <option value="2">Débito</option>
                                     <option value="3">Crédito</option>
+                                    <option value="4">Mercado Pago</option>
+                                    <option value="5">Transferencia</option>
+                                    <option value="6">Dolares</option>
+                                    <option value="7">Otros</option>
                                 </select>
                             </div>
                         </div>
@@ -323,7 +276,7 @@
                     </div>
                 </div>
                 <div class="row">
-                    <div class="col-md-6">
+                    <div class="col-md-4">
                         <div class="form-group">
                             <label for="factura" class="form-label text-dark">N° Factura</label>
                             <div class="input-group mb-3">
@@ -331,12 +284,20 @@
                             </div>
                         </div>
                     </div>
-                    <div class="col-md-6">
+                    <div class="col-md-4">
                         <div class="form-group">
                             <label for="siniestro" class="form-label text-dark">Siniestro</label>
                             <div class="input-group mb-3">
                                 <input id="siniestro" name="siniestro" type="text" class="form-control inputForm">
                             </div>
+                        </div>
+                    </div>
+                    <div class="col-md-4">
+                        <div class="form-group">
+                            <label for="empleado" class="form-label text-dark">Realizado Por</label>
+                            <select name="empleado" id="empleado" class="form-select inputForm" required>
+                                <!--<option value="">Empleeado</option>-->
+                            </select>
                         </div>
                     </div>
                 </div>
@@ -411,10 +372,10 @@
 </div>
 <!-- End of Page Wrapper -->
 
-<!-- Scroll to Top Button-->
+<!-- Scroll to Top Button
 <a class="scroll-to-top rounded" href="#page-top">
     <i class="fas fa-angle-up"></i>
-</a>
+</a>-->
 
 <!-- Logout Modal-->
 <div class="modal fade" id="logoutModal" tabindex="-1" aria-hidden="true">

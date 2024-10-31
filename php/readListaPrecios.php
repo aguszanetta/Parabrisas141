@@ -7,6 +7,7 @@ $marcaID = (isset($_POST['marcaID'])) ? $_POST['marcaID'] : '';
 $modeloID = (isset($_POST['modeloID'])) ? $_POST['modeloID'] : '';
 //$modelo = str_replace("'", "\'", $modelo);
 $cristal = (isset($_POST['cristal'])) ? $_POST['cristal'] : '';
+$idEmpresa = (isset($_POST['idEmpresa'])) ? $_POST['idEmpresa'] : '';
 
 $opcion = (isset($_POST['opcion'])) ? $_POST['opcion'] : '';
 
@@ -43,13 +44,13 @@ switch($opcion){
 	case "fedPat":
 		/*$consulta = "SELECT * FROM fedPat";*/
 		/* --- FedPat ---  */
-		$consulta = "SELECT m.nombre AS marca, mo.nombre AS modelo, c.*, p.* 
+		$consulta = "SELECT m.idMarca, m.nombre AS marca, mo.nombre AS modelo, c.*, p.* 
 		FROM cristal c
 		INNER JOIN modelo mo ON mo.idModelo = c.modeloID
 		INNER JOIN marca m ON m.idMarca = mo.marcaID
 		INNER JOIN precio p ON c.idCristal = p.cristalID
-		INNER JOIN empresaprecio ep ON p.idPrecio = ep.precioID
-		WHERE ep.empresaID = 3 AND c.estado = 'Activo'";
+		INNER JOIN listaPrecio lp ON p.listaPrecioID = lp.idListaPrecio
+		WHERE lp.idListaPrecio = 1 AND p.estado = 'Activo'";
 		$resultado = $conexion->prepare($consulta);
 		$resultado->execute();        
 		$data=$resultado->fetchAll(PDO::FETCH_ASSOC);
@@ -96,33 +97,57 @@ switch($opcion){
 		$resultado->execute();        
 		$data=$resultado->fetchAll(PDO::FETCH_ASSOC);
 		break;
-	case "glasscom":
-		/*$consulta = "SELECT * FROM sanCristobal";*/
-		/* --- Glasscom ---  */
-		$consulta = "SELECT m.nombre AS marca, mo.nombre AS modelo, c.*, p.* 
-		FROM cristal c
-		INNER JOIN modelo mo ON mo.idModelo = c.modeloID
-		INNER JOIN marca m ON m.idMarca = mo.marcaID
-		INNER JOIN precio p ON c.idCristal = p.cristalID
-		INNER JOIN empresaprecio ep ON p.idPrecio = ep.precioID
-		WHERE ep.empresaID = 4 AND c.estado = 'Activo'";
+	case "empresas":
+		$consulta = "SELECT idEmpresa, nombre AS empresa 
+			FROM empresa
+			WHERE estado = 'Activo'
+			ORDER BY nombre";
 		$resultado = $conexion->prepare($consulta);
 		$resultado->execute();        
 		$data=$resultado->fetchAll(PDO::FETCH_ASSOC);
 		break;
 	case "modelos":
-		$consulta = "SELECT idModelo, nombre AS modelo
-		FROM modelo m
-		WHERE marcaID = $marcaID";
+		$consulta = "SELECT DISTINCT mo.idModelo, mo.nombre AS modelo
+		FROM modelo mo
+		INNER JOIN cristal c ON mo.idModelo = c.modeloID
+		INNER JOIN precio p ON c.idCristal = p.cristalID
+		INNER JOIN listaPrecio lp ON p.listaPrecioID = lp.idListaPrecio
+		INNER JOIN empresa e ON e.listaPrecioID = lp.idListaPrecio
+		WHERE mo.marcaID = $marcaID AND e.idEmpresa = '$idEmpresa' AND p.estado = 'Activo'
+		ORDER BY mo.nombre";
 		$resultado = $conexion->prepare($consulta);
 		$resultado->execute();        
 		$data=$resultado->fetchAll(PDO::FETCH_ASSOC);
 		break;
 	case "cristales":
-		$consulta = "SELECT DISTINCT tipo 
+		$consulta = "SELECT DISTINCT c.tipo 
 		FROM cristal c
-		WHERE modeloID = $modeloID
-		ORDER BY tipo";
+		INNER JOIN precio p ON c.idCristal = p.cristalID
+		INNER JOIN listaPrecio lp ON p.listaPrecioID = lp.idListaPrecio
+		INNER JOIN empresa e ON e.listaPrecioID = lp.idListaPrecio
+		WHERE modeloID = $modeloID AND e.idEmpresa = '$idEmpresa' AND p.estado = 'Activo'
+		ORDER BY c.tipo";
+		$resultado = $conexion->prepare($consulta);
+		$resultado->execute();        
+		$data=$resultado->fetchAll(PDO::FETCH_ASSOC);
+		break;
+	/*case "marcas":
+		$consulta = "SELECT m.idMarca, m.nombre AS marca 
+		FROM marca m
+		ORDER BY nombre";
+		$resultado = $conexion->prepare($consulta);
+		$resultado->execute();        
+		$data=$resultado->fetchAll(PDO::FETCH_ASSOC);
+		break;*/
+	case "listaDePrecio":
+		$consulta = "SELECT m.idMarca, m.nombre AS marca, mo.nombre AS modelo, c.*, p.* 
+		FROM cristal c
+		INNER JOIN modelo mo ON mo.idModelo = c.modeloID
+		INNER JOIN marca m ON m.idMarca = mo.marcaID
+		INNER JOIN precio p ON c.idCristal = p.cristalID
+		INNER JOIN listaPrecio lp ON p.listaPrecioID = lp.idListaPrecio
+		INNER JOIN empresa e ON e.listaPrecioID = lp.idListaPrecio
+		WHERE e.idEmpresa = '$idEmpresa' AND p.estado = 'Activo'";
 		$resultado = $conexion->prepare($consulta);
 		$resultado->execute();        
 		$data=$resultado->fetchAll(PDO::FETCH_ASSOC);

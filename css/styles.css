@@ -384,3 +384,155 @@ div#wrapperArchivo .fa-cloud-arrow-up{
 .ph10px {
     padding-inline: 10px;
 }
+
+/*----------------------DragPrecios----------------------*/
+.wrapperPrecio{
+    width: 100%;
+    /*width: 430px;*/
+    background: #fff;
+    border-radius: 5px;
+    padding: 30px;
+    box-shadow: 7px 7px 12px rgba(0,0,0,0.05);
+}
+
+.formPrecio{
+    height: 180px;
+    display: flex;
+    cursor: pointer;
+    align-items: center;
+    justify-content: center;
+    flex-direction: column;
+    border-radius: 5px;
+    border : 2px dashed #3f3e91;
+}
+
+.formPrecio :where(i, p){
+    color: #3f3e91;
+}
+
+.formPrecio i{
+    font-size: 50px;
+}
+
+.formPrecio p{
+    margin-top: 15px;
+    font-size: 16px;
+    font-weight: bold;
+}
+
+.formPrecio:hover{
+    background: #00000024;
+}
+
+.formPrecio :where(i,p){
+    pointer-events: none;
+}
+
+/* --- Cargar Archivos --- */
+
+#btnCargarArchivo{
+    padding: 10px 15px 10px 15px;
+    /*font-size: 15px;
+    height: 35px;*/
+}
+
+#btnCargarPrecio{
+    padding: 10px 15px 10px 15px;
+    /*font-size: 15px;
+    height: 35px;*/
+}
+
+.uploaded {
+    /*width: 375px;*/
+    width: 35%;
+    min-width: 300px;
+    margin: 10px;
+    background-color: #fff;
+    border-radius: 10px;
+    display: flex;
+    flex-direction: row;
+    justify-content: flex-start;
+    align-items: center;
+}
+
+.uploaded-ListaPrecio {
+    /*width: 375px;*/
+    width: 50%;
+    min-width: 300px;
+    margin: 10px;
+    background-color: #fff;
+    border-radius: 10px;
+    display: flex;
+    flex-direction: row;
+    justify-content: flex-start;
+    align-items: center;
+}
+
+div.uploaded i.fa-file-pdf,
+div.uploaded i.fa-file-image{
+    padding: 15px;
+    font-size: 40px;
+}
+
+div.uploaded-ListaPrecio i.fa-file-excel{
+    padding: 15px;
+    font-size: 40px;
+}
+
+.file {
+    display: flex;
+    flex-direction: column;
+    width: 80%;
+}
+
+.file__name {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: baseline;
+    /*width: 300px;*/
+    line-height: 0;
+    /*color: #0c3214;*/
+    font-size: 18px;
+    letter-spacing: 1.5px;
+}
+
+.nombreArchivo{
+    white-space: nowrap;
+    text-overflow: ellipsis;
+    overflow: hidden;
+}
+
+.fa-times {
+    font-weight: 900;
+}
+
+.fa-times:hover {
+    cursor: pointer;
+    opacity: 0.8;
+}
+
+.eliminarArchivo{
+    float: right;
+    color: #696969;
+}
+
+/*----------------------Progress Bar----------------------*/
+
+
+#Progress {
+    width: 100%;
+    animation-name: progressBar;
+    animation-iteration-count: 1;
+    animation-duration: 2s;
+}
+
+@keyframes progressBar {
+    0% {
+    width: 10%;
+    }
+
+    100% {
+    width: 100%;
+    }
+}

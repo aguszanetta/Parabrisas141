@@ -56,11 +56,13 @@ $(document).ready(function() {
                 return "<ul class='list-group list-group-flush text-center'>" + todos + "</ul>"
               }
             },
+            { "defaultContent": "",  "visible": false , "sortable": false },
+            { "defaultContent": "",  "visible": false , "sortable": false },
             { "data": "empresa", "sortable": false },
-            //{ "data": "grabado", "sortable": false },
             { "data": "siniestro", "visible": true , "sortable": false },
             { "data": "numFactura", "visible": true , "sortable": false },
             { "data": "esPago", "sortable": false },
+            { "defaultContent": "",  "visible": false , "sortable": false },
             { "data": "esAPedir", 
               "sortable": false,
               "render": function(data){
@@ -72,8 +74,23 @@ $(document).ready(function() {
                 return "<ul class='list-group list-group-flush text-center'>" + todos + "</ul>"
               }
             },
-            //{ "data": "estado", "sortable": false },
-            { "defaultContent": "<div class='text-center'><button class='btn btn-info text-white btn-EditarTurno'><i class='fa-solid fa-info-circle'></i></button></div>", "sortable": false }
+            { "data": "empleado", "sortable": false },
+            { "data": "estado", "sortable": false, "visible": false },
+            {
+              "data": { "data": "idTurno" },
+              "orderable": false,
+              "sortable": false,
+              "render": function(data, type, row) {
+                  switch (data.estado) {
+                    case "Activo":
+                        return "<div class='text-center'><button class='btn btn-orange text-white btn-EditarTurno'><i class='fa-solid fa-info-circle'></i></button></div>" 
+                        break;
+                    case "Finalizado":
+                        return  "<div class='text-center'><button class='btn btn-secondary text-white btn-EditarTurno'><i class='fa-solid fa-info-circle'></i></button></div>"
+                        break;
+                  }
+              }
+          }
         ],
         "pageLength": 50,
         "language": {
@@ -162,7 +179,7 @@ $(document).ready(function() {
             dir: 'desc'
         },
         searchBuilder: {
-          columns: [1, 6, 9, 11, 12]
+          columns: [1, 6, 9, 13, 14]
         },
         dom: 'QBfrtilp',
         buttons: [
@@ -194,7 +211,7 @@ $(document).ready(function() {
                 $('row c[r="H2"]', sheet).attr('s', '2');
               },
               exportOptions: {
-                  columns: [1, 2, 3, 4, 5, 6, 7, 8, 9, 10],
+                  columns: [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 14, 15, 16, 17],
                   format: {
                     body: function(data, row, column, node) {
                         tempDiv = document.createElement('div');
@@ -220,7 +237,7 @@ $(document).ready(function() {
             {
                 extend: 'pdfHtml5',
                 exportOptions: {
-                    columns: [1, 2, 3, 4, 5, 6, 7, 8, 9, 10],
+                    columns: [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 14, 15, 16, 17],
                     format: {
                         body: function(data, row, column, node) {
                             tempDiv = document.createElement('div');
@@ -260,7 +277,7 @@ $(document).ready(function() {
                     doc.styles.tableHeader.fillColor = '#ffffff',
                         doc.styles.tableHeader.color = '#000000',
                         doc.styles.tableBodyOdd.fillColor = '#ffffff',
-                        doc.content[1].margin = [25, 0, 0, 0], //left, top, right, bottom
+                        doc.content[1].margin = [-20, 0, 0, 0], //left, top, right, bottom
                         doc.content[1].layout = {
                             hLineWidth: function(i, node) {
                                 return (i === 0 || i === node.table.body.length) ? 2 : 1;
@@ -470,6 +487,7 @@ $(document).ready(function() {
           $("#fechaEntrega").val(datos[0][0].fechaEntrega);
           $("#numFactura").val(datos[0][0].numFactura);
           $("#siniestro").val(datos[0][0].siniestro);
+          $("#empleado").val(datos[0][0].empleadoID);
   
           //CARGAR DESPLEGABLE MODELO
           for (let i = 0; i < datos[4].length; i++) {
@@ -529,6 +547,18 @@ $(document).ready(function() {
             case "Crédito":
               $("#tipoPago").val(3)
             break;
+            case "Mercado Pago":
+              $("#tipoPago").val(4)
+            break;
+            case "Transferencia":
+              $("#tipoPago").val(5)
+            break;
+            case "Dolares":
+              $("#tipoPago").val(6)
+            break;
+            case "Otros":
+              $("#tipoPago").val(7)
+            break;
             default:
               $("#tipoPago").val(0)
             break;
@@ -575,6 +605,7 @@ $(document).ready(function() {
           }else{
             $("#btn-finalizarTurno").show()
           }
+          $("#formTurno").attr("data-estado", datos[0][0].estado)
         }
       });
   
@@ -593,7 +624,14 @@ $(document).ready(function() {
     /*---------- EDITAR ----------*/
     $(document).on("click", "#btn-editarTurno", function(){
       tipoForm="editar"
-      $(".inputForm").prop("disabled", false);
+      estado = $("#formTurno").attr("data-estado")
+      
+      if(estado == "Finalizado"){
+        $("#trabajo, #importeTrabajo, #observacion, #esPago, #tipoPago, #fechaPago, #fechaEntrega, #numFactura, #siniestro, #empleado").prop("disabled", false);
+      } else {
+        $(".inputForm").prop("disabled", false);
+      }
+
       $("#btn-editarTurno").css('visibility', 'hidden');
       $("#btn-finalizarTurno").css('visibility', 'hidden');
       $(".btn-editar").show();
@@ -611,19 +649,26 @@ $(document).ready(function() {
   
     /*---------- FINALIZAR ----------*/
     $(document).on("click", "#btn-finalizarTurno", function(){
-      tipoForm="finalizar"
-      //idTurno = IdTurno DATATBALE
-      Swal.fire({
-        title: '¿Seguro?',
-        text: '¿Estás seguro que quieres finalizar este turno?',
-        icon: 'warning',
-        showCancelButton: true,
-        reverseButtons: true,
-        confirmButtonText: 'Confirmar',
-        cancelButtonText: 'Cancelar',
-        confirmButtonColor: '#3085d6',
-        cancelButtonColor: '#d33',
-      }).then((result) => {
+      tipoForm="finalizar";
+      empleado = $("#empleado option:selected").val();
+      if(empleado == 1){
+        Swal.fire({
+          title: 'Error',
+          text: 'Debes asignar un empleado para poder finalizar el turno',
+          icon: 'error'
+      })
+      } else {
+        Swal.fire({
+          title: '¿Seguro?',
+          text: '¿Estás seguro que quieres finalizar este turno?',
+          icon: 'warning',
+          showCancelButton: true,
+          reverseButtons: true,
+          confirmButtonText: 'Confirmar',
+          cancelButtonText: 'Cancelar',
+          confirmButtonColor: '#3085d6',
+          cancelButtonColor: '#d33',
+        }).then((result) => {
           if (result.isConfirmed) {
             $.ajax({
                 url: "crudTurnos.php",
@@ -645,6 +690,7 @@ $(document).ready(function() {
             });
           }
         })
+      }
     });
   
     /*---------- ELIMINAR ----------*/
@@ -721,6 +767,7 @@ $(document).ready(function() {
       var fechaEntrega = $("#fechaEntrega").val();
       var numFactura = $("#numFactura").val();
       var siniestro = $("#siniestro").val();
+      var empleadoID = $("#empleado").val()
       
       if(tipoForm == 'alta'){
         $.ajax({
@@ -745,6 +792,7 @@ $(document).ready(function() {
               fechaEntrega: fechaEntrega,
               siniestro: siniestro,
               numFactura: numFactura,
+              empleadoID: empleadoID,
               modeloID: modeloID,
               cristalesAPedir: cristalesAPedir
             },
@@ -801,6 +849,7 @@ $(document).ready(function() {
                   fechaEntrega: fechaEntrega,
                   siniestro: siniestro,
                   numFactura: numFactura,
+                  empleadoID: empleadoID,
                   modeloID: modeloID,
                   banderaCristales: banderaCristales,
                   banderaTrabajos: banderaTrabajos,
@@ -838,15 +887,28 @@ $(document).ready(function() {
   
     /*-------CARGAR DESPLEGABLES COMP - MARCA - MODELO - CRISTAL-------*/
     
-    /*$.ajax({
+    $.ajax({
       type: "POST",
       url: 'crudTurnos.php',
       datatype:"json",    
-      data:  { opcion: 6 }, 
+      data:  { opcion: 17 }, 
       success: function(data) {
           var datos = JSON.parse(data);
           for (let i = 0; i < datos.length; i++) {
               $("#empresa").append("<option value=" + datos[i].idEmpresa + ">" + datos[i].nombre + "</option>");
+          } 
+      }
+    });
+    
+    $.ajax({
+      type: "POST",
+      url: 'crudTurnos.php',
+      datatype:"json",    
+      data:  { opcion: 19 }, 
+      success: function(data) {
+          var datos = JSON.parse(data);
+          for (let i = 0; i < datos.length; i++) {
+              $("#empleado").append("<option value=" + datos[i].idEmpleado + ">" + datos[i].nombre + "</option>");
           } 
       }
     });
@@ -855,14 +917,14 @@ $(document).ready(function() {
       type: "POST",
       url: 'crudTurnos.php',
       datatype:"json",    
-      data:  { opcion: 7 }, 
+      data:  { opcion: 16 }, 
       success: function(data) {
           var datos = JSON.parse(data);
           for (let i = 0; i < datos.length; i++) {
               $("#marca").append("<option value=" + datos[i].idMarca + ">" + datos[i].nombre + "</option>");
           } 
       }
-    });*/
+    });
   
     /*$(document).on("change", "#marca", function() {
       marcaID = $("#marca option:selected").val();
@@ -991,6 +1053,7 @@ $(document).ready(function() {
                       tablaCristales.cell(i, 5).data(cristalesCambioEmp[i][2]).draw();
                   }
                   $("#cristales").attr('value', JSON.stringify(cristalesCambioEmp));
+                  $("#banderaCristales").attr('value', "cambio");
                   Swal.fire({
                     title: 'Exito',
                     text: 'Los precios se actualizaron correctamente',
@@ -1290,10 +1353,10 @@ $(document).ready(function() {
               $('#loader').addClass('hidden')
           },
           success: function(data) {
-              var datos = JSON.parse(data);     
-              importeTotalSinIva = datos[0].totalSinIva * cantidad
-              importeTotalConIva = datos[0].totalConIva * cantidad
-              resolve([importeTotalSinIva.toFixed(2), importeTotalConIva.toFixed(2)])
+            var datos = JSON.parse(data);     
+            importeTotalSinIva = datos[0].totalSinIva * cantidad;
+            importeTotalConIva = datos[0].totalConIva * cantidad;
+            resolve([importeTotalSinIva.toFixed(2), importeTotalConIva.toFixed(2)]);
           }
       })
   });

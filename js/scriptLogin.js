@@ -1,7 +1,6 @@
 $(function(){
 	$(document).on("click", "#btn-password", function() {
 		eye = $('#eye')[0].classList;
-		console.log("entra", eye)
 		if ($('#eye')[0].classList[1] == 'fa-eye') {
 			$('#eye').attr('class', 'svg-inline--fa fa-eye-slash fs-110pct');
 			$('#password').attr('type', 'text');
@@ -40,7 +39,6 @@ $(function(){
 						   confirmButtonText: 'OK'
 						});
 					}else{
-						console.log(data)
 						Swal.fire({
 						  title: 'Exito',
 						  text: 'Conexión exitosa!',

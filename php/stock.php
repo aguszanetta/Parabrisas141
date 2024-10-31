@@ -31,7 +31,7 @@
                             <th>Lado</th>  
                             <th>Color</th>
                             <th>Cantidad</th>
-                            <th>Precio Final</th>
+                            <!--<th>Precio Final</th>-->
                             <th>Acciones</th>
                         </tr>
                     </thead>
@@ -90,10 +90,10 @@
     </div>
     <!-- End of Page Wrapper -->
 
-    <!-- Scroll to Top Button-->
+    <!-- Scroll to Top Button
     <a class="scroll-to-top rounded" href="#page-top">
         <i class="fas fa-angle-up"></i>
-    </a>
+    </a>-->
 
     <!-- Logout Modal-->
     <div class="modal fade" id="logoutModal" tabindex="-1" aria-hidden="true">
@@ -134,6 +134,11 @@
 <script type="text/javascript" src="../libraries/DataTables/datatables.min.js"></script>
 <script type="text/javascript" src="../libraries/DataTables/DataTables-1.13.4/js/jquery.dataTables.min.js"></script>
 <script type="text/javascript" src="../libraries/DataTables/DataTables-1.13.4/js/dataTables.bootstrap5.min.js"></script>
+
+<!-- Search Builder Datatables JS -->
+<script src="../libraries/DataTables/SearchBuilder-1.4.2/js/dataTables.searchBuilder.min.js"></script>
+<script src="../libraries/DataTables/SearchBuilder-1.4.2/js/searchBuilder.bootstrap5.min.js"></script>
+<script src="../libraries/DataTables/DateTime-1.4.0/js/dataTables.dateTime.min.js"></script>
 
 <!-- Botones Datatables JS -->
 <script src="../libraries/DataTables/Buttons-2.3.6/js/dataTables.buttons.min.js"></script>

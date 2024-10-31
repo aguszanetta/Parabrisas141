@@ -1,8 +1,8 @@
 <?php
     session_start();
-    if(!isset($_SESSION['s_usuario'])) {
+    if(!isset($_SESSION['s_usuario']) || ($_SESSION['s_rol'] != 'mav' && (basename($_SERVER['PHP_SELF'])) == 'cargarPrecios.php') ){
         header("Location: login.php");
-    }
+    } 
 ?>
 
 <!DOCTYPE html>
@@ -137,23 +137,20 @@
 
              <!-- Nav Item - Pages Collapse Menu 2-->
             <li class="nav-item mb-1">
-                <a id="lpNav" class="nav-link collapsed" data-toggle="collapse" data-bs-toggle="collapse" data-bs-target="#dummy-target" 
-                aria-expanded="false" aria-controls="collapseLp">
-                <i class="fas fa-clipboard-list"></i>
-                    <span class="menu-title">Lista de Precios</span>
+                <a class="nav-link" href="listaPrecios.php">
+                    <i class="fa-solid fa-clipboard-list"></i>
+                    <span class="menu-title" >Lista de Precios</span>
                 </a>
-                <div id="collapseLp" class="collapse m-01rem">
-                    <ul class="nav flex-column">
-                        <li class="nav-item"> <a class="nav-link subitem" href="lp_laCaja.php">• La Caja</a></li>
-                        <li class="nav-item"> <a class="nav-link subitem" href="lp_glasscom.php">• Glasscom</a>
-                        <li class="nav-item"> <a class="nav-link subitem" href="lp_fedPat.php">• Fed Pat</a>
-                        <li class="nav-item"> <a class="nav-link subitem" href="lp_comun.php">• Común</a>
-                        <li class="nav-item"> <a class="nav-link subitem" href="lp_asnm.php">• A-S-N-M</a>
-                        <li class="nav-item"> <a class="nav-link subitem" href="lp_lss.php">• La Segunda - Sancor</a>
-                        <li class="nav-item"> <a class="nav-link subitem" href="lp_sanCristobalMercantilAndina.php">• San Cristobal - Mercantil Andina</a>
-                    </ul>
-                </div>
             </li>
+            <!-- Nav Item - Charts -->
+            <?php if($_SESSION['s_rol'] == "mav") {?>
+                <li class="nav-item mb-1">
+                    <a class="nav-link" href="cargarPrecios.php">
+                        <i class="fa-solid fa-clipboard-list"></i>
+                        <span class="menu-title" >Cargar Precios</span>
+                    </a>
+                </li>
+            <?php } ?>
         </ul>
         <!-- End of Sidebar -->
 
@@ -188,5 +185,6 @@
                         </li>
                     </ul>
                 </nav>
+                
                 
                 <!-- End of Topbar -->

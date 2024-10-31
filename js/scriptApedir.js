@@ -1,6 +1,20 @@
 $(document).ready(function() {
     fecha = moment(new Date()).format("DD/MM/YYYY");
     fechaFalsa123 = "19/10/2024";
+
+    $.ajax({
+        type: "POST",
+        url: 'crudAPedir.php',
+        datatype:"json",    
+        data:  { opcion: 4 }, 
+        success: function(data) {
+            var datos = JSON.parse(data);
+            for (let i = 0; i < datos.length; i++) {
+                $("#marca").append("<option value=" + datos[i].idMarca + ">" + datos[i].nombre + "</option>");
+            } 
+        }
+    });
+
     tablaAPedir = $('#tablaAPedir').DataTable({
         "ajax": {
             "url": "crudAPedir.php",
@@ -19,7 +33,23 @@ $(document).ready(function() {
             { "data": "lado", "visible": false },
             { "data": "color", "visible": false },
             { "data": "aPedir" },
-            { "defaultContent": "<div class='text-center'><div class='btn-group'><button class='btn btn-primary btnEditarAPedir'><i class='fas fa-pen-to-square'></i></button><button class='btn btn-info text-white btnDetalleAPedir'><i class='fas fa-info-circle'></i></button></div></div>", "sortable": false }
+            { "data": "precioFinal" },
+            { "defaultContent": "<div class='text-center'> \
+                    <div class='btn-group'> \
+                        <button class='btn btn-primary btnEditarAPedir'> \
+                            <i class='fas fa-pen-to-square'></i> \
+                        </button> \
+                        <button class='btn btn-info text-white btnDetalleAPedir'> \
+                            <i class='fas fa-info-circle'></i> \
+                        </button> \
+                        <button class='btn btn-danger text-white btnEliminarAPedir'> \
+                            <i class='fas fa-trash'></i> \
+                        </button> \
+                    </div> \
+                </div>", 
+                "sortable": false,
+                "width": '15%' 
+            }
         ],
         /*"order": [
             [1, "asc"]
@@ -131,7 +161,6 @@ $(document).ready(function() {
         $("#idStock").attr('value', idStock);
         $("#aPedir").val(aPedir);
         $('#modalEditar').modal('show');
-        
     });
 
     $('#formEditarAPedir').submit(function(e){
@@ -145,7 +174,6 @@ $(document).ready(function() {
             datatype: "json",
             data: { idStock: idStock, aPedir: aPedir, opcion: 2 },
             success: function(data) {
-                console.log("data", data)
                 Swal.fire({
                     title: 'Exito',
                     text: 'La cantidad ha sido actualizada correctamente',
@@ -179,14 +207,13 @@ $(document).ready(function() {
 
 
     //Borrar
-    $(document).on("click", ".btnPedido", function() {
-        fila = $(this);
-        fila2 = $(this).closest("tr");
-        data = $('#tablaAPedir').DataTable().row(fila2).data();
-        codigo = data['codigo'];
+    $(document).on("click", ".btnEliminarAPedir", function() {
+        fila = $(this).closest("tr");
+        data = $('#tablaAPedir').DataTable().row(fila).data();
+        idStock = data['idStock'];
         Swal.fire({
             title: '¿Seguro?',
-            text: "¿Estas seguro de borrar el turno?",
+            text: "¿Estas seguro de borrar el cristal a pedir?",
             icon: 'warning',
             showCancelButton: true,
             confirmButtonColor: '#3085d6',
@@ -199,9 +226,9 @@ $(document).ready(function() {
                     url: "crudAPedir.php",
                     type: "POST",
                     datatype: "json",
-                    data: { opcion: 1, codigo: codigo },
+                    data: { opcion: 5, idStock: idStock },
                     success: function() {
-                        tablaAPedir.row(fila.parents('tr')).remove().draw();
+                        tablaAPedir.ajax.reload()
                     }
                 });
                 Swal.fire(
@@ -223,6 +250,6 @@ $(document).ready(function() {
         } else {
             $("#alertaAPedir").hide()
         }
-      });
+    });
 
 });

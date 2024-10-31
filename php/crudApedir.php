@@ -13,12 +13,13 @@ $opcion = (isset($_POST['opcion'])) ? $_POST['opcion'] : '';
 switch($opcion){
     case 1:      
         //$consulta = "SELECT m.nombre AS marca, mo.nombre AS modelo, c.*, s.idStock, s.cantidad, s.cristalID 
-        $consulta = "SELECT m.nombre AS marca, mo.nombre AS modelo, c.*, s.idStock, s.aPedir, s.cristalID
+        $consulta = "SELECT m.nombre AS marca, mo.nombre AS modelo, c.*, s.idStock, s.aPedir, s.cristalID, (s.aPedir * p.totalSinIva) AS precioFinal
         FROM stock s
         INNER JOIN cristal c ON c.idCristal = s.cristalID
         INNER JOIN modelo mo ON mo.idModelo = c.modeloID
         INNER JOIN marca m ON m.idMarca = mo.marcaID
-        WHERE s.aPedir > 0";
+        INNER JOIN precio p ON c.idCristal = p.cristalID
+        WHERE s.aPedir > 0 AND p.listaPrecioID = 8";
         /*WHERE s.cantidad < 0";*/
         $resultado = $conexion->prepare($consulta);
         $resultado->execute();        
@@ -32,6 +33,18 @@ switch($opcion){
         break;
     case 3:    
         $consulta = "UPDATE stock SET aPedir='$aPedir' WHERE cristalID='$cristalID'";	
+        $resultado = $conexion->prepare($consulta);
+        $resultado->execute();    
+        $data=$resultado->fetchAll(PDO::FETCH_ASSOC);
+        break;
+    case 4:    
+        $consulta = "SELECT * FROM `marca` ORDER BY nombre;";	
+        $resultado = $conexion->prepare($consulta);
+        $resultado->execute();    
+        $data=$resultado->fetchAll(PDO::FETCH_ASSOC);
+        break;
+    case 5:    
+        $consulta = "UPDATE stock SET aPedir=0 WHERE idStock='$idStock'";	
         $resultado = $conexion->prepare($consulta);
         $resultado->execute();    
         $data=$resultado->fetchAll(PDO::FETCH_ASSOC);

@@ -18,6 +18,7 @@
                             <th>Lado</th>  
                             <th>Color</th>
                             <th>Cantidad</th>
+                            <th>Precio Final</th>
                             <th>Acciones</th>
                         </tr>
                     </thead>
@@ -46,37 +47,6 @@
                         <div class="input-group mb-3">
                             <select name="marca" id="marca" class="form-select inputForm" required>
                                 <option value="">Marca</option>
-                                <option value="1">ALFA ROMEO</option>
-                                <option value="2">AUDI</option>
-                                <option value="3">BMW</option>
-                                <option value="4">CHERY</option>
-                                <option value="5">CHEVROLET</option>
-                                <option value="6">CITROEN</option>
-                                <option value="7">DAEWOO</option>
-                                <option value="8">DAIHATSU</option>
-                                <option value="9">DODGE/CHRYSLER</option>
-                                <option value="10">FIAT</option>
-                                <option value="11">FORD</option>
-                                <option value="12">HONDA</option>
-                                <option value="13">HYUNDAI</option>
-                                <option value="14">KIA-ASIA</option>
-                                <option value="15">MAZDA</option>
-                                <option value="16">MERCEDES BENZ</option>
-                                <option value="17">MITSUBISHI</option>
-                                <option value="18">NISSAN</option>
-                                <option value="19">OPEL</option>
-                                <option value="20">PEUGEOT</option>
-                                <option value="21">RENAULT</option>
-                                <option value="22">ROVER</option>
-                                <option value="23">SCANIA</option>
-                                <option value="24">SEAT</option>
-                                <option value="25">SMART</option>
-                                <option value="26">SSANG YONG</option>
-                                <option value="27">SUBARU</option>
-                                <option value="28">SUZUKI</option>
-                                <option value="29">TOYOTA</option>
-                                <option value="30">VOLKSWAGEN</option>
-                                <option value="31">VOLVO</option>
                             </select>
                         </div>
                     </div>
@@ -205,10 +175,10 @@
     </div>
     <!-- End of Page Wrapper -->
 
-    <!-- Scroll to Top Button-->
+    <!-- Scroll to Top Button
     <a class="scroll-to-top rounded" href="#page-top">
         <i class="fas fa-angle-up"></i>
-    </a>
+    </a>-->
 
     <!-- Logout Modal-->
     <div class="modal fade" id="logoutModal" tabindex="-1" aria-hidden="true">
