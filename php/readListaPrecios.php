@@ -13,90 +13,6 @@ $opcion = (isset($_POST['opcion'])) ? $_POST['opcion'] : '';
 
 switch($opcion){
 	/*--------------Cargar Tablas--------------*/
-    case "asnm":
-		/*$consulta = "SELECT * FROM laCaja";*/
-		/* --- Allianz / Sure / Nacion / Mapfre ---  */
-		$consulta = "SELECT m.nombre AS marca, mo.nombre AS modelo, c.*, p.* 
-		FROM cristal c
-		INNER JOIN modelo mo ON mo.idModelo = c.modeloID
-		INNER JOIN marca m ON m.idMarca = mo.marcaID
-		INNER JOIN precio p ON c.idCristal = p.cristalID
-		INNER JOIN empresaprecio ep ON p.idPrecio = ep.precioID
-		WHERE ep.empresaID = 12 AND c.estado = 'Activo'";
-		$resultado = $conexion->prepare($consulta);
-		$resultado->execute();        
-		$data=$resultado->fetchAll(PDO::FETCH_ASSOC);
-		break;
-	case "comun":
-		/*$consulta = "SELECT * FROM glasscom";*/
-		/* --- Comun ---  */
-		$consulta = "SELECT m.nombre AS marca, mo.nombre AS modelo, c.*, p.* 
-		FROM cristal c
-		INNER JOIN modelo mo ON mo.idModelo = c.modeloID
-		INNER JOIN marca m ON m.idMarca = mo.marcaID
-		INNER JOIN precio p ON c.idCristal = p.cristalID
-		INNER JOIN empresaprecio ep ON p.idPrecio = ep.precioID
-		WHERE ep.empresaID = 2 AND c.estado = 'Activo'";
-		$resultado = $conexion->prepare($consulta);
-		$resultado->execute();        
-		$data=$resultado->fetchAll(PDO::FETCH_ASSOC);
-		break;
-	case "fedPat":
-		/*$consulta = "SELECT * FROM fedPat";*/
-		/* --- FedPat ---  */
-		$consulta = "SELECT m.idMarca, m.nombre AS marca, mo.nombre AS modelo, c.*, p.* 
-		FROM cristal c
-		INNER JOIN modelo mo ON mo.idModelo = c.modeloID
-		INNER JOIN marca m ON m.idMarca = mo.marcaID
-		INNER JOIN precio p ON c.idCristal = p.cristalID
-		INNER JOIN listaPrecio lp ON p.listaPrecioID = lp.idListaPrecio
-		WHERE lp.idListaPrecio = 1 AND p.estado = 'Activo'";
-		$resultado = $conexion->prepare($consulta);
-		$resultado->execute();        
-		$data=$resultado->fetchAll(PDO::FETCH_ASSOC);
-		break;
-	case "laCaja":
-		/*$consulta = "SELECT * FROM comun";*/
-		/* --- La Caja ---  */
-		$consulta = "SELECT m.nombre AS marca, mo.nombre AS modelo, c.*, p.* 
-		FROM cristal c
-		INNER JOIN modelo mo ON mo.idModelo = c.modeloID
-		INNER JOIN marca m ON m.idMarca = mo.marcaID
-		INNER JOIN precio p ON c.idCristal = p.cristalID
-		INNER JOIN empresaprecio ep ON p.idPrecio = ep.precioID
-		WHERE ep.empresaID = 5 AND c.estado = 'Activo'";
-		$resultado = $conexion->prepare($consulta);
-		$resultado->execute();        
-		$data=$resultado->fetchAll(PDO::FETCH_ASSOC);
-		break;
-	case "lss":
-		/*$consulta = "SELECT * FROM allianzSuraNacionMapfre";*/
-		/* --- La Segunda - Sancor ---  */
-		$consulta = "SELECT m.nombre AS marca, mo.nombre AS modelo, c.*, p.* 
-		FROM cristal c
-		INNER JOIN modelo mo ON mo.idModelo = c.modeloID
-		INNER JOIN marca m ON m.idMarca = mo.marcaID
-		INNER JOIN precio p ON c.idCristal = p.cristalID
-		INNER JOIN empresaprecio ep ON p.idPrecio = ep.precioID
-		WHERE ep.empresaID = 6 AND c.estado = 'Activo'";
-		$resultado = $conexion->prepare($consulta);
-		$resultado->execute();        
-		$data=$resultado->fetchAll(PDO::FETCH_ASSOC);
-		break;
-	case "scma":
-		/*$consulta = "SELECT * FROM laSegundaSancor";*/
-		/* --- San Cristobal - Mercantil Andina ---  */
-		$consulta = "SELECT m.nombre AS marca, mo.nombre AS modelo, c.*, p.* 
-		FROM cristal c
-		INNER JOIN modelo mo ON mo.idModelo = c.modeloID
-		INNER JOIN marca m ON m.idMarca = mo.marcaID
-		INNER JOIN precio p ON c.idCristal = p.cristalID
-		INNER JOIN empresaprecio ep ON p.idPrecio = ep.precioID
-		WHERE ep.empresaID = 10 AND c.estado = 'Activo'";
-		$resultado = $conexion->prepare($consulta);
-		$resultado->execute();        
-		$data=$resultado->fetchAll(PDO::FETCH_ASSOC);
-		break;
 	case "empresas":
 		$consulta = "SELECT idEmpresa, nombre AS empresa 
 			FROM empresa
@@ -111,7 +27,7 @@ switch($opcion){
 		FROM modelo mo
 		INNER JOIN cristal c ON mo.idModelo = c.modeloID
 		INNER JOIN precio p ON c.idCristal = p.cristalID
-		INNER JOIN listaPrecio lp ON p.listaPrecioID = lp.idListaPrecio
+		INNER JOIN listaprecio lp ON p.listaPrecioID = lp.idListaPrecio
 		INNER JOIN empresa e ON e.listaPrecioID = lp.idListaPrecio
 		WHERE mo.marcaID = $marcaID AND e.idEmpresa = '$idEmpresa' AND p.estado = 'Activo'
 		ORDER BY mo.nombre";
@@ -123,7 +39,7 @@ switch($opcion){
 		$consulta = "SELECT DISTINCT c.tipo 
 		FROM cristal c
 		INNER JOIN precio p ON c.idCristal = p.cristalID
-		INNER JOIN listaPrecio lp ON p.listaPrecioID = lp.idListaPrecio
+		INNER JOIN listaprecio lp ON p.listaPrecioID = lp.idListaPrecio
 		INNER JOIN empresa e ON e.listaPrecioID = lp.idListaPrecio
 		WHERE modeloID = $modeloID AND e.idEmpresa = '$idEmpresa' AND p.estado = 'Activo'
 		ORDER BY c.tipo";
@@ -131,21 +47,13 @@ switch($opcion){
 		$resultado->execute();        
 		$data=$resultado->fetchAll(PDO::FETCH_ASSOC);
 		break;
-	/*case "marcas":
-		$consulta = "SELECT m.idMarca, m.nombre AS marca 
-		FROM marca m
-		ORDER BY nombre";
-		$resultado = $conexion->prepare($consulta);
-		$resultado->execute();        
-		$data=$resultado->fetchAll(PDO::FETCH_ASSOC);
-		break;*/
 	case "listaDePrecio":
 		$consulta = "SELECT m.idMarca, m.nombre AS marca, mo.nombre AS modelo, c.*, p.* 
 		FROM cristal c
 		INNER JOIN modelo mo ON mo.idModelo = c.modeloID
 		INNER JOIN marca m ON m.idMarca = mo.marcaID
 		INNER JOIN precio p ON c.idCristal = p.cristalID
-		INNER JOIN listaPrecio lp ON p.listaPrecioID = lp.idListaPrecio
+		INNER JOIN listaprecio lp ON p.listaPrecioID = lp.idListaPrecio
 		INNER JOIN empresa e ON e.listaPrecioID = lp.idListaPrecio
 		WHERE e.idEmpresa = '$idEmpresa' AND p.estado = 'Activo'";
 		$resultado = $conexion->prepare($consulta);

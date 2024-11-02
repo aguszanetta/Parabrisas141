@@ -37,7 +37,7 @@ switch($opcion){
     case 1:
         $consulta = "SELECT t.idTurno, DATE(t.fechaHora) AS fecha, t.franjaHoraria, DATE_FORMAT(t.fechaHora, '%H:%i') AS hora, t.contacto, 
             t.telefono, t.dominio, CONCAT(ma.nombre, ' - ', mo.nombre) AS vehiculo, GROUP_CONCAT(tr.nombre) AS trabajos, 
-            e.nombre AS empresa, t.esPago, t.siniestro, t.numFactura, t.estado, em.nombre AS empleado
+            e.nombre AS empresa, t.esPago, t.tipoPago, t.siniestro, t.numFactura, t.estado, em.nombre AS empleado
             FROM turno t 
             INNER JOIN modelo mo ON mo.idModelo = t.modeloID 
             INNER JOIN marca ma ON ma.idMarca = mo.marcaID 
@@ -227,7 +227,7 @@ switch($opcion){
         /* --- Turno + Marca + Cristales --- */
         $consulta="SELECT DISTINCT m.marcaID, m.idModelo, m.nombre, t.*, GROUP_CONCAT(c.idCristal) AS idCristales, GROUP_CONCAT(c.codigo) AS codigos, GROUP_CONCAT(c.descripcion) AS descripciones, GROUP_CONCAT(td.esApedir) AS aPedir
         FROM turno t
-        INNER JOIN turnodetalle td ON t.idTurno = td.turnoID
+        LEFT JOIN turnodetalle td ON t.idTurno = td.turnoID
         INNER JOIN modelo m ON m.idModelo = t.modeloID
         INNER JOIN cristal c ON m.idModelo = c.modeloID
         WHERE t.idTurno = $idTurno";
@@ -308,7 +308,7 @@ switch($opcion){
         break;
     case 10: 
         $consulta = "SELECT p.totalSinIva, p.totalConIva FROM precio p 
-        INNER JOIN listaPrecio lp ON lp.idListaPrecio = p.listaPrecioID
+        INNER JOIN listaprecio lp ON lp.idListaPrecio = p.listaPrecioID
         INNER JOIN empresa e ON lp.idListaPrecio = e.listaPrecioID
         WHERE (p.cristalID = '$cristalID') AND (e.idEmpresa = '$empresaID');";
         $resultado = $conexion->prepare($consulta);
@@ -317,7 +317,7 @@ switch($opcion){
         break;
     case 11:
         $consulta = "SELECT p.totalSinIva, p.totalConIva, p.cristalID FROM precio p 
-        INNER JOIN listaPrecio lp ON lp.idListaPrecio = p.listaPrecioID
+        INNER JOIN listaprecio lp ON lp.idListaPrecio = p.listaPrecioID
         INNER JOIN empresa e ON lp.idListaPrecio = e.listaPrecioID
         WHERE p.cristalID IN ($idCristales) AND (e.idEmpresa = '$empresaID');";
         $resultado = $conexion->prepare($consulta);
@@ -391,13 +391,13 @@ switch($opcion){
         $data=$resultado->fetchAll(PDO::FETCH_ASSOC);
         break;
     case 17:
-        $consulta = "SELECT * FROM empresa;";
+        $consulta = "SELECT * FROM empresa ORDER BY nombre;";
         $resultado = $conexion->prepare($consulta);
         $resultado->execute();        
         $data=$resultado->fetchAll(PDO::FETCH_ASSOC);
         break;
     case 18:
-        $consulta = "SELECT * FROM listaPrecio";
+        $consulta = "SELECT * FROM listaprecio";
         $resultado = $conexion->prepare($consulta);
         $resultado->execute();        
         $data=$resultado->fetchAll(PDO::FETCH_ASSOC);

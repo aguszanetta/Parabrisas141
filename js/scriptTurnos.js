@@ -1,13 +1,9 @@
 
 $(document).ready(function() {
     window.jsPDF = window.jspdf.jsPDF;
-    //import jsPDF from './';
-    //import { jsPDF } from "jspdf";
-    //import autoTable from 'jspdf-autotable'
-    //window.jspdf.autotable = window.jspdf.autotable.jspdf.autotable; 
     var tipoForm ='';
     var idTurno = '';
-    const fechaHoy = new Date();
+    const fecha = moment(new Date()).format("DD/MM/YYYY");
 
     arrayCristales = [];
     arrayCristal = [];
@@ -43,37 +39,69 @@ $(document).ready(function() {
             { "data": "hora", "sortable": false },
             { "data": "contacto", "sortable": false },
             { "data": "telefono", "sortable": false },
-            { "data": "dominio", "sortable": false },
             { "data": "vehiculo", "sortable": false },
+            { "data": "dominio", "sortable": false },
             { "data": "trabajos", 
               "sortable": false, 
               "render": function(data){
-                trabajos = data.split(',')
-                todos = ''
-                for (i = 0; i < trabajos.length; i++) {
-                  todos = todos + "<li class='list-group-item p-0 bg-transparent'>" + trabajos[i] + " </li>"
+                if(data){
+                  trabajos = data.split(',')
+                  todos = ''
+                  for (i = 0; i < trabajos.length; i++) {
+                    todos = todos + "<li class='list-group-item p-0 bg-transparent'>" + trabajos[i] + " </li>"
+                  }
+                  return "<ul class='list-group list-group-flush text-center'>" + todos + "</ul>"
+                } else {
+                  return ""
                 }
-                return "<ul class='list-group list-group-flush text-center'>" + todos + "</ul>"
               }
             },
-            { "defaultContent": "",  "visible": false , "sortable": false },
-            { "defaultContent": "",  "visible": false , "sortable": false },
             { "data": "empresa", "sortable": false },
             { "data": "siniestro", "visible": true , "sortable": false },
-            { "data": "numFactura", "visible": true , "sortable": false },
+            { "data": {"data": "idTurno"},  
+              "visible": false , 
+              "sortable": false,
+              "render": function(data){
+                grabado = ((data.trabajos).split('')).includes('Grabado')
+                if(grabado){
+                  return "Si"
+                } else {
+                  return ""
+                }
+              } 
+            },
+            { "data": {"data": "idTurno"},  
+              "visible": false , 
+              "sortable": false,
+              "render": function(data){
+                polarizado = ((data.trabajos).split('')).includes('Polarizado')
+                if(polarizado){
+                  return "Si"
+                } else {
+                  return ""
+                }
+              } 
+            },
             { "data": "esPago", "sortable": false },
-            { "defaultContent": "",  "visible": false , "sortable": false },
+            { "data": "tipoPago",  "visible": false , "sortable": false },
+            { "data": "numFactura", "visible": true , "sortable": false },
             { "data": "esAPedir", 
               "sortable": false,
               "render": function(data){
-                aPedir = data.split(',')
-                todos = ''
-                for (i = 0; i < aPedir.length; i++) {
-                  todos = todos + "<li class='list-group-item p-0 bg-transparent'>" + aPedir[i] + " </li>"
+                if(data){
+                  aPedir = data.split(',')
+                  todos = ''
+                  for (i = 0; i < aPedir.length; i++) {
+                    todos = todos + "<li class='list-group-item p-0 bg-transparent'>" + aPedir[i] + " </li>"
+                  }
+                  return "<ul class='list-group list-group-flush text-center'>" + todos + "</ul>"
+                } else {
+                  return ""
                 }
-                return "<ul class='list-group list-group-flush text-center'>" + todos + "</ul>"
               }
             },
+            { "defaultContent": "",  "visible": false , "sortable": false },
+            { "defaultContent": "",  "visible": false , "sortable": false },
             { "data": "empleado", "sortable": false },
             { "data": "estado", "sortable": false, "visible": false },
             {
@@ -179,7 +207,7 @@ $(document).ready(function() {
             dir: 'desc'
         },
         searchBuilder: {
-          columns: [1, 6, 9, 13, 14]
+          columns: [1, 7, 9, 15, 20]
         },
         dom: 'QBfrtilp',
         buttons: [
@@ -207,16 +235,17 @@ $(document).ready(function() {
               },
               customize: function(xlsx) {
                 var sheet = xlsx.xl.worksheets['sheet1.xml'];
-                $('row c[r^="H"]', sheet).attr('s', '55');
-                $('row c[r="H2"]', sheet).attr('s', '2');
+                $('row c[r^="F"]', sheet).attr('s', '55');
+                $('row c[r="F2"]', sheet).attr('s', '2');
               },
               exportOptions: {
-                  columns: [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 14, 15, 16, 17],
+              //Turno	Contacto	Telefono	Vehiculo	Dominio	Trabajos	Compañía	Graba	Polariza	Pago	Tipo de Pago	Foto Antes	Foto Despues	Realizado Por
+                  columns: [2, 4, 5, 6, 7, 8, 9, 11, 12, 13, 14, 17, 18, 19],
                   format: {
                     body: function(data, row, column, node) {
                         tempDiv = document.createElement('div');
                         tempDiv.innerHTML = data;
-                        if (column === 7) {
+                        if (column === 5) {
                           trabajosLi = tempDiv.getElementsByTagName("li")
                           liArray = [];
                           for (i = 0; i < trabajosLi.length; i++) {
@@ -229,7 +258,7 @@ $(document).ready(function() {
                     }
                 }
               },
-              title: 'Turnos Parabrisas 141',
+              title: 'Turnos Parabrisas 141 - '+ fecha,
               text: '<i class="fas fa-file-excel"></i> ',
               titleAttr: 'Exportar a Excel',
               className: 'btn btn-success'
@@ -237,25 +266,30 @@ $(document).ready(function() {
             {
                 extend: 'pdfHtml5',
                 exportOptions: {
-                    columns: [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 14, 15, 16, 17],
+                //Turno	Contacto	Telefono	Vehiculo	Dominio	Trabajos	Compañía	Graba	Polariza	Pago	Tipo de Pago	Foto Antes	Foto Despues	Realizado Por
+                    columns: [2, 4, 5, 6, 7, 8, 9, 11, 12, 13, 14, 17, 18, 19],
                     format: {
                         body: function(data, row, column, node) {
                             tempDiv = document.createElement('div');
                             tempDiv.innerHTML = data;
-                            if (column === 7) {
+                            if (column === 5) {
                               trabajosLi = tempDiv.getElementsByTagName("li")
                               liArray = [];
                               for (i = 0; i < trabajosLi.length; i++) {
                                   if (trabajosLi[i].innerText.length) { liArray.push((trabajosLi[i].innerText)); }
                               }
                               return liArray.join("\n")
+                            } else if(column === 9){
+                              return ""
+                            } else if (column === 13){
+                              return ""
                             } else {
                               return tempDiv.innerText
                             }
                         }
                     }
                 },
-                title: 'Turnos Parabrisas 141',
+                title: 'Turnos Parabrisas 141 - '+ fecha,
                 text: '<i class="fas fa-file-pdf"></i> ',
                 titleAttr: 'Exportar a PDF',
                 className: 'btn btn-danger',
@@ -496,31 +530,36 @@ $(document).ready(function() {
           $("#modelo").val(datos[0][0].idModelo);
   
           //CARGAR DESPLEGABLE CRISTAL
-          idCristal = datos[0][0].idCristales.split(',')
-          codigos = datos[0][0].codigos.split(',')
-          descripciones = datos[0][0].descripciones.split(',')
-          for (let i = 0; i < codigos.length; i++) {
-            $("#cristal").append($('<option>', {value: idCristal[i], text: codigos[i] + " — " + descripciones[i]}));
+          if(datos[0][0].idCristales){
+            idCristal = datos[0][0].idCristales.split(',')
+            codigos = datos[0][0].codigos.split(',')
+            descripciones = datos[0][0].descripciones.split(',')
+            for (let i = 0; i < codigos.length; i++) {
+              $("#cristal").append($('<option>', {value: idCristal[i], text: codigos[i] + " — " + descripciones[i]}));
+            }
           }
-  
+
           //CARGAR TABLA CRISTALES
           arrayCristales = []
-          for (let i = 0; i < datos[2].length; i++) {
-          arrayCristal = []
-          arrayCristal.push("'"+datos[2][i].otro+"'", datos[2][i].importeSinIva, datos[2][i].importeConIva, datos[2][i].cantidad, datos[2][i].cristalID, "'"+datos[2][i].esAPedir+"'");
-          arrayCristales.push(arrayCristal);
-          tablaCristales.row.add([
-              datos[2][i].codigo,
-              datos[2][i].descripcion,
-              datos[2][i].cantidad,
-              datos[2][i].otro,
-              datos[2][i].importeSinIva,
-              datos[2][i].importeConIva,
-              datos[2][i].cristalID,
-              datos[2][i].esAPedir
-          ]).draw(false);
+          if(datos[2]){
+            for (let i = 0; i < datos[2].length; i++) {
+            arrayCristal = []
+            arrayCristal.push("'"+datos[2][i].otro+"'", datos[2][i].importeSinIva, datos[2][i].importeConIva, datos[2][i].cantidad, datos[2][i].cristalID, "'"+datos[2][i].esAPedir+"'");
+            arrayCristales.push(arrayCristal);
+            tablaCristales.row.add([
+                datos[2][i].codigo,
+                datos[2][i].descripcion,
+                datos[2][i].cantidad,
+                datos[2][i].otro,
+                datos[2][i].importeSinIva,
+                datos[2][i].importeConIva,
+                datos[2][i].cristalID,
+                datos[2][i].esAPedir
+            ]).draw(false);
+            }
+            $("#cristales").attr('value', JSON.stringify(arrayCristales))
           }
-          $("#cristales").attr('value', JSON.stringify(arrayCristales))
+  
   
           //TRABAJO
           arrayTrabajos = []

@@ -24,17 +24,19 @@
                             <th>Hora</th>
                             <th>Contacto</th>
                             <th>Telefono</th>
-                            <th>Dominio</th>
                             <th>Vehiculo</th>
+                            <th>Dominio</th>
                             <th>Trabajos</th>
-                            <th>Graba</th>
-                            <th>Polariza</th>
                             <th>Compañia</th>
                             <th>Siniestro</th>
+                            <th>Graba</th>
+                            <th>Polariza</th>
+                            <th>Pago</th>
+                            <th>Tipo de Pago</th>
                             <th>N° Factura</th>
-                            <th>Pagó</th>
-                            <th>Tipo Pago</th>
                             <th>Cristales A Pedir</th>
+                            <th>Foto Antes</th>
+                            <th>Foto Despues</th>
                             <th>Realizado Por</th>
                             <th>Estado</th>
                             <th>Acciones</th>

@@ -75,7 +75,6 @@ $(document).ready(function() {
                 }).then( function(){
                     //Return Info sobre Marcas Nuevas - Modelos Nuevos- Cristales Nuevos - Cristales Baja
                     $('#loader').addClass('hidden')
-                    console.log(data)
                     datos = JSON.parse(data)
                     $("#info").text("Info - " + $("#listaPrecio :selected").text())
 

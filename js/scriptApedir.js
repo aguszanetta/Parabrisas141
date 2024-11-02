@@ -1,6 +1,5 @@
 $(document).ready(function() {
     fecha = moment(new Date()).format("DD/MM/YYYY");
-    fechaFalsa123 = "19/10/2024";
 
     $.ajax({
         type: "POST",
@@ -132,7 +131,7 @@ $(document).ready(function() {
         cristalID = $("#cristal option:selected").val();
         aPedir = $("#cantidad").val();
         $.ajax({
-            url: "crudApedir.php",
+            url: "crudAPedir.php",
             type: "POST",
             datatype: "json",
             data: { cristalID: cristalID, aPedir: aPedir, opcion: 3 },
@@ -169,7 +168,7 @@ $(document).ready(function() {
         idStock = $("#idStock").val();
         
         $.ajax({
-            url: "crudApedir.php",
+            url: "crudAPedir.php",
             type: "POST",
             datatype: "json",
             data: { idStock: idStock, aPedir: aPedir, opcion: 2 },
