@@ -280,9 +280,18 @@ $(document).ready(function() {
                               }
                               return liArray.join("\n")
                             } else if(column === 9){
-                              return ""
+                              esPago = tempDiv.getElementsByTagName("li")
+                              if(data == "Si"){
+                                return data
+                              } else {
+                                return ""
+                              }
                             } else if (column === 13){
-                              return ""
+                              if(data == "Sin Asignar"){
+                                return ""
+                              } else {
+                                return tempDiv.innerText
+                              }
                             } else {
                               return tempDiv.innerText
                             }
