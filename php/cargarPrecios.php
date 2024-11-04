@@ -112,6 +112,7 @@
 <script src="../libraries/jquery/jquery-3.6.4.min.js"></script>
 
 <!-- Custom Script -->
+<script src="../js/scriptPanel.js"></script>
 <script src="../js/template.js"></script>
 <script src="../js/hoverable-collapse.js"></script>
 <script type="text/javascript" src="../js/scriptCargarPrecios.js"></script>

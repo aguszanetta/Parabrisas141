@@ -11,16 +11,17 @@ $cristalID = (isset($_POST['cristalID'])) ? $_POST['cristalID'] : '';
 $opcion = (isset($_POST['opcion'])) ? $_POST['opcion'] : '';
 
 switch($opcion){
-    case 1:      
-        //$consulta = "SELECT m.nombre AS marca, mo.nombre AS modelo, c.*, s.idStock, s.cantidad, s.cristalID 
-        $consulta = "SELECT m.nombre AS marca, mo.nombre AS modelo, c.*, s.idStock, s.aPedir, s.cristalID, (s.aPedir * p.totalSinIva) AS precioFinal
+    case 1:
+        $consulta = "SELECT m.nombre AS marca, mo.nombre AS modelo, c.*, s.idStock, s.aPedir, s.cristalID,
+        IFNULL((SELECT p.totalSinIva * s.aPedir
+        FROM precio p
+        WHERE p.listaPrecioID = 8 AND p.cristalID = c.idCristal),'Sin Precio Prop.') 
+        AS precioFinal
         FROM stock s
         INNER JOIN cristal c ON c.idCristal = s.cristalID
         INNER JOIN modelo mo ON mo.idModelo = c.modeloID
         INNER JOIN marca m ON m.idMarca = mo.marcaID
-        INNER JOIN precio p ON c.idCristal = p.cristalID
-        WHERE s.aPedir > 0 AND p.listaPrecioID = 8";
-        /*WHERE s.cantidad < 0";*/
+        WHERE s.aPedir > 0;";
         $resultado = $conexion->prepare($consulta);
         $resultado->execute();        
         $data=$resultado->fetchAll(PDO::FETCH_ASSOC);

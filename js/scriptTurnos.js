@@ -3,7 +3,7 @@ $(document).ready(function() {
     window.jsPDF = window.jspdf.jsPDF;
     var tipoForm ='';
     var idTurno = '';
-    const fecha = moment(new Date()).format("DD/MM/YYYY");
+    const fechaHoy = new Date();
 
     arrayCristales = [];
     arrayCristal = [];
@@ -258,7 +258,10 @@ $(document).ready(function() {
                     }
                 }
               },
-              title: 'Turnos Parabrisas 141 - '+ fecha,
+              title: function(){
+                var fechas = tablaTurnos.column(1).data().toArray();
+                return 'Turnos Parabrisas 141 - '+ moment(fechas[0]).format('DD/MM/YYYY');
+              },
               text: '<i class="fas fa-file-excel"></i> ',
               titleAttr: 'Exportar a Excel',
               className: 'btn btn-success'
@@ -298,7 +301,10 @@ $(document).ready(function() {
                         }
                     }
                 },
-                title: 'Turnos Parabrisas 141 - '+ fecha,
+                title: function(){
+                  var fechas = tablaTurnos.column(1).data().toArray();
+                  return 'Turnos Parabrisas 141 - '+ moment(fechas[0]).format('DD/MM/YYYY');
+                },
                 text: '<i class="fas fa-file-pdf"></i> ',
                 titleAttr: 'Exportar a PDF',
                 className: 'btn btn-danger',
@@ -816,7 +822,7 @@ $(document).ready(function() {
       var numFactura = $("#numFactura").val();
       var siniestro = $("#siniestro").val();
       var empleadoID = $("#empleado").val()
-      
+
       if(tipoForm == 'alta'){
         $.ajax({
             url: "crudTurnos.php",
@@ -974,7 +980,7 @@ $(document).ready(function() {
       }
     });
   
-    /*$(document).on("change", "#marca", function() {
+    $(document).on("change", "#marca", function() {
       marcaID = $("#marca option:selected").val();
       $("#modelo").html("<option value=>Modelo</option>");
       $("#cristal").html("<option value=>Cristal</option>");
@@ -1013,11 +1019,10 @@ $(document).ready(function() {
               }
           });
       }
-    });*/
+    });
   
     $(document).on("change", "#cristal", function() {
       idCristal = $("option:selected", this).val();
-      
       if(idCristal){
         $.ajax({
           type: "POST",
@@ -1175,26 +1180,24 @@ $(document).ready(function() {
           otro = $("#otro").prop("checked")
            
           if (!otro || (otro && $("#importe").val())) {
-              cantidadAPedir = cantidadStock - cantidad;
-              //arrayStock = [];
-              if(cantidadAPedir < 0){
-                //arrayStock.push(idCristal, (cantidadAPedir*-1))
-                cristalesAPedir.push([idCristal, (cantidadAPedir*-1)])
-                $("#cristalesAPedir").attr('value', JSON.stringify(cristalesAPedir))
-                esAPedir = 'Sí'
-              }else{
-                esAPedir = 'No'
-              }
-  
               if (otro) {
                   importeTotalSinIva = ($("#importe").val() * cantidad).toFixed(2);
                   importeTotalConIva = (($("#importe").val() * 1.21) * cantidad).toFixed(2);
                   cristalOtro = 'Sí'
                 } else {
                   importeArray = await cargarImporte(idCristal, idEmpresa, cantidad);
-                  importeTotalSinIva=importeArray[0];
-                  importeTotalConIva=importeArray[1];
-                  cristalOtro = 'No'
+                  if(importeArray.length > 0){
+                    importeTotalSinIva=importeArray[0];
+                    importeTotalConIva=importeArray[1];
+                    cristalOtro = 'No'
+                  } else{
+                    Swal.fire({
+                      title: '¡Cuidado!',
+                      text: 'No se encontró precio de este cristal para la aseguradora ingresada.',
+                      icon: 'warning'
+                    })
+
+                  }
               }
               
               arrayCristal = [];
@@ -1202,28 +1205,41 @@ $(document).ready(function() {
               if ($("#cristales").val()) {
                   arrayCristales = JSON.parse($("#cristales").val())
               }
-              arrayCristal.push("'"+cristalOtro+"'", importeTotalSinIva, importeTotalConIva, cantidad, idCristal, "'"+esAPedir+"'");
-              arrayCristales.push(arrayCristal);
-              $("#cristales").attr('value', JSON.stringify(arrayCristales))
-              tablaCristales.row.add([
-                  codigo,
-                  descripcion,
-                  cantidad,
-                  cristalOtro,
-                  importeTotalSinIva,
-                  importeTotalConIva,
-                  idCristal,
-                  esAPedir
-              ]).draw(false);
-              $("#importe").val('')
-              $("#colImporte").hide();
-              $("#otro").prop("checked", false)
-              //$("#cristal").val(0).trigger('change');
-              $("#cristal").val(0);
-              $("#cantidad").val('')
-              //$("#cristal").prop("disabled", false);
-              $("#banderaCristales").attr('value', "cambio")
-              $("#alertaCristal").hide()
+              if(importeArray.length > 0){
+                /*--Cargar Array aPedir--*/
+                cantidadAPedir = cantidadStock - cantidad;
+                if(cantidadAPedir < 0){
+                  cristalesAPedir.push([idCristal, (cantidadAPedir*-1)])
+                  $("#cristalesAPedir").attr('value', JSON.stringify(cristalesAPedir))
+                  esAPedir = 'Sí'
+                }else{
+                  esAPedir = 'No'
+                }
+                /*----------------------*/
+
+                arrayCristal.push("'"+cristalOtro+"'", importeTotalSinIva, importeTotalConIva, cantidad, idCristal, "'"+esAPedir+"'");
+                arrayCristales.push(arrayCristal);
+                $("#cristales").attr('value', JSON.stringify(arrayCristales))
+                tablaCristales.row.add([
+                    codigo,
+                    descripcion,
+                    cantidad,
+                    cristalOtro,
+                    importeTotalSinIva,
+                    importeTotalConIva,
+                    idCristal,
+                    esAPedir
+                ]).draw(false);
+                $("#importe").val('')
+                $("#colImporte").hide();
+                $("#otro").prop("checked", false)
+                //$("#cristal").val(0).trigger('change');
+                $("#cristal").val(0);
+                $("#cantidad").val('')
+                //$("#cristal").prop("disabled", false);
+                $("#banderaCristales").attr('value', "cambio")
+                $("#alertaCristal").hide()
+              }
           } else {
               Swal.fire({
                   title: 'Importe vacío',
@@ -1401,10 +1417,14 @@ $(document).ready(function() {
               $('#loader').addClass('hidden')
           },
           success: function(data) {
-            var datos = JSON.parse(data);     
-            importeTotalSinIva = datos[0].totalSinIva * cantidad;
-            importeTotalConIva = datos[0].totalConIva * cantidad;
-            resolve([importeTotalSinIva.toFixed(2), importeTotalConIva.toFixed(2)]);
+            var datos = JSON.parse(data);
+            if(datos.length > 0){
+              importeTotalSinIva = datos[0].totalSinIva * cantidad;
+              importeTotalConIva = datos[0].totalConIva * cantidad;
+              resolve([importeTotalSinIva.toFixed(2), importeTotalConIva.toFixed(2)]);
+            } else {
+              resolve([])
+            }
           }
       })
   });

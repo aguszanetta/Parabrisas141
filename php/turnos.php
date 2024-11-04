@@ -409,7 +409,7 @@
 <script src="../js/template.js"></script>
 <script src="../js/hoverable-collapse.js"></script>
 <script type="text/javascript" src="../js/scriptTurnos.js"></script>
-<script type="text/javascript" src="../js/script.js"></script>
+<!--<script type="text/javascript" src="../js/script.js"></script>-->
 
 <!-- SweetAlert2 -->
 <script src="../libraries/sweetalert2/sweetalert2.all.min.js"></script>
