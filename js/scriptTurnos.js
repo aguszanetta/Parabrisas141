@@ -202,10 +202,10 @@ $(document).ready(function() {
             },
         },
         //responsive: "true",
-        order: {
-            data: 'fecha',
-            dir: 'desc'
-        },
+        order: [
+          [ 1, 'desc' ],  // Primero ordena por fecha en orden ascendente
+          [ 2, 'asc' ] 
+        ],
         searchBuilder: {
           columns: [1, 7, 9, 15, 20]
         },
@@ -259,7 +259,7 @@ $(document).ready(function() {
                 }
               },
               title: function(){
-                var fechas = tablaTurnos.column(1).data().toArray();
+                var fechas = tablaTurnos.column(1,  { search: 'applied' }).data().toArray();
                 return 'Turnos Parabrisas 141 - '+ moment(fechas[0]).format('DD/MM/YYYY');
               },
               text: '<i class="fas fa-file-excel"></i> ',
@@ -302,7 +302,7 @@ $(document).ready(function() {
                     }
                 },
                 title: function(){
-                  var fechas = tablaTurnos.column(1).data().toArray();
+                  var fechas = tablaTurnos.column(1, { search: 'applied' }).data().toArray();
                   return 'Turnos Parabrisas 141 - '+ moment(fechas[0]).format('DD/MM/YYYY');
                 },
                 text: '<i class="fas fa-file-pdf"></i> ',
@@ -463,6 +463,7 @@ $(document).ready(function() {
       //$("#rowArchivos").children().not("#wrapperArchivo").remove();
       $("#contentArchivos").empty();
       $("#alertaCristal").hide();
+      $("#cristalesAPedir").attr('value', '[]')
       idTurno = ''
     });
   

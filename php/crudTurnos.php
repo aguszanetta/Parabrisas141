@@ -295,7 +295,7 @@ switch($opcion){
         $data=$resultado->fetchAll(PDO::FETCH_ASSOC);
         break;
     case 8:
-        $consulta = "SELECT * FROM modelo WHERE marcaID='$marcaID';";
+        $consulta = "SELECT * FROM modelo WHERE marcaID='$marcaID' ORDER BY nombre;";
         $resultado = $conexion->prepare($consulta);
         $resultado->execute();        
         $data=$resultado->fetchAll(PDO::FETCH_ASSOC);
