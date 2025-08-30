@@ -35,9 +35,9 @@ $(document).ready(function() {
                   return moment(data, 'YYYY-MM-DD').format('DD-MM-YYYY');
                 }
             },
-            { "data": "franjaHoraria", "sortable": false },
-            { "data": "hora", "sortable": false },
-            { "data": "contacto", "sortable": false },
+            { "data": "franjaHoraria" },
+            { "data": "hora" },
+            { "data": "cliente", "sortable": false },
             { "data": "telefono", "sortable": false },
             { "data": "vehiculo", "sortable": false },
             { "data": "dominio", "sortable": false },
@@ -239,7 +239,7 @@ $(document).ready(function() {
                 $('row c[r="F2"]', sheet).attr('s', '2');
               },
               exportOptions: {
-              //Turno	Contacto	Telefono	Vehiculo	Dominio	Trabajos	Compañía	Graba	Polariza	Pago	Tipo de Pago	Foto Antes	Foto Despues	Realizado Por
+              //Turno	Cliente	Telefono	Vehiculo	Dominio	Trabajos	Compañía	Graba	Polariza	Pago	Tipo de Pago	Foto Antes	Foto Despues	Realizado Por
                   columns: [2, 4, 5, 6, 7, 8, 9, 11, 12, 13, 14, 17, 18, 19],
                   format: {
                     body: function(data, row, column, node) {
@@ -269,7 +269,7 @@ $(document).ready(function() {
             {
                 extend: 'pdfHtml5',
                 exportOptions: {
-                //Turno	Contacto	Telefono	Vehiculo	Dominio	Trabajos	Compañía	Graba	Polariza	Pago	Tipo de Pago	Foto Antes	Foto Despues	Realizado Por
+                //Turno	Cliente	Telefono	Vehiculo	Dominio	Trabajos	Compañía	Graba	Polariza	Pago	Tipo de Pago	Foto Antes	Foto Despues	Realizado Por
                     columns: [2, 4, 5, 6, 7, 8, 9, 11, 12, 13, 14, 17, 18, 19],
                     format: {
                         body: function(data, row, column, node) {
@@ -519,14 +519,13 @@ $(document).ready(function() {
         success: function(data) {
           datos = JSON.parse(data)
           fecha = datos[0][0].fechaHora
-          contacto = datos[0][0].contacto
-          $("#contacto").val(contacto);
           $("#fechaHora").val(fecha);
           if(datos[0][0].hora == "Mañana"){
             $("#franjaHoraria").val(1);
           }else{
             $("#franjaHoraria").val(2);
           }
+          $("#cliente").val(datos[0][0].clienteID);
           $("#telefono").val(datos[0][0].telefono);
           $("#dominio").val(datos[0][0].dominio);
           $("#empresa").val(datos[0][0].empresaID);
@@ -794,7 +793,7 @@ $(document).ready(function() {
     /*---------- FORMULARIO ----------*/
     $('#formTurno').submit(function(e){
       e.preventDefault();
-      var contacto = $("#contacto").val();
+      var clienteID = $("#cliente").val();
       var fechaHora = $("#fechaHora").val();
       var franjaHoraria = $("#franjaHoraria option:selected").text();
       var telefono = $("#telefono").val();
@@ -833,7 +832,6 @@ $(document).ready(function() {
               opcion: 2,
               fechaHora: fechaHora,
               franjaHoraria: franjaHoraria,
-              contacto: contacto,
               telefono: telefono,
               dominio: dominio,
               empresaID: empresa,
@@ -849,6 +847,7 @@ $(document).ready(function() {
               numFactura: numFactura,
               empleadoID: empleadoID,
               modeloID: modeloID,
+              clienteID:clienteID,
               cristalesAPedir: cristalesAPedir
             },
             success: function(data) {
@@ -890,7 +889,6 @@ $(document).ready(function() {
                   idTurno: idTurno,
                   fechaHora: fechaHora,
                   franjaHoraria: franjaHoraria,
-                  contacto: contacto,
                   telefono: telefono,
                   dominio: dominio,
                   empresaID: empresa,
@@ -906,6 +904,7 @@ $(document).ready(function() {
                   numFactura: numFactura,
                   empleadoID: empleadoID,
                   modeloID: modeloID,
+                  clienteID: clienteID,
                   banderaCristales: banderaCristales,
                   banderaTrabajos: banderaTrabajos,
                   cristalesAPedir: cristalesAPedir
@@ -940,7 +939,7 @@ $(document).ready(function() {
     });*/
   
   
-    /*-------CARGAR DESPLEGABLES COMP - MARCA - MODELO - CRISTAL-------*/
+    /*-------CARGAR DESPLEGABLES COMP - MARCA - MODELO - CRISTAL - CLIENTE-------*/
     
     $.ajax({
       type: "POST",
@@ -979,6 +978,24 @@ $(document).ready(function() {
               $("#marca").append("<option value=" + datos[i].idMarca + ">" + datos[i].nombre + "</option>");
           } 
       }
+    });
+
+    $.ajax({
+      type: "POST",
+      url: 'crudTurnos.php',
+      datatype:"json",    
+      data:  { opcion: 20 }, 
+      success: function(data) {
+          var datos = JSON.parse(data);
+          for (let i = 0; i < datos.length; i++) {
+              $("#cliente").append("<option value=" + datos[i].idCliente + " data-tel="+ datos[i].telefono +">" + datos[i].cliente + "</option>");
+          } 
+      }
+    });
+
+    $(document).on("change", "#cliente", function() {
+      telefono = $("#cliente option:selected").data('tel');
+      $("#telefono").val(telefono);
     });
   
     $(document).on("change", "#marca", function() {

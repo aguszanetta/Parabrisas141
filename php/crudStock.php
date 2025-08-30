@@ -25,6 +25,12 @@ switch($opcion){
         $resultado->execute();        
         $data=$resultado->fetchAll(PDO::FETCH_ASSOC);
         break;
+    case 3:    
+        $consulta = "UPDATE stock SET cantidad=0";	
+        $resultado = $conexion->prepare($consulta);
+        $resultado->execute();        
+        $data=$resultado->fetchAll(PDO::FETCH_ASSOC);
+        break;
 }
 
 print json_encode($data, JSON_UNESCAPED_UNICODE);

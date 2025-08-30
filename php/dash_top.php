@@ -106,6 +106,14 @@
                 </div>
             </li>
 
+             <!-- Nav Item - Charts -->
+             <li class="nav-item mb-1">
+                <a class="nav-link" href="clientes.php">
+                    <i class="fas fa-user"></i>
+                    <span class="menu-title" >Clientes</span>
+                </a>
+            </li>
+
             <!--<li class="nav-item mb-1">
                 <a class="nav-link collapsed" data-toggle="collapse" data-target="#collapseTwo" href="#" aria-expanded="true" aria-controls="collapseTwo">
                     <i class="fas fa-list-ol"></i>

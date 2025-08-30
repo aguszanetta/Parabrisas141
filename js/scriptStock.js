@@ -236,7 +236,15 @@ $(document).ready(function() {
                         $("#tablaStock_wrapper>.dtsb-searchBuilder").show()
                     }
                 }
-              },
+            },
+            {
+                titleAttr: 'Limpiar A Pedir',
+                text: '<i class="fas fa-trash"></i> ',
+                className: 'btn btn-warning btn-icon br7px',
+                action: function(e, dt, node, config) {
+                    EliminarTodoStock();
+                }
+            }
         ]
     });
 
@@ -362,3 +370,33 @@ $(document).ready(function() {
 	});
  
 });
+
+function EliminarTodoStock(){
+    Swal.fire({
+        title: '¿Seguro?',
+        text: "¿Estas seguro de eliminar todos los cristales en stock?",
+        icon: 'warning',
+        showCancelButton: true,
+        confirmButtonColor: '#3085d6',
+        cancelButtonColor: '#d33',
+        confirmButtonText: 'Sí, borralo',
+        cancelButtonText: "Cancelar"
+    }).then((result) => {
+        if (result.isConfirmed) {
+            $.ajax({
+                url: "crudStock.php",
+                type: "POST",
+                datatype: "json",
+                data: { opcion: 3 },
+                success: function() {
+                    tablaStock.ajax.reload()
+                }
+            });
+            Swal.fire(
+                '¡Borrado!',
+                'Los registros has sido borrados.',
+                'success'
+            )
+        }
+    })
+}

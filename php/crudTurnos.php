@@ -6,7 +6,7 @@ $conexion = $objeto->Conectar();
 $idTurno = (isset($_POST['idTurno'])) ? $_POST['idTurno'] : '';
 $fechaHora = (isset($_POST['fechaHora'])) ? $_POST['fechaHora'] : '';
 $franjaHoraria = (isset($_POST['franjaHoraria'])) ? $_POST['franjaHoraria'] : '';
-$contacto = (isset($_POST['contacto'])) ? $_POST['contacto'] : '';
+$clienteID = (isset($_POST['clienteID'])) ? $_POST['clienteID'] : '';
 $telefono = (isset($_POST['telefono'])) ? $_POST['telefono'] : '';
 $dominio = (isset($_POST['dominio'])) ? $_POST['dominio'] : '';
 $empresaID = (isset($_POST['empresaID'])) ? $_POST['empresaID'] : '';
@@ -35,7 +35,7 @@ $opcion = (isset($_POST['opcion'])) ? $_POST['opcion'] : '';
 
 switch($opcion){
     case 1:
-        $consulta = "SELECT t.idTurno, DATE(t.fechaHora) AS fecha, t.franjaHoraria, DATE_FORMAT(t.fechaHora, '%H:%i') AS hora, t.contacto, 
+        $consulta = "SELECT t.idTurno, DATE(t.fechaHora) AS fecha, t.franjaHoraria, DATE_FORMAT(t.fechaHora, '%H:%i') AS hora, cl.razonSocial AS cliente, 
             t.telefono, t.dominio, CONCAT(ma.nombre, ' - ', mo.nombre) AS vehiculo, GROUP_CONCAT(tr.nombre) AS trabajos, 
             e.nombre AS empresa, t.esPago, t.tipoPago, t.siniestro, t.numFactura, t.estado, em.nombre AS empleado
             FROM turno t 
@@ -45,6 +45,7 @@ switch($opcion){
             INNER JOIN trabajo tr ON trt.trabajoID = tr.idTrabajo 
             INNER JOIN empresa e ON e.idEmpresa = t.empresaID 
             INNER JOIN empleado em ON em.idEmpleado = t.empleadoID
+            INNER JOIN cliente cl ON cl.idCliente = t.clienteID
             WHERE t.estado = 'Activo' OR t.estado = 'Finalizado'
             GROUP BY t.idTurno 
             ORDER BY t.fechaHora DESC;";
@@ -76,8 +77,8 @@ switch($opcion){
     case 2:
         /* --- Insertar Turno --- */
         $consulta = "INSERT INTO turno 
-        (fechaHora, franjaHoraria, contacto, telefono, dominio, siniestro, observacion, esPago, tipoPago, fechaPago, numFactura, importeTrabajo, fechaEntrega, estado, modeloID, empresaID, empleadoID) 
-        VALUES('$fechaHora', '$franjaHoraria', '$contacto', '$telefono', '$dominio', '$siniestro', '$observacion', '$esPago', '$tipoPago', '$fechaPago', '$numFactura', '$importeTrabajo', '$fechaEntrega', 'Activo', '$modeloID', '$empresaID', '$empleadoID');";
+        (fechaHora, franjaHoraria, telefono, dominio, siniestro, observacion, esPago, tipoPago, fechaPago, numFactura, importeTrabajo, fechaEntrega, estado, modeloID, clienteID, empresaID, empleadoID) 
+        VALUES('$fechaHora', '$franjaHoraria', '$telefono', '$dominio', '$siniestro', '$observacion', '$esPago', '$tipoPago', '$fechaPago', '$numFactura', '$importeTrabajo', '$fechaEntrega', 'Activo', '$modeloID', '$clienteID', '$empresaID', '$empleadoID');";
         $resultado = $conexion->prepare($consulta);
         $resultado->execute();
         $turnoID=$conexion->lastInsertId();
@@ -134,9 +135,9 @@ switch($opcion){
             $resultado->execute();
             $data=$resultado->fetchAll(PDO::FETCH_ASSOC);
         } elseif ($estadoTurno[0]["estado"] == "Activo") {
-            $consulta = "UPDATE turno SET contacto='$contacto', fechaHora='$fechaHora', franjaHoraria='$franjaHoraria', telefono='$telefono', dominio='$dominio',
+            $consulta = "UPDATE turno SET fechaHora='$fechaHora', franjaHoraria='$franjaHoraria', telefono='$telefono', dominio='$dominio',
             siniestro='$siniestro', observacion='$observacion', esPago='$esPago', tipoPago='$tipoPago', fechaPago='$fechaPago', numFactura='$numFactura', importeTrabajo='$importeTrabajo', fechaEntrega='$fechaEntrega', modeloID='$modeloID',
-            empresaID='$empresaID', empleadoID='$empleadoID'
+            clienteID='$clienteID', empresaID='$empresaID', empleadoID='$empleadoID'
             WHERE idTurno='$idTurno'";
 
             $resultado = $conexion->prepare($consulta);
@@ -325,7 +326,7 @@ switch($opcion){
         $data=$resultado->fetchAll(PDO::FETCH_ASSOC);
         break;
     case 12:
-        $consulta = "SELECT t.idTurno, t.fechaHora, t.contacto, CONCAT(m.nombre, ' - ', mo.nombre) AS vehiculo, 
+        $consulta = "SELECT t.idTurno, t.fechaHora, cl.razonSocial AS cliente, CONCAT(m.nombre, ' - ', mo.nombre) AS vehiculo, 
         e.nombre AS empresa, GREATEST((DATEDIFF(NOW(),fechaHora) - e.plazoPago)*-1, 0) AS diasRestantes, 
         GREATEST(DATEDIFF(NOW(),fechaHora) - e.plazoPago, 0) AS diasMora, 
         IF(DATEDIFF(NOW(),fechaHora) - e.plazoPago>0, 'En Mora', 'En Proceso') AS estado
@@ -333,6 +334,7 @@ switch($opcion){
         INNER JOIN modelo mo ON mo.idModelo = t.modeloID
         INNER JOIN marca m ON m.idMarca = mo.marcaID
         INNER JOIN empresa e ON e.idEmpresa = t.empresaID
+        INNER JOIN cliente cl ON cl.idCliente = t.clienteID
         WHERE t.estado = 'Finalizado' AND t.esPago = 'No';";
         $resultado = $conexion->prepare($consulta);
         $resultado->execute();
@@ -404,6 +406,12 @@ switch($opcion){
         break;
     case 19:
         $consulta = "SELECT * FROM empleado";
+        $resultado = $conexion->prepare($consulta);
+        $resultado->execute();        
+        $data=$resultado->fetchAll(PDO::FETCH_ASSOC);
+        break;
+    case 20:
+        $consulta = "SELECT idCliente, CONCAT(razonSocial, ' - ', cuitCuil) AS cliente, telefono FROM cliente WHERE estado = 'Activo'";
         $resultado = $conexion->prepare($consulta);
         $resultado->execute();        
         $data=$resultado->fetchAll(PDO::FETCH_ASSOC);

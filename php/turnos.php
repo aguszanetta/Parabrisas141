@@ -22,7 +22,7 @@
                             <th>Fecha</th>
                             <th>Turno</th>
                             <th>Hora</th>
-                            <th>Contacto</th>
+                            <th>Cliente</th>
                             <th>Telefono</th>
                             <th>Vehiculo</th>
                             <th>Dominio</th>
@@ -91,9 +91,11 @@
                     </div>
                     <div class="col-md-3">
                         <div class="form-group">
-                            <label for="contacto" class="form-label text-dark">Contacto</label>
+                            <label for="cliente" class="form-label text-dark">Cliente</label>
                             <div class="input-group mb-3">
-                                <input id="contacto" name="contacto" type="text" class="form-control inputForm" required>
+                                <select name="cliente" id="cliente" class="form-select inputForm" required>
+                                    <option value="" data-tel="">Cliente</option>
+                                </select>
                             </div>
                         </div>
                     </div>

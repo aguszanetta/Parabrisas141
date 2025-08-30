@@ -1,6 +1,6 @@
 #loginFondo{
     height: 100vh;
-    background-image: url('../img/bg-5.jpg');
+    background-image: url('../img/bg-6.jpg');
     background-size: cover;
     background-repeat: no-repeat;
     background-position: center center;
@@ -132,7 +132,8 @@
 #tablaStock,
 #tablaAPedir,
 #tablaCristales,
-#tablaPagosMora {
+#tablaPagosMora,
+#tablaClientes {
     width: 100% !important;
 }
 
@@ -140,7 +141,8 @@
 #tablaLP_filter,
 #tablaStock_filter,
 #tablaAPedir_filter,
-#tablaPagosMora_filter {
+#tablaPagosMora_filte,
+#tablaClientes_filter {
     margin-bottom: 15px;
 }
 
@@ -148,7 +150,8 @@ div#tablaTurnos_filter label input,
 div#tablaLP_filter label input,
 div#tablaStock_filter label input,
 div#tablaAPedir_filter label input,
-div#tablaPagosMora_filter label input{
+div#tablaPagosMora_filter label input,
+div#tablaClientes_filter label input{
     height: 2.375rem;
 }
 
